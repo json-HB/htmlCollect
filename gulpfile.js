@@ -6,11 +6,7 @@ const less = require("gulp-less");
 const bs = require("browser-sync").create();
 const marked = require("marked");
 
-gulp.task("default", ["del", "js", "html", "less", "server"], function(cb) {
-  //   gulp
-  //     .src(["data/*.*"], { base: "data" })
-  //     .pipe(concat("haibo.js", { newline: "\n" }))
-  //     .pipe(gulp.dest("dist"));
+gulp.task("default", ["del", "js", "html", "less"], function(cb) {
   cb();
 });
 
