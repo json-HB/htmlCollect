@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="prerender" href="http://www.kreditone.in/" />
+    <title>preload</title>
+    <link rel="dns-prefetch" href="https://cdn.bootcss.com" />
+  </head>
+  <body>
+    <button type="button">click</button>
+    <script type="module">
+      const btn = document.querySelector("button");
+      function preloadUrl() {
+        window.open("http://www.kreditone.in/");
+      }
+      btn.addEventListener("click", preloadUrl, {
+        capture: false,
+        once: true,
+        passive: true
+      });
+      window.onload = function() {
+        const ele = document.createElement("script");
+        ele.src =
+          "https://cdn.bootcss.com/react/16.9.0-rc.0/cjs/react.development.js";
+        ele.async = true;
+        ele.type = "module";
+        ele.addEventListener(
+          "load",
+          function() {
+            console.log("load");
+          },
+          false
+        );
+        ele.addEventListener(
+          "error",
+          function() {
+            alert("error");
+          },
+          false
+        );
+        document.body.appendChild(ele);
+      };
+    </script>
+  </body>
+</html>

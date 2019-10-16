@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Table</title>
+    <link rel="stylesheet" href="/index.css" />
+    <link rel="stylesheet" href="" />
+  </head>
+  <body>
+    <style></style>
+    <a href="alipays://">打开支付宝</a>
+    <button class="click">click</button>
+    <button class="click.a">click.a</button>
+    <button class="click.b">click.b</button>
+    <script></script>
+
+    <br />
+    <input type="file" id="file" />
+    <div class="preview"></div>
+    <script>
+      const file = document.querySelector("#file");
+      file.addEventListener(
+        "change",
+        function(ev) {
+          const File = new FileReader();
+          const data = ev.target.files[0];
+          const imageType = data.type;
+          console.log("change", data);
+          File.readAsDataURL(data);
+          File.onload = function(ev) {
+            console.log(ev);
+            const img = new Image();
+            img.src = ev.target.result;
+            img.onload = function(ev) {
+              let originWidth = this.width;
+              let originHeight = this.height;
+              let targetW, targetH;
+              const maxWidth = 800;
+              const maxHeight = 800;
+              if (originWidth > maxWidth || originHeight > maxHeight) {
+                if (originWidth / originHeight > maxWidth / maxHeight) {
+                  targetW = maxWidth;
+                  targetH = (maxWidth * originHeight) / originWidth;
+                } else {
+                  targetH = maxHeight;
+                  targetW = (maxHeight * originWidth) / originHeight;
+                }
+              }
+              const canvas = document.createElement("canvas");
+              const context = canvas.getContext("2d");
+              canvas.width = targetW;
+              canvas.height = targetH;
+              context.clearRect(0, 0, targetW, targetH);
+              context.drawImage(img, 0, 0, targetW, targetH);
+              const result = canvas.toDataURL(imageType, 0.2);
+              document.querySelector(
+                ".preview"
+              ).style.background = `url(${result}) no-repeat`;
+              document.querySelector(".preview").style.height = "200px";
+            };
+          };
+        },
+        false
+      );
+    </script>
+  </body>
+</html>

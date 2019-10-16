@@ -1,0 +1,64 @@
+@color: red;
+
+.a {
+  background-attachment: fixed;
+}
+.b {
+  color: blue;
+  &:extend(.a);
+  .mixin();
+}
+
+.mixin(@width: 100px) {
+  width: @width;
+  height: calc(100% - 20px);
+  box-shadow: 1px 1px 1px #ccc;
+}
+
+.scale1px {
+  position: relative;
+  border: none;
+  &:after {
+    content: "";
+    position: absolute;
+    height: 1px;
+    width: 100%;
+    background-color: black;
+    transform: scaleY(1);
+    transform-origin: 0 0;
+    @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+      transform: scaleY(0.5);
+    }
+    @media only screen and (-webkit-min-device-pixel-ratio: 3) {
+      transform: scaleY(0.33);
+    }
+  }
+}
+
+.scale1pxB4(#ccc);
+
+.scale1pxB4(@color) {
+  .scale1pxB4 {
+    position: relative;
+    border: none;
+  }
+  .scale1pxB4:after {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    transform: scale(1);
+    border: 1px solid @color;
+    transform-origin: left top;
+    @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+      height: 200%;
+      width: 200%;
+      transform: scale(0.5);
+    }
+    @media only screen and (min-device-pixel-ratio: 3) {
+      height: 300%;
+      width: 300%;
+      transform: scale(0.33);
+    }
+  }
+}

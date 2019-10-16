@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="manifest" href="/haibo.webmanifest" />
+  </head>
+  <body>
+    <textarea name="content" id="marked"></textarea>
+    <button id="submit">Send</button>
+    <style>
+      textarea {
+        box-sizing: border-box;
+        width: 100%;
+        height: 50vh;
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        box-shadow: 2px 2px 2px #ddd;
+        display: block;
+      }
+      button {
+        display: block;
+        height: 50px;
+        line-height: 50px;
+        border: 1px solid #ccc;
+        padding: 0px 20px;
+        font-size: 16px;
+        color: green;
+        font-weight: 700;
+        margin: auto;
+        margin-top: 20px;
+        cursor: pointer;
+      }
+    </style>
+    <script>
+      let btn = document.querySelector("#submit");
+      let text = document.querySelector("#marked");
+      let loading = false;
+      btn.addEventListener(
+        "click",
+        function() {
+          let val = text.value;
+          disableBtn(true);
+          let data = {
+            data: val
+          };
+          fetch("http://haibo.online:3007/marked", {
+            body: JSON.stringify(data), // must match 'Content-Type' header
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "same-origin", // include, same-origin, *omit
+            headers: {
+              "user-agent": navigator.userAgent,
+              "content-type": "application/json"
+            },
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            mode: "no-cors", // no-cors, cors, *same-origin
+            referrer: "no-referrer" // *client, no-referrer
+          })
+            .then(response => response.json())
+            .then(res => {
+              window.open(res.data, "_blank");
+            })
+            .catch(e => {
+              alert("wrong");
+            })
+            .finally(() => {
+              disableBtn(false);
+            });
+        },
+        false
+      );
+      function disableBtn(bol) {
+        if (bol) {
+          btn.setAttribute("disabled", "");
+        } else {
+          btn.removeAttribute("disabled");
+        }
+      }
+    </script>
+  </body>
+</html>

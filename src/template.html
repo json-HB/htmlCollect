@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      console.time("load");
+      console.time("content");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="bg">hello world I am coming!</div>
+    <style>
+      div.bg {
+        display: inline-block;
+        background-blend-mode: color;
+        background: linear-gradient(to right, #e81717, blue);
+        padding: 20px;
+        -webkit-background-clip: text;
+        color: transparent;
+        background-position: 10% 70%;
+        background-size: 200%, 100%;
+        transition: background 0.3s linear 0s;
+        font-size: 30px;
+        font-weight: bold;
+      }
+      div:hover {
+        background-size: 100% 100%;
+      }
+      li {
+        height: 2vh;
+      }
+      :root {
+        --baseColor: blue;
+      }
+      div.fixHeader {
+        position: fixed;
+        top: -100%;
+        left: 0;
+        right: 0;
+        height: 50px;
+        border: 1px solid #ccc;
+        line-height: 50px;
+        color: var(--baseColor);
+        font-weight: bold;
+        text-align: center;
+        text-shadow: 1px 1px 1px #ddd;
+        box-shadow: 1px 1px 1px #eee;
+        transition: top 1s ease-in 0s;
+      }
+      .fixHeader.show {
+        top: 0;
+      }
+      .fixHeader .content {
+        height: 50px;
+      }
+    </style>
+    <div class="fixHeader">
+      <div class="content">
+        hello world
+      </div>
+    </div>
+    <script type="module">
+      window.onload = function() {
+        console.log("load");
+        console.timeEnd("load");
+        let preTop;
+        let dir = null;
+        function scroll() {
+          console.info("scrolling ...");
+          const top = (document.documentElement || document.body).scrollTop;
+          if (preTop) {
+            if (preTop - top > 0) {
+              dir = "up";
+            } else if (preTop - top < 0) {
+              dir = "down";
+            }
+          }
+          if (top != preTop) {
+            preTop = top;
+          }
+          move(dir);
+        }
+
+        function move() {
+          setTimeout(function() {
+            dir == "down"
+              ? fixHeader.classList.add("show")
+              : fixHeader.classList.remove("show");
+          }, 0);
+        }
+
+        function throth(fn, time = 1000) {
+          let pre;
+          return function() {
+            console.log("inder");
+            if (!pre || Date.now() - pre > time) {
+              pre = Date.now();
+              fn();
+            }
+          };
+        }
+        const fixHeader = document.querySelector(".fixHeader");
+        window.addEventListener("scroll", throth(scroll, 20), {
+          passive: false,
+          captrue: false
+        });
+      };
+      document.addEventListener("DOMContentLoaded", function() {
+        console.log("contentLoad");
+        console.timeEnd("content");
+      });
+    </script>
+    <ul>
+      <li>hello*1i</li>
+      <li>hello*2i</li>
+      <li>hello*3i</li>
+      <li>hello*4i</li>
+      <li>hello*5i</li>
+      <li>hello*6i</li>
+      <li>hello*7i</li>
+      <li>hello*8i</li>
+      <li>hello*9i</li>
+      <li>hello*10i</li>
+      <li>hello*11i</li>
+      <li>hello*12i</li>
+      <li>hello*13i</li>
+      <li>hello*14i</li>
+      <li>hello*15i</li>
+      <li>hello*16i</li>
+      <li>hello*17i</li>
+      <li>hello*18i</li>
+      <li>hello*19i</li>
+      <li>hello*20i</li>
+      <li>hello*21i</li>
+      <li>hello*22i</li>
+      <li>hello*23i</li>
+      <li>hello*24i</li>
+      <li>hello*25i</li>
+      <li>hello*26i</li>
+      <li>hello*27i</li>
+      <li>hello*28i</li>
+      <li>hello*29i</li>
+      <li>hello*30i</li>
+      <li>hello*31i</li>
+      <li>hello*32i</li>
+      <li>hello*33i</li>
+      <li>hello*34i</li>
+      <li>hello*35i</li>
+      <li>hello*36i</li>
+      <li>hello*37i</li>
+      <li>hello*38i</li>
+      <li>hello*39i</li>
+      <li>hello*40i</li>
+      <li>hello*41i</li>
+      <li>hello*42i</li>
+      <li>hello*43i</li>
+      <li>hello*44i</li>
+      <li>hello*45i</li>
+      <li>hello*46i</li>
+      <li>hello*47i</li>
+      <li>hello*48i</li>
+      <li>hello*49i</li>
+      <li>hello*50i</li>
+      <li>hello*51i</li>
+      <li>hello*52i</li>
+      <li>hello*53i</li>
+      <li>hello*54i</li>
+      <li>hello*55i</li>
+      <li>hello*56i</li>
+      <li>hello*57i</li>
+      <li>hello*58i</li>
+      <li>hello*59i</li>
+      <li>hello*60i</li>
+      <li>hello*61i</li>
+      <li>hello*62i</li>
+      <li>hello*63i</li>
+      <li>hello*64i</li>
+      <li>hello*65i</li>
+      <li>hello*66i</li>
+      <li>hello*67i</li>
+      <li>hello*68i</li>
+      <li>hello*69i</li>
+      <li>hello*70i</li>
+      <li>hello*71i</li>
+      <li>hello*72i</li>
+      <li>hello*73i</li>
+      <li>hello*74i</li>
+      <li>hello*75i</li>
+      <li>hello*76i</li>
+      <li>hello*77i</li>
+      <li>hello*78i</li>
+      <li>hello*79i</li>
+      <li>hello*80i</li>
+      <li>hello*81i</li>
+      <li>hello*82i</li>
+      <li>hello*83i</li>
+      <li>hello*84i</li>
+      <li>hello*85i</li>
+      <li>hello*86i</li>
+      <li>hello*87i</li>
+      <li>hello*88i</li>
+      <li>hello*89i</li>
+      <li>hello*90i</li>
+      <li>hello*91i</li>
+      <li>hello*92i</li>
+      <li>hello*93i</li>
+      <li>hello*94i</li>
+      <li>hello*95i</li>
+      <li>hello*96i</li>
+      <li>hello*97i</li>
+      <li>hello*98i</li>
+      <li>hello*99i</li>
+      <li>hello*100i</li>
+    </ul>
+  </body>
+</html>
