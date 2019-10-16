@@ -18,14 +18,37 @@
 
     <br />
     <input type="file" id="file" />
-    <div class="preview"></div>
+    <br />
+    <label>rate(0.01-1.00):</label>
+    <input
+      type="number"
+      min="0.01"
+      max="1.00"
+      step="0.01"
+      value="0.9"
+      id="rate"
+    />
+    <br />
+    <p id="result"></p>
+    <img src="" alt="" id="preview" />
     <script>
+      function dealKb(size) {
+        const types = ["bite", "KB", "M", "G"];
+        const limit = 1024;
+        let i = 0;
+        while (size / limit >= 1) {
+          i++;
+          size /= limit;
+        }
+        return Math.round(size * 100) / 100 + types[i];
+      }
       const file = document.querySelector("#file");
       file.addEventListener(
         "change",
         function(ev) {
           const File = new FileReader();
           const data = ev.target.files[0];
+          const originSize = dealKb(data.size);
           const imageType = data.type;
           console.log("change", data);
           File.readAsDataURL(data);
@@ -54,11 +77,16 @@
               canvas.height = targetH;
               context.clearRect(0, 0, targetW, targetH);
               context.drawImage(img, 0, 0, targetW, targetH);
-              const result = canvas.toDataURL(imageType, 0.2);
-              document.querySelector(
-                ".preview"
-              ).style.background = `url(${result}) no-repeat`;
-              document.querySelector(".preview").style.height = "200px";
+              const rate = document.querySelector("#rate").value || 0.92;
+              const result = canvas.toDataURL(imageType, +rate);
+              document.querySelector("#preview").src = result;
+              let blob = new Blob([result], { type: imageType });
+              let dealSize = dealKb(blob.size);
+              document.querySelector("#preview").onload = function(ev) {
+                document.querySelector(
+                  "#result"
+                ).innerHTML = `from${originSize} reduce to ${dealSize}`;
+              };
             };
           };
         },
