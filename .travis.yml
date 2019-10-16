@@ -1,7 +1,7 @@
 language: node_js
 node_js: v12.11.1
 cache:
-  npm: true
+  # npm: true
   directories:
     - node_modules
 branches:
@@ -11,6 +11,8 @@ branches:
     - master
 env:
   - project=webui
+before_install:
+  - npm uninstall gulp -g
 install:
   - npm i gulp-cli@2.2.0 -g
   - npm i
