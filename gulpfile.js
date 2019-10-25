@@ -9,12 +9,11 @@ var UglifyJS = require("gulp-uglify");
 
 let Tasks = ["vendors", "del", "js", "html", "less"];
 
-const isBrowser = typeof window !== undefined;
-
-isBrowser && Tasks.push("server");
-util.log(Tasks, "tasks");
-
 gulp.task("default", Tasks, function(cb) {
+  cb();
+});
+
+gulp.task("server", Tasks.concat("server"), function(cb) {
   cb();
 });
 
