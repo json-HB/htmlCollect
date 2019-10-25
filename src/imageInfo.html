@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>EXIF example with inline EXIF info</title>
+  </head>
+  <body>
+    <script type="text/javascript" src="/vendors/exif.js"></script>
+    <input type="file" id="file" />
+    <div class="info"></div>
+    <img class="pre" src="" alt="" />
+    <style>
+      .pre {
+        width: 50vw;
+        height: auto;
+      }
+      .info {
+        white-space: pre;
+      }
+    </style>
+    <script>
+      const file = document.querySelector("#file");
+      file.addEventListener("change", function(ev) {
+        let File = new FileReader();
+        let f = ev.target.files[0];
+        File.readAsDataURL(f);
+        File.onload = function(ev) {
+          let res = ev.target.result;
+          let img = new Image();
+          img.src = res;
+          img.onload = function() {
+            EXIF.getData(img, function() {
+              var allMetaData = EXIF.getAllTags(this);
+              document.querySelector(".pre").src = res;
+              document.querySelector(".info").innerHTML = JSON.stringify(
+                allMetaData,
+                null,
+                "\n"
+              );
+            });
+          };
+        };
+      });
+    </script>
+  </body>
+</html>

@@ -50,7 +50,7 @@
           const data = ev.target.files[0];
           const originSize = dealKb(data.size);
           const imageType = data.type;
-          console.log("change", data);
+          console.log("change111", data);
           File.readAsDataURL(data);
           File.onload = function(ev) {
             console.log(ev);
@@ -78,6 +78,7 @@
               context.clearRect(0, 0, targetW, targetH);
               context.drawImage(img, 0, 0, targetW, targetH);
               const rate = document.querySelector("#rate").value || 0.92;
+              console.log(rate, 99999);
               const result = canvas.toDataURL(imageType, +rate);
               document.querySelector("#preview").src = result;
               let blob = new Blob([result], { type: imageType });

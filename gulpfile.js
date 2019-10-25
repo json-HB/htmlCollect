@@ -5,8 +5,16 @@ const util = require("gulp-util");
 const less = require("gulp-less");
 const bs = require("browser-sync").create();
 const marked = require("marked");
+var UglifyJS = require("gulp-uglify");
 
-gulp.task("default", ["del", "js", "html", "less"], function(cb) {
+let Tasks = ["vendors", "del", "js", "html", "less"];
+
+const isBrowser = typeof window !== undefined;
+
+isBrowser && Tasks.push("server");
+util.log(Tasks, "tasks");
+
+gulp.task("default", Tasks, function(cb) {
   cb();
 });
 
@@ -129,4 +137,13 @@ function concat(fileName, opt = {}) {
 gulp.task("del", function(cb) {
   require("child_process").execSync("rm -rf dist");
   cb();
+});
+
+gulp.task("vendors", function(cb) {
+  const basePath = path.resolve("node_modules");
+  gulp
+    .src([path.resolve(basePath, "exif-js", "exif.js")])
+    .pipe(UglifyJS())
+    .pipe(gulp.dest(path.resolve("src/vendors/")))
+    .on("finish", cb);
 });
