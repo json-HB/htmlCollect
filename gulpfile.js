@@ -41,7 +41,7 @@ gulp.task("collectHtml", function(cb) {
           let str = paths
             .map(
               item =>
-                `<a href='${item}'>${item
+                `<a href='/htmlCollect/${item}'>${item
                   .substring(1)
                   .replace(/\.html$/g, "")}</a><br />\n`
             )
