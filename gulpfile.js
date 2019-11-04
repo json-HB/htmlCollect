@@ -15,8 +15,8 @@ gulp.task("default", Tasks, function(cb) {
   sequence("collectHtml", cb);
 });
 
-gulp.task("server", Tasks.concat("server"), function(cb) {
-  sequence("collectHtml", cb);
+gulp.task("dev", function(cb) {
+  sequence(Tasks.concat("server"), "collectHtml", cb);
 });
 
 gulp.task("collectHtml", function(cb) {
@@ -127,7 +127,7 @@ gulp.task("server", function() {
       baseDir: "dist"
     }
   });
-  gulp.watch("src/*.html", ["html"]);
+  gulp.watch("src/*.html", ["html", "collectHtml"]);
   gulp.watch("src/*.less", ["less"]);
 });
 

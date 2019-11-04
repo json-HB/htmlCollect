@@ -6,6 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>menu list</title>
   </head>
+  <script>
+    if (document.domain == "json-hb.github.io") {
+      var base = document.createElement("base");
+      base.href = "/htmlCollect";
+      document.head.appendChild(base);
+    }
+  </script>
   <body>
     {{ _content_ }}
   </body>
