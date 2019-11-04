@@ -36,6 +36,7 @@
         --baseColor: blue;
       }
       div.fixHeader {
+        background: #ccc;
         position: fixed;
         top: -100%;
         left: 0;
@@ -68,6 +69,7 @@
         console.timeEnd("load");
         let preTop;
         let dir = null;
+        let state = "init";
         function scroll() {
           console.info("scrolling ...");
           const top = (document.documentElement || document.body).scrollTop;
@@ -86,6 +88,7 @@
 
         function move() {
           setTimeout(function() {
+            console.log(state);
             dir == "down"
               ? fixHeader.classList.add("show")
               : fixHeader.classList.remove("show");
@@ -103,6 +106,24 @@
           };
         }
         const fixHeader = document.querySelector(".fixHeader");
+        fixHeader.addEventListener(
+          "transitionstart",
+          function() {
+            state = "start";
+          },
+          false
+        );
+        fixHeader.ontransitionrun = function() {
+          state = "run";
+        };
+        fixHeader.addEventListener(
+          "transitionend",
+          function() {
+            console.log("end");
+            state = "end";
+          },
+          false
+        );
         window.addEventListener("scroll", throth(scroll, 20), {
           passive: false,
           captrue: false
@@ -113,107 +134,76 @@
         console.timeEnd("content");
       });
     </script>
-    <ul>
-      <li>hello*1i</li>
-      <li>hello*2i</li>
-      <li>hello*3i</li>
-      <li>hello*4i</li>
-      <li>hello*5i</li>
-      <li>hello*6i</li>
-      <li>hello*7i</li>
-      <li>hello*8i</li>
-      <li>hello*9i</li>
-      <li>hello*10i</li>
-      <li>hello*11i</li>
-      <li>hello*12i</li>
-      <li>hello*13i</li>
-      <li>hello*14i</li>
-      <li>hello*15i</li>
-      <li>hello*16i</li>
-      <li>hello*17i</li>
-      <li>hello*18i</li>
-      <li>hello*19i</li>
-      <li>hello*20i</li>
-      <li>hello*21i</li>
-      <li>hello*22i</li>
-      <li>hello*23i</li>
-      <li>hello*24i</li>
-      <li>hello*25i</li>
-      <li>hello*26i</li>
-      <li>hello*27i</li>
-      <li>hello*28i</li>
-      <li>hello*29i</li>
-      <li>hello*30i</li>
-      <li>hello*31i</li>
-      <li>hello*32i</li>
-      <li>hello*33i</li>
-      <li>hello*34i</li>
-      <li>hello*35i</li>
-      <li>hello*36i</li>
-      <li>hello*37i</li>
-      <li>hello*38i</li>
-      <li>hello*39i</li>
-      <li>hello*40i</li>
-      <li>hello*41i</li>
-      <li>hello*42i</li>
-      <li>hello*43i</li>
-      <li>hello*44i</li>
-      <li>hello*45i</li>
-      <li>hello*46i</li>
-      <li>hello*47i</li>
-      <li>hello*48i</li>
-      <li>hello*49i</li>
-      <li>hello*50i</li>
-      <li>hello*51i</li>
-      <li>hello*52i</li>
-      <li>hello*53i</li>
-      <li>hello*54i</li>
-      <li>hello*55i</li>
-      <li>hello*56i</li>
-      <li>hello*57i</li>
-      <li>hello*58i</li>
-      <li>hello*59i</li>
-      <li>hello*60i</li>
-      <li>hello*61i</li>
-      <li>hello*62i</li>
-      <li>hello*63i</li>
-      <li>hello*64i</li>
-      <li>hello*65i</li>
-      <li>hello*66i</li>
-      <li>hello*67i</li>
-      <li>hello*68i</li>
-      <li>hello*69i</li>
-      <li>hello*70i</li>
-      <li>hello*71i</li>
-      <li>hello*72i</li>
-      <li>hello*73i</li>
-      <li>hello*74i</li>
-      <li>hello*75i</li>
-      <li>hello*76i</li>
-      <li>hello*77i</li>
-      <li>hello*78i</li>
-      <li>hello*79i</li>
-      <li>hello*80i</li>
-      <li>hello*81i</li>
-      <li>hello*82i</li>
-      <li>hello*83i</li>
-      <li>hello*84i</li>
-      <li>hello*85i</li>
-      <li>hello*86i</li>
-      <li>hello*87i</li>
-      <li>hello*88i</li>
-      <li>hello*89i</li>
-      <li>hello*90i</li>
-      <li>hello*91i</li>
-      <li>hello*92i</li>
-      <li>hello*93i</li>
-      <li>hello*94i</li>
-      <li>hello*95i</li>
-      <li>hello*96i</li>
-      <li>hello*97i</li>
-      <li>hello*98i</li>
-      <li>hello*99i</li>
-      <li>hello*100i</li>
-    </ul>
+    <div class="grid">
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      <div>4</div>
+      <div>5</div>
+      <div>6</div>
+      <div>7</div>
+      <div>8</div>
+      <div>9</div>
+    </div>
+    <style>
+      .grid {
+        display: grid;
+        grid-template-rows: repeat(3, 100px);
+        grid-template-columns: repeat(3, 100px);
+        grid-gap: 20px 30px;
+        /* grid-row-gap: 20px; */
+        grid-template-areas:
+          "a b c"
+          "d e f"
+          "g h i";
+        grid-auto-flow: column;
+        justify-content: end;
+        align-items: stretch;
+      }
+      .grid > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        font-size: 28px;
+        -webkit-font-smoothing: antialiased;
+        cursor: pointer;
+        transition: transform 0.2s linear 0s;
+      }
+      .grid > div:hover {
+        transform: scale(1.2);
+        box-shadow: 0px 0px 2px solid #ddd;
+        border-radius: 5px;
+      }
+      .grid > div:nth-child(1) {
+        background: red;
+        grid-area: e;
+      }
+      .grid > div:nth-child(2) {
+        background: orange;
+      }
+      .grid > div:nth-child(3) {
+        background: yellow;
+      }
+      .grid > div:nth-child(4) {
+        background: yellowgreen;
+      }
+      .grid > div:nth-child(5) {
+        background: pink;
+      }
+      .grid > div:nth-child(6) {
+        background: burlywood;
+      }
+      .grid > div:nth-child(7) {
+        background: purple;
+      }
+      .grid > div:nth-child(8) {
+        background: orchid;
+      }
+      .grid > div:nth-child(9) {
+        background: aqua;
+      }
+    </style>
+    <div style="height: 200vh;"></div>
   </body>
 </html>

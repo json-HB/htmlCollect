@@ -6,19 +6,60 @@ const less = require("gulp-less");
 const bs = require("browser-sync").create();
 const marked = require("marked");
 var UglifyJS = require("gulp-uglify");
+const fs = require("fs");
+const sequence = require("run-sequence");
 
 let Tasks = ["vendors", "del", "js", "html", "less"];
 
 gulp.task("default", Tasks, function(cb) {
-  cb();
+  sequence("collectHtml", cb);
 });
 
 gulp.task("server", Tasks.concat("server"), function(cb) {
-  cb();
+  sequence("collectHtml", cb);
+});
+
+gulp.task("collectHtml", function(cb) {
+  const paths = [];
+  gulp
+    .src("dist/*.html")
+    .pipe(
+      through.obj(function(file, enc, next) {
+        let extrName = path.extname(file.path);
+        let basename = path.basename(file.path);
+        if (extrName == ".html" && basename != "index.html") {
+          paths.push("/" + basename);
+        }
+        this.push(file);
+        next();
+      })
+    )
+    .on("finish", function() {
+      fs.readFile(path.resolve("dist/index.html"), "utf8", function(err, data) {
+        if (err) throw new Error(err);
+        if (data) {
+          let str = paths
+            .map(
+              item =>
+                `<a href='${item}'>${item
+                  .substring(1)
+                  .replace(/\.html$/g, "")}</a><br />\n`
+            )
+            .join("");
+          data = data.replace(/\{\{\s*(.+)\s*\}\}/, function(full, part) {
+            return str;
+          });
+          fs.writeFileSync(path.resolve("dist/index.html"), data, {
+            encoding: "utf8"
+          });
+        }
+        cb();
+      });
+    });
 });
 
 gulp.task("js", function(cb) {
-  gulp.src(["src/**/*.js"], { base: "src" }).pipe(gulp.dest("dist"));
+  return gulp.src(["src/**/*.js"], { base: "src" }).pipe(gulp.dest("dist"));
 });
 
 gulp.task("less", function(cb) {
