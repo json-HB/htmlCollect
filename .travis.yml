@@ -11,7 +11,6 @@ branches:
     - master
 env:
   - project=htmlCollect
-  - date=`date`
 install:
   - npm i gulp-cli -g
   - npm i
@@ -19,6 +18,7 @@ install:
 before_script:
   - echo "before script"
 script:
+  - export date=`date`
   - BUILD_TIME=$date gulp
   - ls
 deploy:
