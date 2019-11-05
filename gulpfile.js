@@ -28,7 +28,7 @@ gulp.task("collectHtml", function(cb) {
         let extrName = path.extname(file.path);
         let basename = path.basename(file.path);
         if (extrName == ".html" && basename != "index.html") {
-          paths.push("/" + basename);
+          paths.push(basename);
         }
         this.push(file);
         next();
@@ -41,9 +41,7 @@ gulp.task("collectHtml", function(cb) {
           let str = paths
             .map(
               item =>
-                `<a href='/htmlCollect${item}'>${item
-                  .substring(1)
-                  .replace(/\.html$/g, "")}</a><br />\n`
+                `<a href='${item}'>${item.replace(/\.html$/g, "")}</a><br />\n`
             )
             .join("");
           data = data.replace(/\{\{\s*(.+)\s*\}\}/, function(full, part) {
@@ -94,7 +92,7 @@ gulp.task("marked", function(cb) {
     .pipe(gulp.dest("dist"))
     .on("finish", function() {
       fs.readFile(
-        path.resolve(__dirname, "src/index.html"),
+        path.resolve(__dirname, "src/md.html"),
         { encoding: "utf8" },
         function(err, data) {
           if (err) return util.log("wrong");
@@ -102,7 +100,7 @@ gulp.task("marked", function(cb) {
             data = data.replace(/{{\s__content__\s}}/g, mardContent);
             util.log(data);
             fs.writeFile(
-              "src/index.html",
+              "src/md.html",
               data,
               { encoding: "utf8" },
               (err, d) => {
