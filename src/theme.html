@@ -25,7 +25,7 @@
       function preload() {
         ["a", "b"].forEach(item => {
           let l = document.createElement("link");
-          l.href = `/${item}.css`;
+          l.href = `${item}.css`;
           l.rel = "stylesheet alternate";
           l.title = "disabled";
           l.type = "text/css";

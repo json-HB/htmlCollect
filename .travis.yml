@@ -10,7 +10,8 @@ branches:
   only:
     - master
 env:
-  - project=webui
+  - project=htmlCollect
+  - date=`date`
 install:
   - npm i gulp-cli -g
   - npm i
@@ -18,7 +19,7 @@ install:
 before_script:
   - echo "before script"
 script:
-  - gulp
+  - BUILD_TIME=$date gulp
   - ls
 deploy:
   provider: pages

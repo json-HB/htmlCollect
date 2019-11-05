@@ -12,11 +12,34 @@ const sequence = require("run-sequence");
 let Tasks = ["vendors", "del", "js", "html", "less"];
 
 gulp.task("default", Tasks, function(cb) {
-  sequence("collectHtml", cb);
+  sequence(["collectHtml"], ["mergePro"], cb);
 });
 
 gulp.task("dev", function(cb) {
   sequence(Tasks.concat("server"), "collectHtml", cb);
+});
+
+gulp.task("mergePro", function(cb) {
+  const BUILD_TIME = new Date().toISOString();
+  gulp
+    .src("dist/index.html")
+    .pipe(
+      through.obj(function(file, enc, next) {
+        let contents = file.contents.toString();
+        contents = contents.replace(/{{([^}]+)}}/g, function(full, part) {
+          console.log(part, full);
+          if (part == "BUILD_TIME") {
+            return process.env.BUILD_TIME || BUILD_TIME;
+          }
+          return full;
+        });
+        file.contents = Buffer.from(contents);
+        this.push(file);
+        next();
+      })
+    )
+    .pipe(gulp.dest("dist"))
+    .on("finish", cb);
 });
 
 gulp.task("collectHtml", function(cb) {
@@ -44,8 +67,11 @@ gulp.task("collectHtml", function(cb) {
                 `<a href='${item}'>${item.replace(/\.html$/g, "")}</a><br />\n`
             )
             .join("");
-          data = data.replace(/\{\{\s*(.+)\s*\}\}/, function(full, part) {
-            return str;
+          data = data.replace(/\{\{\s*(_\w+_)\s*\}\}/g, function(full, part) {
+            if (part == "_content_") {
+              return str;
+            }
+            return full;
           });
           fs.writeFileSync(path.resolve("dist/index.html"), data, {
             encoding: "utf8"
