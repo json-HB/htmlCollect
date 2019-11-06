@@ -1,4 +1,4 @@
-## soem html collections
+## some html collections
 
 ### build Status
 
