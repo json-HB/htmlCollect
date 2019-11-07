@@ -16,7 +16,7 @@ gulp.task("default", Tasks, function(cb) {
 });
 
 gulp.task("dev", function(cb) {
-  sequence(Tasks.concat("server"), "collectHtml", cb);
+  sequence(Tasks, "collectHtml", "server", cb);
 });
 
 gulp.task("mergePro", function(cb) {
