@@ -11,7 +11,7 @@ const sequence = require("run-sequence");
 
 let Tasks = ["vendors", "del", "js", "html", "less"];
 
-gulp.task("default", Tasks, function(cb) {
+gulp.task("default", Tasks.slice(1), function(cb) {
   sequence(["collectHtml"], ["mergePro"], cb);
 });
 
@@ -206,8 +206,12 @@ gulp.task("del", function(cb) {
 gulp.task("vendors", function(cb) {
   const basePath = path.resolve("node_modules");
   gulp
-    .src([path.resolve(basePath, "exif-js", "exif.js")])
-    .pipe(UglifyJS())
+    .src([
+      path.resolve(basePath, "exif-js", "exif.js"),
+      path.resolve(basePath, "pdfjs-dist/build", "pdf.js"),
+      path.resolve(basePath, "pdfjs-dist/build", "pdf.worker.js")
+    ])
+    // .pipe(UglifyJS())
     .pipe(gulp.dest(path.resolve("src/vendors/")))
     .on("finish", cb);
 });

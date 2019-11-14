@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>pdf</title>
+  </head>
+  <body>
+    <script src="vendors/pdf.js"></script>
+    <div class="app-wrapper"></div>
+    <script>
+      const pdf = window["pdfjs-dist/build/pdf"];
+      var url = location.search.replace("?url=", "");
+      pdf.GlobalWorkerOptions.workerSrc = "/vendors/pdf.worker.js";
+
+      // Asynchronous download of PDF
+      var loadingTask = pdf.getDocument(url);
+      loadingTask.promise.then(
+        function(pdfs) {
+          console.log("PDF loaded");
+          const pageNum = pdfs.numPages;
+          console.log(pageNum);
+          const appWrapperDom = document.querySelector(".app-wrapper");
+          for (let c = 1; c <= pageNum; c++) {
+            let canvasDom = document.createElement("canvas");
+            canvasDom.setAttribute("id", "pdf-canvas" + c);
+            appWrapperDom.appendChild(canvasDom);
+          }
+          const winW = document.documentElement.clientWidth;
+          for (let i = 1; i <= pageNum; i++) {
+            pdfs.getPage(i).then(function(page) {
+              const viewport = page.getViewport(1);
+              const scale = (winW / viewport.width).toFixed(1);
+              const scaledViewport = page.getViewport({ scale: 1 });
+              const canvas = document.getElementById("pdf-canvas" + i);
+              const context = canvas.getContext("2d");
+              canvas.height = scaledViewport.height;
+              canvas.width = scaledViewport.width;
+              const renderContext = {
+                canvasContext: context,
+                viewport: scaledViewport
+              };
+              const renderTask = page.render(renderContext);
+              renderTask.then(function() {
+                if (i === 1) {
+                  document.body.style.zoom = scale;
+                }
+                if (pageNum == i) {
+                  console.log("load success");
+                }
+              });
+            });
+          }
+        },
+        function(reason) {
+          // PDF loading error
+          console.log(reason);
+        }
+      );
+    </script>
+  </body>
+</html>
