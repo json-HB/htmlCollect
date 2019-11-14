@@ -13,9 +13,9 @@
       const pdf = window["pdfjs-dist/build/pdf"];
       var url = location.search.replace("?url=", "");
       let path = "";
-      if (/htmlCollect/.test(location.pathname)) {
-        path = "htmlCollect";
-      }
+      // if (/htmlCollect/.test(location.pathname)) {
+      //   path = "htmlCollect";
+      // }
       pdf.GlobalWorkerOptions.workerSrc = path + "/vendors/pdf.worker.js";
 
       // Asynchronous download of PDF
