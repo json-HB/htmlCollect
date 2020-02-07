@@ -9,7 +9,7 @@ var UglifyJS = require("gulp-uglify");
 const fs = require("fs");
 const sequence = require("run-sequence");
 
-let Tasks = ["vendors", "del", "js", "html", "less"];
+let Tasks = ["vendors", "del", "js", "html", "img", "less"];
 
 gulp.task("default", Tasks.slice(1), function(cb) {
   sequence(["collectHtml"], ["mergePro"], cb);
@@ -96,9 +96,13 @@ gulp.task("less", function(cb) {
 
 gulp.task("html", function(cb) {
   return gulp
-    .src(["src/*.+(html|json|png|css|mp3)", "assert/*"])
+    .src(["src/*.+(html|json|png|css|mp3)"])
     .pipe(gulp.dest("dist"))
     .pipe(bs.stream());
+});
+
+gulp.task("img", function() {
+  return gulp.src("assert/*.*").pipe(gulp.dest("dist/img"));
 });
 
 gulp.task("marked", function(cb) {
@@ -151,7 +155,9 @@ gulp.task("server", function() {
       baseDir: "dist"
     }
   });
-  gulp.watch("src/*.html", ["html", "collectHtml"]);
+  gulp.watch("src/*.html", () => {
+    sequence("html", "collectHtml");
+  });
   gulp.watch("src/*.less", ["less"]);
 });
 
@@ -214,4 +220,25 @@ gulp.task("vendors", function(cb) {
     // .pipe(UglifyJS())
     .pipe(gulp.dest(path.resolve("src/vendors/")))
     .on("finish", cb);
+});
+
+gulp.task("url-load", function(cb) {
+  gulp
+    .src("src/template.html")
+    .pipe(
+      through.obj(function(file, enc, next) {
+        let content = file.contents.toString();
+        const imgType = ["jpeg", "jpg", "pbg"];
+        content = content.replace(/img\s([^>]*)src="([^"]+)"/g, function(
+          full,
+          extra,
+          part
+        ) {
+          console.log(full, extra, part);
+          return full;
+        });
+        next();
+      })
+    )
+    .pipe(gulp.dest("dist"));
 });
