@@ -83,7 +83,10 @@ gulp.task("collectHtml", function(cb) {
 });
 
 gulp.task("js", function(cb) {
-  return gulp.src(["src/**/*.js"], { base: "src" }).pipe(gulp.dest("dist"));
+  return gulp
+    .src(["src/**/*.+(js|json)"], { base: "src" })
+    .pipe(gulp.dest("dist"))
+    .pipe(bs.stream());
 });
 
 gulp.task("less", function(cb) {
@@ -159,6 +162,7 @@ gulp.task("server", function() {
     sequence("html", "collectHtml");
   });
   gulp.watch("src/*.less", ["less"]);
+  gulp.watch("src/vendors/*.js", ["js"]);
 });
 
 function concat(fileName, opt = {}) {
