@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>webWorker</title>
+    <style>
+      .content {
+        white-space: pre;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="btn">click</button>
+    <div class="content"></div>
+    <script>
+      const content = document.body.querySelector(".content");
+      let worker;
+      function initWorker() {
+        worker = new Worker("vendors/worker.js", { name: "myWorker" });
+        worker.onmessage = function(e) {
+          const data = e.data;
+          const type = data.type;
+          if (type == "fetch") {
+            content.innerHTML += data.data.name + "\n";
+          }
+        };
+      }
+
+      initWorker();
+      const btn = document.body.querySelector("#btn");
+      btn.onclick = function() {
+        id = 0;
+        let timer = setInterval(
+          function(data) {
+            console.log(data);
+            id++;
+            if (id >= 6) {
+              clearInterval(timer);
+              return;
+            }
+            worker.postMessage({ type: "fetch", data: { id } });
+          },
+          1000,
+          id
+        );
+      };
+      addEventListener("visibilitychange", () => {
+        console.log(document.visibilityState);
+        if (document.visibilityState == "hidden") {
+          worker.postMessage({ type: "close", data: { msg: "tag change" } });
+        } else {
+          initWorker();
+        }
+      });
+    </script>
+  </body>
+</html>
