@@ -27,7 +27,7 @@ function closeWorker(data) {
 }
 
 function fetchApi(data) {
-  const url = "/mock/index.json";
+  const url = "/htmlCollect/mock/index.json";
   fetch(url, {
     method: "GET",
     headers: {
