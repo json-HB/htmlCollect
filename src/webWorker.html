@@ -9,10 +9,53 @@
       .content {
         white-space: pre;
       }
+      .hover {
+        background: #ccc;
+        color: black;
+        padding: 10px;
+        border: 1px solid #ddd;
+        font-size: 20px;
+        display: inline-block;
+        position: relative;
+      }
+      .hover:hover {
+        cursor: pointer;
+      }
+      .layer {
+        position: absolute;
+        transition: opacity 0.3s ease-in 0s;
+      }
+      .layer:before {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 0;
+        height: 0;
+        border: 10px solid transparent;
+        border-bottom-color: yellowgreen;
+        left: 50%;
+        transform: translateX(-50%);
+        top: -20px;
+      }
+      .layer .container {
+        min-width: 100px;
+        min-height: 50px;
+        border: red;
+        padding: 10px;
+        background: rgb(144, 146, 137);
+        color: blue;
+        text-align: center;
+      }
+      .hide {
+        opacity: 0;
+        z-index: -999;
+      }
     </style>
   </head>
   <body>
     <button id="btn">click</button>
+    <div class="hover">hover me</div>
+    <div class="client"></div>
     <div class="content"></div>
     <script>
       const content = document.body.querySelector(".content");
@@ -23,6 +66,8 @@
           const data = e.data;
           const type = data.type;
           if (type == "fetch") {
+            const name = data.data.name;
+            layerInstance.updateText(name);
             content.innerHTML += data.data.name + "\n";
           }
         };
@@ -54,6 +99,56 @@
           initWorker();
         }
       });
+    </script>
+    <template id="layer-template">
+      <div class="layer hide">
+        <div class="container">
+          暂无数据
+        </div>
+      </div>
+    </template>
+    <script>
+      const hoverDom = document.querySelector(".hover");
+      const clientDom = document.querySelector(".client");
+
+      function Layer(dom) {
+        this.dom = dom;
+        this.LayerDom = null;
+        this.init();
+        this.bindEvent();
+      }
+      Layer.prototype.init = function() {
+        const tem = document.getElementById("layer-template");
+        document.body.appendChild(tem.content);
+        this.LayerDom = document.querySelector(".layer");
+      };
+      Layer.prototype.update = function(x, y) {
+        console.log(x, y);
+        this.LayerDom.style.cssText = `left: ${x}px;top: ${y}px;`;
+      };
+      Layer.prototype.updateText = function(text) {
+        this.LayerDom.querySelector(".container").innerText = text;
+      };
+      Layer.prototype.bindEvent = function() {
+        console.log("bindEvent", this.dom);
+        this.dom.addEventListener("mousemove", ev => {
+          console.log(ev);
+          const { left, top, height, width } = this.dom.getBoundingClientRect();
+          const x = left + ev.offsetX - width / 2;
+          const y = top + height + 10;
+          this.update(x, y);
+        });
+        this.dom.addEventListener("mouseenter", () => {
+          console.log("enter", this.LayerDom);
+          this.LayerDom.classList.remove("hide");
+        });
+        this.dom.addEventListener("mouseout", () => {
+          console.log("out");
+          this.LayerDom.classList.add("hide");
+        });
+      };
+
+      var layerInstance = new Layer(hoverDom);
     </script>
   </body>
 </html>

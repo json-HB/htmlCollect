@@ -26,8 +26,12 @@ function closeWorker(data) {
   self.close();
 }
 
+function isLocal() {
+  return location.href.includes("localhost");
+}
+
 function fetchApi(data) {
-  const url = "/htmlCollect/mock/index.json";
+  const url = isLocal() ? "/mock/index.json" : "/htmlCollect/mock/index.json";
   fetch(url, {
     method: "GET",
     headers: {
