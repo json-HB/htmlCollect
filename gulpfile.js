@@ -44,42 +44,53 @@ gulp.task("mergePro", function(cb) {
 
 gulp.task("collectHtml", function(cb) {
   const paths = [];
-  gulp
+  return gulp
     .src("dist/*.html")
     .pipe(
-      through.obj(function(file, enc, next) {
-        let extrName = path.extname(file.path);
-        let basename = path.basename(file.path);
-        if (extrName == ".html" && basename != "index.html") {
-          paths.push(basename);
-        }
-        this.push(file);
-        next();
-      })
-    )
-    .on("finish", function() {
-      fs.readFile(path.resolve("dist/index.html"), "utf8", function(err, data) {
-        if (err) throw new Error(err);
-        if (data) {
-          let str = paths
-            .map(
-              item =>
-                `<a href='${item}'>${item.replace(/\.html$/g, "")}</a><br />\n`
-            )
-            .join("");
-          data = data.replace(/\{\{\s*(_\w+_)\s*\}\}/g, function(full, part) {
-            if (part == "_content_") {
-              return str;
+      through.obj(
+        function(file, enc, next) {
+          let extrName = path.extname(file.path);
+          let basename = path.basename(file.path);
+          if (extrName == ".html" && basename != "index.html") {
+            paths.push(basename);
+          }
+          this.push(file);
+          next();
+        },
+        function() {
+          fs.readFile(path.resolve("dist/index.html"), "utf8", function(
+            err,
+            data
+          ) {
+            if (err) throw new Error(err);
+            if (data) {
+              let str = paths
+                .map(
+                  item =>
+                    `<a href='${item}'>${item.replace(
+                      /\.html$/g,
+                      ""
+                    )}</a><br />\n`
+                )
+                .join("");
+              data = data.replace(/\{\{\s*(_\w+_)\s*\}\}/g, function(
+                full,
+                part
+              ) {
+                if (part == "_content_") {
+                  return str;
+                }
+                return full;
+              });
+              fs.writeFileSync(path.resolve("dist/index.html"), data, {
+                encoding: "utf8"
+              });
             }
-            return full;
-          });
-          fs.writeFileSync(path.resolve("dist/index.html"), data, {
-            encoding: "utf8"
           });
         }
-        cb();
-      });
-    });
+      )
+    )
+    .on("finish", cb);
 });
 
 gulp.task("js", function(cb) {
