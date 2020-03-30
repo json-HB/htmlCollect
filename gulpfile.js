@@ -246,3 +246,47 @@ gulp.task("url-load", function(cb) {
     )
     .pipe(gulp.dest("dist"));
 });
+
+function parseArgv(argv) {
+  let rest = argv.slice(3);
+  let obj = {};
+  while (rest.length) {
+    let key = rest.splice(0, 1)[0];
+    console.log(key);
+    if (key.startsWith("-")) {
+      key = key.replace(/-/, "");
+      if (rest[0] !== undefined && rest[0].startsWith("-")) {
+        obj[key] = true;
+      } else {
+        obj[key] = rest[0];
+        rest.splice(0, 1);
+      }
+    } else {
+      obj[key] = true;
+    }
+  }
+  return obj;
+}
+
+gulp.task("tem", function(cb) {
+  const argv = parseArgv(process.argv);
+  const baseDir = path.resolve(__dirname, "src/template");
+  console.log(argv);
+  fs.readFile(
+    path.resolve(baseDir, `${argv.type || "html"}.template`),
+    { encoding: "utf8" },
+    function(err, data) {
+      data = data.replace(/{{(.*)}}/g, function(full, part) {
+        return argv[part] || "N/A";
+      });
+      fs.writeFileSync(
+        path.resolve(__dirname, `src/${argv["name"]}.html`),
+        data,
+        {
+          encoding: "utf8"
+        }
+      );
+      cb();
+    }
+  );
+});
