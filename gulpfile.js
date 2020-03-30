@@ -12,7 +12,7 @@ const sequence = require("run-sequence");
 let Tasks = ["vendors", "del", "js", "html", "img", "less"];
 
 gulp.task("default", Tasks.slice(1), function(cb) {
-  sequence(["collectHtml"], ["mergePro"], cb);
+  sequence(["collectHtml", "mergePro"], cb);
 });
 
 gulp.task("dev", function(cb) {
@@ -26,7 +26,7 @@ gulp.task("mergePro", function(cb) {
     .pipe(
       through.obj(function(file, enc, next) {
         let contents = file.contents.toString();
-        contents = contents.replace(/{{([^}]+)}}/g, function(full, part) {
+        contents = contents.replace(/\{\{([^}]+)\}\}/g, function(full, part) {
           console.log(part, full);
           if (part == "BUILD_TIME") {
             return process.env.BUILD_TIME || BUILD_TIME;
@@ -42,55 +42,44 @@ gulp.task("mergePro", function(cb) {
     .on("finish", cb);
 });
 
-gulp.task("collectHtml", function(cb) {
+gulp.task("collectHtml", function() {
   const paths = [];
   return gulp
     .src("dist/*.html")
     .pipe(
-      through.obj(
-        function(file, enc, next) {
-          let extrName = path.extname(file.path);
-          let basename = path.basename(file.path);
-          if (extrName == ".html" && basename != "index.html") {
-            paths.push(basename);
-          }
-          this.push(file);
-          next();
-        },
-        function() {
-          fs.readFile(path.resolve("dist/index.html"), "utf8", function(
-            err,
-            data
-          ) {
-            if (err) throw new Error(err);
-            if (data) {
-              let str = paths
-                .map(
-                  item =>
-                    `<a href='${item}'>${item.replace(
-                      /\.html$/g,
-                      ""
-                    )}</a><br />\n`
-                )
-                .join("");
-              data = data.replace(/\{\{\s*(_\w+_)\s*\}\}/g, function(
-                full,
-                part
-              ) {
-                if (part == "_content_") {
-                  return str;
-                }
-                return full;
-              });
-              fs.writeFileSync(path.resolve("dist/index.html"), data, {
-                encoding: "utf8"
-              });
+      through.obj(function(file, enc, next) {
+        let extrName = path.extname(file.path);
+        let basename = path.basename(file.path);
+        if (extrName == ".html" && basename != "index.html") {
+          paths.push(basename);
+        }
+        this.push(file);
+        next();
+      })
+    )
+    .on("finish", function() {
+      fs.readFile(path.resolve("dist/index.html"), "utf8", function(err, data) {
+        if (err) throw new Error(err);
+        if (data) {
+          let str = paths
+            .map(
+              item =>
+                `<a href='${item}'>${item.replace(/\.html$/g, "")}</a><br />\n`
+            )
+            .join("");
+          data = data.replace(/\{\{\s*(_\w+_)\s*\}\}/g, function(full, part) {
+            if (part == "_content_") {
+              return str;
             }
+            return full;
+          });
+          console.log(data);
+          fs.writeFileSync(path.resolve("dist/index.html"), data, {
+            encoding: "utf8"
           });
         }
-      )
-    )
-    .on("finish", cb);
+      });
+    });
 });
 
 gulp.task("js", function(cb) {
