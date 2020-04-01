@@ -27,7 +27,6 @@ gulp.task("mergePro", function(cb) {
       through.obj(function(file, enc, next) {
         let contents = file.contents.toString();
         contents = contents.replace(/\{\{([^}]+)\}\}/g, function(full, part) {
-          console.log(part, full);
           if (part == "BUILD_TIME") {
             return process.env.BUILD_TIME || BUILD_TIME;
           }
@@ -73,7 +72,6 @@ gulp.task("collectHtml", function() {
             }
             return full;
           });
-          console.log(data);
           fs.writeFileSync(path.resolve("dist/index.html"), data, {
             encoding: "utf8"
           });
@@ -238,7 +236,6 @@ gulp.task("url-load", function(cb) {
           extra,
           part
         ) {
-          console.log(full, extra, part);
           return full;
         });
         next();
@@ -252,7 +249,6 @@ function parseArgv(argv) {
   let obj = {};
   while (rest.length) {
     let key = rest.splice(0, 1)[0];
-    console.log(key);
     if (key.startsWith("-")) {
       key = key.replace(/-/, "");
       if (rest[0] !== undefined && rest[0].startsWith("-")) {
@@ -271,7 +267,6 @@ function parseArgv(argv) {
 gulp.task("tem", function(cb) {
   const argv = parseArgv(process.argv);
   const baseDir = path.resolve(__dirname, "src/template");
-  console.log(argv);
   fs.readFile(
     path.resolve(baseDir, `${argv.type || "html"}.template`),
     { encoding: "utf8" },
