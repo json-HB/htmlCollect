@@ -308,7 +308,7 @@ gulp.task("inject", function() {
               if (restObj.inline == 'true') {
                 let data = fs.readFileSync(path.join(path.dirname(file.path), part), 'utf8');
                 if (restObj.gzip == 'true') {
-                  console.log('inner');
+                  
                   data = data.replace(/\s*|\t|\n/g, '');
                 }
                 return `<style>${data}</style>`;
