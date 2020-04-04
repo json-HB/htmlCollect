@@ -12,11 +12,11 @@ const sequence = require("run-sequence");
 let Tasks = ["vendors", "del", "js", "html", "img", "less"];
 
 gulp.task("default", Tasks.slice(1), function(cb) {
-  sequence(["collectHtml", "mergePro"], cb);
+  sequence(["collectHtml", "mergePro", 'inject'], cb);
 });
 
 gulp.task("dev", function(cb) {
-  sequence(Tasks, "collectHtml", "server", cb);
+  sequence(Tasks, 'inject', "collectHtml", "server", cb);
 });
 
 gulp.task("mergePro", function(cb) {
@@ -82,7 +82,7 @@ gulp.task("collectHtml", function() {
 
 gulp.task("js", function(cb) {
   return gulp
-    .src(["src/**/*.+(js|json)"], { base: "src" })
+    .src(["src/**/*.+(js|json|css)"], { base: "src" })
     .pipe(gulp.dest("dist"))
     .pipe(bs.stream());
 });
@@ -217,7 +217,7 @@ gulp.task("vendors", function(cb) {
     .src([
       path.resolve(basePath, "exif-js", "exif.js"),
       path.resolve(basePath, "pdfjs-dist/build", "pdf.js"),
-      path.resolve(basePath, "pdfjs-dist/build", "pdf.worker.js")
+      path.resolve(basePath, "pdfjs-dist/build", "pdf.worker.js"),
     ])
     // .pipe(UglifyJS())
     .pipe(gulp.dest(path.resolve("src/vendors/")))
@@ -284,4 +284,44 @@ gulp.task("tem", function(cb) {
       cb();
     }
   );
+});
+
+gulp.task("inject", function() {
+  
+  return gulp
+    .src("dist/*.html", { cwd: process.cwd() })
+    .pipe(
+      through.obj(function(file, enc, next) {
+        let content = file.contents.toString();
+        content = content.replace(/<!--[\s]*<require\s*src="([^"]*)"\s*([^>]*)\s*>\s*-->/mg, function(full, part, rest) {
+          const lastFile = part.replace(/\./, '').split(path.sep).slice(-1)[0];
+          let restObj;
+          if (rest) {
+            restObj = {};
+            rest.split(/ /).filter(item => item).forEach(item => {
+              let child = item.split('=');
+              restObj[child[0]] = child[1];
+            })
+          }
+          if (path.extname(lastFile) == '.css') {
+            if (restObj) {
+              if (restObj.inline == 'true') {
+                let data = fs.readFileSync(path.join(path.dirname(file.path), part), 'utf8');
+                if (restObj.gzip == 'true') {
+                  console.log('inner');
+                  data = data.replace(/\s*|\t|\n/g, '');
+                }
+                return `<style>${data}</style>`;
+              } 
+            }
+            return `<link href="${rest}" rel="stylesheet"></link>`;
+          }
+          return full;
+        });
+        file.contents = Buffer.from(content);
+        this.push(file);
+        next();
+      })
+    )
+    .pipe(gulp.dest("dist"));
 });

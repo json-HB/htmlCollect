@@ -16,6 +16,7 @@
     "exif-js": "^2.3.0",
     "marked": "^0.7.0",
     "mime": "^2.4.4",
+    "normalize.css": "^8.0.1",
     "pdfjs": "^2.3.2",
     "pdfjs-dist": "^2.2.228"
   },

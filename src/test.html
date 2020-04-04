@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>test</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      .container {
+        position: relative;
+        width: 200px;
+        overflow: hidden;
+        height: 50px;
+      }
+      ul {
+        list-style-type: none;
+        width: 200px;
+        border: 1px solid #ccc;
+        height: 50px;
+        position: relative;
+        top: 0;
+        left: 0;
+        animation: up 4s steps(4) 0s infinite;
+        animation-delay: 200ms;
+      }
+
+      ul:hover {
+        animation-play-state: paused;
+      }
+      ul li {
+        height: 50px;
+        background: yellowgreen;
+        font-size: 28px;
+        line-height: 50px;
+        color: blue;
+        box-sizing: border-box;
+        text-align: center;
+      }
+      ul li:not(:last-child) {
+        border-bottom: 2px solid orange;
+      }
+      @keyframes up {
+        from {
+          top: 0;
+        }
+        to {
+          top: -200px;
+        }
+      }
+      .main {
+        overflow: hidden;
+      }
+      .main .left {
+        width: 200px;
+        height: 400px;
+        background: red;
+        display: inline-block;
+      }
+      .main .right {
+        background: blue;
+        width: calc(100% - 200px);
+        height: 400px;
+        float: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>test</h1>
+    <div class="container">
+      <ul data-top="900">
+        <li data-name="jihaibo">react</li>
+        <li>vue</li>
+        <li>angular</li>
+        <li>rxjs</li>
+      </ul>
+    </div>
+    <div class="main">
+      <div class="left"></div>
+      <div class="right"></div>
+    </div>
+  </body>
+</html>

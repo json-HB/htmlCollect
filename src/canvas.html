@@ -11,12 +11,55 @@
         border: 1px solid black;
       }
     </style>
+    <!-- <require src="./vendors/normalize.css" inline=true gzip=true  > -->
   </head>
   <body>
-    <h1>canvas</h1>
-    <canvas id="canvas" width="1000" height="400"></canvas>
+    <h1 class="iden">canvas</h1>
+    <button id="download">download</button>
+    <canvas id="canvas" width="108" height="108"></canvas>
     <button id="btn">change size</button>
+    <br />
+    <select id="composite"> </select>
     <script module>
+      const composite = [
+        "source-over",
+        "source-in",
+        "source-out",
+        "source-atop",
+        "destination-over",
+        "destination-in",
+        "destination-out",
+        "destination-atop",
+        "lighter",
+        "copy",
+        "xor",
+        "multiply",
+        "screen",
+        "overlay",
+        "darken",
+        "lighten",
+        "color-dodge",
+        "color-burn",
+        "hard-light",
+        "soft-light",
+        "difference",
+        "exclusion",
+        "hue",
+        "saturation",
+        "color",
+        "luminosity"
+      ];
+      let select = document.querySelector("#composite");
+      let innerContent = "";
+      composite.forEach(item => {
+        innerContent += `<option value='${item}'>${item}</option>`;
+      });
+      select.onchange = function(ev) {
+        console.log(ev.target.value);
+        let value = ev.target.value;
+        globalCompositeOperation(value);
+      };
+      select.innerHTML = innerContent;
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
       //   ctx.fillStyle = "RGBA(255, 0, 0, 1)";
@@ -26,11 +69,11 @@
       //   linear.addColorStop(1, "blue");
       //   ctx.fillStyle = linear;
       //   ctx.fillRect(0, 0, 100, 100);
-      const radial = ctx.createRadialGradient(75, 75, 0, 75, 75, 25);
-      radial.addColorStop(0, "red");
-      radial.addColorStop(1, "blue");
-      ctx.fillStyle = radial;
-      ctx.fillRect(50, 50, 50, 50);
+      // const radial = ctx.createRadialGradient(75, 75, 0, 75, 75, 25);
+      // radial.addColorStop(0, "red");
+      // radial.addColorStop(1, "blue");
+      // ctx.fillStyle = radial;
+      // ctx.fillRect(50, 50, 50, 50);
 
       // 十字架
       //   const w = canvas.width / 2;
@@ -174,7 +217,125 @@
       //   ctx.strokeRect(100, 100, 200, 200);
 
       // textAlign
-      ctx.font = "bold 28px simHei";
+      // ctx.font = "bold 28px simHei";
+
+      // ctx.beginPath();
+      // ctx.arc(100, 100, 50, 0, Math.PI / 2, true);
+      // ctx.closePath();
+      // ctx.stroke();
+
+      // ctx.beginPath();
+      // ctx.moveTo(200, 200);
+
+      // ctx.arcTo(250, 250, 300, 200, 50);
+      // ctx.lineTo(300, 200);
+      // ctx.closePath();
+      // ctx.stroke();
+
+      // let x = 10;
+      // let toggle = false;
+      // function clear() {
+      //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+      //   ctx.font = "28px fold SimHei";
+      //   ctx.fillText("Clear", 100, 30);
+      //   setTimeout(() => {
+      //     draw();
+      //   }, 100);
+      // }
+      // function draw() {
+      //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+      //   ctx.beginPath();
+      //   x += 20;
+      //   if (x + 50 > canvas.width) x = 50;
+      //   ctx.fillText("draw", 100, 30);
+      //   ctx.arc(x, 200, 50, 0, Math.PI * 2);
+      //   toggle = !toggle;
+      //   ctx.fillStyle = toggle ? "blue" : "red";
+      //   ctx.fill();
+      //   ctx.stroke();
+      //   setTimeout(() => {
+      //     clear();
+      //   }, 100);
+      // }
+      // draw();
+
+      // createImageData
+
+      // let data = ctx.createImageData(100, 100);
+      // for (let x = 1; x <= data.width; x += 5) {
+      //   for (let y = 1; y <= data.height; y += 5) {
+      //     var index = 4 * (data.width * (y - 1) + (x - 1));
+      //     data.data[index] = 0;
+      //     data.data[index + 1] = 128;
+      //     data.data[index + 2] = 0;
+      //     data.data[index + 3] = 256;
+      //   }
+      // }
+      // ctx.putImageData(data, 0, 0);
+      // const img = canvas.toDataURL();
+      // let pic = new Image();
+      // pic.src = img;
+      // document
+      //   .querySelector(".iden")
+      //   .parentNode.insertBefore(pic, document.querySelector(".iden"));
+      ctx.fillStyle = "blue";
+      ctx.arc(50, 50, 25, 0, 2 * Math.PI);
+      ctx.fill();
+
+      let downBtn = document.querySelector("#download");
+      downBtn.onclick = function() {
+        let a = document.createElement("a");
+        a.setAttribute("hidden", true);
+        a.appendChild(document.createTextNode("download"));
+        document.body.appendChild(a);
+        let data = canvas.toDataURL();
+        // let url = window.URL.createObjectURL(blob);
+        a.setAttribute("href", data);
+        a.setAttribute("download", "haibo");
+        a.click();
+        setTimeout(() => {
+          a.parentNode.removeChild(a);
+          // URL.revokeObjectURL(blob);
+        });
+      };
+      // ctx.rotate((45 * Math.PI) / 180);
+      // ctx.font = "bold 24px SimSun";
+      // ctx.fillText("hello world", 10, 10);
+      // ctx.setTransform(1, 0, 0, 1, 0, 0);
+      // ctx.rect(100, 100, 200, 200);
+      // ctx.stroke();
+      // let img = new Image();
+      // img.src = "/img/pic11.jpg";
+      // img.onload = function(ev) {
+      //   const { width, height } = ev.target;
+      //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+      //   ctx.translate(canvas.width / 2, canvas.height / 2);
+      //   ctx.rotate(90 * (Math.PI / 180));
+      //   ctx.translate(-canvas.width / 2, -canvas.height / 2);
+      //   canvas.width = height;
+      //   canvas.height = width;
+      //   ctx.drawImage(
+      //     this,
+      //     0,
+      //     0,
+      //     width,
+      //     height,
+      //     0,
+      //     0,
+      //     canvas.width,
+      //     canvas.height
+      //   );
+      // };
+
+      // globalCompositeOperation
+      // function globalCompositeOperation(type = "source-over") {
+      //   ctx.fillStyle = "red";
+      //   ctx.fillRect(100, 100, 100, 100);
+      //   ctx.globalCompositeOperation = type;
+      //   ctx.fillStyle = "blue";
+      //   ctx.fillRect(150, 150, 100, 100);
+      // }
+      // globalCompositeOperation();
     </script>
   </body>
 </html>
