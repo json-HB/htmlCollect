@@ -287,7 +287,7 @@ gulp.task("tem", function(cb) {
 });
 
 gulp.task("inject", function() {
-  
+  console.log('inject');
   return gulp
     .src("dist/*.html", { cwd: process.cwd() })
     .pipe(
