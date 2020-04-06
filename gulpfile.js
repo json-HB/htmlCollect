@@ -12,11 +12,11 @@ const sequence = require("run-sequence");
 let Tasks = ["vendors", "del", "js", "html", "img", "less"];
 
 gulp.task("default", Tasks.slice(1), function(cb) {
-  sequence(["collectHtml", "mergePro", 'inject'], cb);
+  sequence(["collectHtml", "mergePro", "inject"], cb);
 });
 
 gulp.task("dev", function(cb) {
-  sequence(Tasks, 'inject', "collectHtml", "server", cb);
+  sequence(Tasks, "inject", "collectHtml", "server", cb);
 });
 
 gulp.task("mergePro", function(cb) {
@@ -61,10 +61,7 @@ gulp.task("collectHtml", function() {
         if (err) throw new Error(err);
         if (data) {
           let str = paths
-            .map(
-              item =>
-                `<a href='${item}'>${item.replace(/\.html$/g, "")}</a><br />\n`
-            )
+            .map(item => `<a href='${item}'>${item.replace(/\.html$/g, "")}</a><br />\n`)
             .join("");
           data = data.replace(/\{\{\s*(_\w+_)\s*\}\}/g, function(full, part) {
             if (part == "_content_") {
@@ -73,7 +70,7 @@ gulp.task("collectHtml", function() {
             return full;
           });
           fs.writeFileSync(path.resolve("dist/index.html"), data, {
-            encoding: "utf8"
+            encoding: "utf8",
           });
         }
       });
@@ -122,30 +119,24 @@ gulp.task("marked", function(cb) {
     )
     .pipe(gulp.dest("dist"))
     .on("finish", function() {
-      fs.readFile(
-        path.resolve(__dirname, "src/md.html"),
-        { encoding: "utf8" },
-        function(err, data) {
-          if (err) return util.log("wrong");
-          if (data) {
-            data = data.replace(/{{\s__content__\s}}/g, mardContent);
-            util.log(data);
-            fs.writeFile(
-              "src/md.html",
-              data,
-              { encoding: "utf8" },
-              (err, d) => {
-                if (err) return util.log("wrong");
-                util.log(util.colors.green("yes"));
-                let spa = require("child_process").spawn("gulp");
-                spa.stdout.on("data", function(d) {
-                  util.log(d.toString());
-                });
-              }
-            );
-          }
+      fs.readFile(path.resolve(__dirname, "src/md.html"), { encoding: "utf8" }, function(
+        err,
+        data
+      ) {
+        if (err) return util.log("wrong");
+        if (data) {
+          data = data.replace(/{{\s__content__\s}}/g, mardContent);
+          util.log(data);
+          fs.writeFile("src/md.html", data, { encoding: "utf8" }, (err, d) => {
+            if (err) return util.log("wrong");
+            util.log(util.colors.green("yes"));
+            let spa = require("child_process").spawn("gulp");
+            spa.stdout.on("data", function(d) {
+              util.log(d.toString());
+            });
+          });
         }
-      );
+      });
     });
 });
 
@@ -153,8 +144,8 @@ gulp.task("server", function() {
   bs.init({
     port: 8008,
     server: {
-      baseDir: "dist"
-    }
+      baseDir: "dist",
+    },
   });
   gulp.watch("src/*.html", () => {
     sequence("html", "collectHtml");
@@ -181,7 +172,7 @@ function concat(fileName, opt = {}) {
         Buffer.from(fileOriginName),
         Buffer.from(opt.newline || "\n"),
         file.contents,
-        Buffer.from(opt.newline || "\n")
+        Buffer.from(opt.newline || "\n"),
       ]);
     } else {
       res = Buffer.concat([
@@ -189,7 +180,7 @@ function concat(fileName, opt = {}) {
         Buffer.from(fileOriginName),
         Buffer.from(opt.newline || "\n"),
         file.contents,
-        Buffer.from(opt.newline || "\n")
+        Buffer.from(opt.newline || "\n"),
       ]);
     }
     cb();
@@ -198,7 +189,7 @@ function concat(fileName, opt = {}) {
     let file = new util.File({
       path: process.cwd() + "/" + fileName,
       cwd: process.cwd(),
-      contents: res
+      contents: res,
     });
     this.push(file);
     cb();
@@ -231,11 +222,7 @@ gulp.task("url-load", function(cb) {
       through.obj(function(file, enc, next) {
         let content = file.contents.toString();
         const imgType = ["jpeg", "jpg", "pbg"];
-        content = content.replace(/img\s([^>]*)src="([^"]+)"/g, function(
-          full,
-          extra,
-          part
-        ) {
+        content = content.replace(/img\s([^>]*)src="([^"]+)"/g, function(full, extra, part) {
           return full;
         });
         next();
@@ -274,50 +261,53 @@ gulp.task("tem", function(cb) {
       data = data.replace(/{{(.*)}}/g, function(full, part) {
         return argv[part] || "N/A";
       });
-      fs.writeFileSync(
-        path.resolve(__dirname, `src/${argv["name"]}.html`),
-        data,
-        {
-          encoding: "utf8"
-        }
-      );
+      fs.writeFileSync(path.resolve(__dirname, `src/${argv["name"]}.html`), data, {
+        encoding: "utf8",
+      });
       cb();
     }
   );
 });
 
 gulp.task("inject", function() {
-  
-  console.log('inject');
   return gulp
     .src("dist/*.html", { cwd: process.cwd() })
     .pipe(
       through.obj(function(file, enc, next) {
         let content = file.contents.toString();
-        content = content.replace(/<!--[\s]*<require\s*src="([^"]*)"\s*([^>]*)\s*>\s*-->/mg, function(full, part, rest) {
-          const lastFile = part.replace(/\./, '').split(path.sep).slice(-1)[0];
-          let restObj;
-          if (rest) {
-            restObj = {};
-            rest.split(/ /).filter(item => item).forEach(item => {
-              let child = item.split('=');
-              restObj[child[0]] = child[1];
-            })
-          }
-          if (path.extname(lastFile) == '.css') {
-            if (restObj) {
-              if (restObj.inline == 'true') {
-                let data = fs.readFileSync(path.join(path.dirname(file.path), part), 'utf8');
-                if (restObj.gzip == 'true') {
-                  data = data.replace(/\s*|\t|\n/g, '');
-                }
-                return `<style>${data}</style>`;
-              } 
+        content = content.replace(
+          /<!--[\s]*<require\s*src="([^"]*)"\s*([^>]*)\s*>\s*-->/gm,
+          function(full, part, rest) {
+            const lastFile = part
+              .replace(/\./, "")
+              .split(path.sep)
+              .slice(-1)[0];
+            let restObj;
+            if (rest) {
+              restObj = {};
+              rest
+                .split(/ /)
+                .filter(item => item)
+                .forEach(item => {
+                  let child = item.split("=");
+                  restObj[child[0]] = child[1];
+                });
             }
-            return `<link href="${rest}" rel="stylesheet"></link>`;
+            if (path.extname(lastFile) == ".css") {
+              if (restObj) {
+                if (restObj.inline == "true") {
+                  let data = fs.readFileSync(path.join(path.dirname(file.path), part), "utf8");
+                  if (restObj.gzip == "true") {
+                    data = data.replace(/\s*|\t|\n/g, "");
+                  }
+                  return `<style>${data}</style>`;
+                }
+              }
+              return `<link href="${rest}" rel="stylesheet"></link>`;
+            }
+            return full;
           }
-          return full;
-        });
+        );
         file.contents = Buffer.from(content);
         this.push(file);
         next();
