@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>touchAction</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        position: relative;
+        height: 50px;
+        border: 1px solid #ccc;
+        line-height: 50px;
+        font-size: 28px;
+        color: black;
+        transition: all 0.3s linear 0s;
+        will-change: height, opacity;
+      }
+      .container .layer {
+        position: relative;
+        background: #03a9f4;
+        z-index: 2;
+        padding-left: 20px;
+      }
+      .container .layer.move {
+        transition: left 0.2s linear 0s;
+      }
+
+      .container .action {
+        position: absolute;
+        z-index: 1;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        font-size: 30px;
+      }
+      .container .action button {
+        float: right;
+        border: 1px solid #ccc;
+        height: 100%;
+        padding: 18px;
+        color: red;
+        outline: none;
+      }
+      .container .action button:first-child {
+        color: blue;
+      }
+      .fadeout {
+        opacity: 0;
+        height: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>touchAction</h1>
+    <div class="container">
+      <div class="layer">
+        <p>touch me</p>
+      </div>
+      <div class="action">
+        <button type="button" class="btn-confirm">confirm</button>
+        <button type="button" class="btn-cancel">delete</button>
+      </div>
+    </div>
+    <script>
+      function log(...arg) {
+        console.log(...arg);
+      }
+    </script>
+    <script defer module>
+      const addEventListenerConfig = { capture: false, passive: false };
+      let layer = document.querySelector(".layer");
+      let btn1 = document.querySelector(".action .btn-confirm");
+      let btn2 = document.querySelector(".action .btn-cancel");
+      var beginX = 0;
+      var actionWidth = 0;
+      var done = false;
+      layer.addEventListener(
+        "touchstart",
+        function(ev) {
+          ev.preventDefault();
+          if (done) return;
+          layer.classList.remove("move");
+          beginX = ev.changedTouches[0].clientX;
+          actionWidth = btn1.offsetWidth * 2 - 8;
+          log(ev, "touchstart");
+        },
+        addEventListenerConfig
+      );
+      layer.addEventListener(
+        "touchmove",
+        function(ev) {
+          ev.preventDefault();
+          if (done) return;
+          const diff = ev.changedTouches[0].clientX - beginX;
+          if (diff < 0) {
+            layer.style.left = `${diff}px`;
+          }
+          log(ev, "touchmove");
+        },
+        addEventListenerConfig
+      );
+      layer.addEventListener(
+        "touchend",
+        function(ev) {
+          if (done) return;
+          log("touchend", actionWidth);
+          const diff = ev.changedTouches[0].clientX - beginX;
+          if (diff < 0 && Math.abs(diff) > actionWidth / 2) {
+            layer.classList.add("move");
+            layer.style.left = `-${actionWidth}px`;
+            done = true;
+          } else {
+            layer.classList.add("move");
+            layer.style.left = `0px`;
+          }
+        },
+        addEventListenerConfig
+      );
+      btn1.addEventListener(
+        "click",
+        function() {
+          alert("confirm");
+          done = false;
+          layer.classList.add("move");
+          layer.style.left = "0px";
+        },
+        false
+      );
+      btn2.addEventListener(
+        "click",
+        function() {
+          alert("delete");
+          const container = layer.parentNode;
+          container.classList.add("fadeout");
+          container.addEventListener(
+            "transitionend",
+            function() {
+              container.removeEventListener("transitionend");
+              container.parentNode.removeChild(container);
+            },
+            {
+              once: true,
+              capture: false,
+            }
+          );
+        },
+        false
+      );
+    </script>
+  </body>
+</html>
