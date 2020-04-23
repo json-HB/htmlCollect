@@ -5,6 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>menu list</title>
+    <style>
+      :root {
+        --baseColor: #ff6666;
+        --secondary: #ffff00;
+        --third: #3399cc;
+      }
+      body {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: center;
+        align-content: flex-start;
+      }
+      body a {
+        position: relative;
+        display: inline-block;
+        padding: 10px;
+        border: 1px solid #ccc;
+        color: var(--secondary);
+        background: var(--baseColor);
+        text-decoration: none;
+        border-radius: 10px;
+        margin-left: 10px;
+        margin-top: 10px;
+        transition: opacity 0.2s ease-in 0s;
+        overflow: hidden;
+      }
+      body a:before {
+        content: attr(data-text);
+        display: block;
+        position: absolute;
+        left: 10px;
+        top: -22px;
+        transition: top 0.2s linear 0s;
+        color: var(--third);
+      }
+      a:hover:before {
+        top: 10px;
+      }
+      /* a:hover {
+      } */
+      body:hover a:not(:hover) {
+        opacity: 0.4;
+      }
+    </style>
   </head>
   <script>
     if (document.domain == "json-hb.github.io") {
@@ -16,10 +62,11 @@
   </script>
   <script>
     var G = {
-      BUILD_TIME: "{{BUILD_TIME}}"
+      BUILD_TIME: "{{BUILD_TIME}}",
     };
   </script>
   <body>
     {{ _content_ }}
+    <script></script>
   </body>
 </html>

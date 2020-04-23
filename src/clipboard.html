@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>clipboard</title>
+    <style>
+      body {
+        /* user-select: none; */
+      }
+      input::-webkit-input-placeholder {
+        color: aqua;
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>clipboard</h1>
+    <h3>select text</h3>
+    <input class="selectInt" type="text" value="I am a default value" placeholder="hello world" />
+    <br />
+    <button id="selectAll">selectAll</button>
+    <!-- <require src="./util/clipboard.js" inline=true gzip=true babel=true > -->
+    <script>
+      let btn = document.querySelector("#selectAll");
+      btn.addEventListener(
+        "click",
+        () => {
+          let copy = new JasonClipboard({ class: "selectInt" });
+          copy.copy();
+        },
+        false
+      );
+    </script>
+  </body>
+</html>

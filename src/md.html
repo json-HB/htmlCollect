@@ -44,7 +44,7 @@
           let val = text.value;
           disableBtn(true);
           let data = {
-            data: val
+            data: val,
           };
           fetch("http://haibo.online:3007/marked", {
             body: JSON.stringify(data), // must match 'Content-Type' header
@@ -52,11 +52,11 @@
             credentials: "same-origin", // include, same-origin, *omit
             headers: {
               "user-agent": navigator.userAgent,
-              "content-type": "application/json"
+              "content-type": "application/json",
             },
             method: "POST", // *GET, POST, PUT, DELETE, etc.
             mode: "no-cors", // no-cors, cors, *same-origin
-            referrer: "no-referrer" // *client, no-referrer
+            referrer: "no-referrer", // *client, no-referrer
           })
             .then(response => response.json())
             .then(res => {

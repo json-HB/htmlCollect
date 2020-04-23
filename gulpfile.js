@@ -5,9 +5,10 @@ const util = require("gulp-util");
 const less = require("gulp-less");
 const bs = require("browser-sync").create();
 const marked = require("marked");
-var UglifyJS = require("gulp-uglify");
+const UglifyJS = require("uglify-js");
 const fs = require("fs");
 const sequence = require("run-sequence");
+const Babel = require("@babel/core");
 
 let Tasks = ["vendors", "del", "js", "html", "img", "less"];
 
@@ -61,7 +62,13 @@ gulp.task("collectHtml", function() {
         if (err) throw new Error(err);
         if (data) {
           let str = paths
-            .map(item => `<a href='${item}'>${item.replace(/\.html$/g, "")}</a><br />\n`)
+            .map(
+              item =>
+                `<a data-text='${item.replace(/\.html$/g, "")}' href='${item}'>${item.replace(
+                  /\.html$/g,
+                  ""
+                )}</a>`
+            )
             .join("");
           data = data.replace(/\{\{\s*(_\w+_)\s*\}\}/g, function(full, part) {
             if (part == "_content_") {
@@ -148,7 +155,7 @@ gulp.task("server", function() {
     },
   });
   gulp.watch("src/*.html", () => {
-    sequence("html", "collectHtml");
+    sequence("html", "collectHtml", "inject");
   });
   gulp.watch("src/*.less", ["less"]);
   gulp.watch("src/vendors/*.js", ["js"]);
@@ -304,6 +311,24 @@ gulp.task("inject", function() {
                 }
               }
               return `<link href="${rest}" rel="stylesheet"></link>`;
+            } else if (path.extname(lastFile) == ".js") {
+              if (restObj) {
+                if (restObj.inline == "true") {
+                  const option = {
+                    presets: [["@babel/preset-env", { loose: true }]],
+                    plugins: [["@babel/plugin-proposal-class-properties", { loose: true }]],
+                  };
+                  let data = fs.readFileSync(path.join(path.dirname(file.path), part), "utf8");
+                  if (restObj.babel == "true") {
+                    code = Babel.transformSync(data, option).code;
+                  }
+                  if (restObj.gzip == "true") {
+                    code = UglifyJS.minify(code).code;
+                  }
+                  return `<script type='text/javascript' data-type='bable'>${code}</script>`;
+                }
+              }
+              return `<script src="${part}" type='text/javascript'></script>`;
             }
             return full;
           }

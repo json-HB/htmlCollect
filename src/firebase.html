@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>firebase</title>
+  </head>
+  <body>
+    <h1>firebase</h1>
+    <button class="login">login</button>
+    <button class="share">share</button>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-analytics.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyAn3LM9h3hmzTiYdaAMQfgFK-4vgLqf4Bc",
+        authDomain: "covid-h5.firebaseapp.com",
+        databaseURL: "https://covid-h5.firebaseio.com",
+        projectId: "covid-h5",
+        storageBucket: "covid-h5.appspot.com",
+        messagingSenderId: "182767721880",
+        appId: "1:182767721880:web:5c2e846878652a87ce9fed",
+        measurementId: "G-HHHZ40CE8F",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+      console.log(firebase);
+      let app = firebase.analytics();
+      app.setAnalyticsCollectionEnabled(true);
+      document.querySelector(".login").onclick = function() {
+        console.log("login");
+        app.logEvent("haibo", {
+          description: "login description",
+        });
+      };
+      document.querySelector(".share").onclick = function() {
+        console.log("share");
+        app.logEvent("share", {
+          description: "share description",
+        });
+      };
+    </script>
+  </body>
+</html>

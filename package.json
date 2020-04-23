@@ -21,6 +21,9 @@
     "pdfjs-dist": "^2.2.228"
   },
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.5",
     "async": "^3.1.0",
     "browser-sync": "^2.26.7",
     "del": "^5.1.0",
@@ -29,6 +32,8 @@
     "gulp-uglify": "^3.0.2",
     "run-sequence": "^2.2.1",
     "through2": "^3.0.1",
+    "uglify-js": "^3.9.1",
     "vinyl": "^2.2.0"
-  }
+  },
+  "browserslist": "> 0.25%, not dead"
 }
