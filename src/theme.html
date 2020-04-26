@@ -75,7 +75,8 @@
               setTheme(themtCache[theme].baseColor);
             } else {
               getTheme().then(res => {
-                setTheme(res["theme"].baseColor);
+                console.log(res);
+                setTheme(res["theme"][theme].baseColor);
                 themtCache = res;
               });
             }
