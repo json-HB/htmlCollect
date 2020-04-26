@@ -72,7 +72,7 @@
           if (target.nodeName == "BUTTON") {
             let theme = target.className.split("-")[1];
             if (themtCache != null) {
-              setTheme(themtCache[theme].baseColor);
+              setTheme(themtCache["theme"][theme].baseColor);
             } else {
               getTheme().then(res => {
                 console.log(res);
