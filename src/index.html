@@ -51,15 +51,8 @@
         opacity: 0.4;
       }
     </style>
+    <!-- <require src="./util/baseTag.js" inline=true gzip=true  > -->
   </head>
-  <script>
-    if (document.domain == "json-hb.github.io") {
-      var base = document.createElement("base");
-      base.href = "/htmlCollect/";
-      base.target = "_self";
-      document.head.appendChild(base);
-    }
-  </script>
   <script>
     var G = {
       BUILD_TIME: "{{BUILD_TIME}}",
@@ -67,6 +60,5 @@
   </script>
   <body>
     {{ _content_ }}
-    <script></script>
   </body>
 </html>

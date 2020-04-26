@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node ./bin/index.js",
     "p": "node ./bin/test.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "mock": "json-server -w -p 8100 db.json"
   },
   "keywords": [],
   "author": "",
@@ -14,11 +15,13 @@
   "dependencies": {
     "ali-oss": "^6.1.1",
     "exif-js": "^2.3.0",
+    "html-minifier": "^4.0.0",
     "marked": "^0.7.0",
     "mime": "^2.4.4",
     "normalize.css": "^8.0.1",
     "pdfjs": "^2.3.2",
-    "pdfjs-dist": "^2.2.228"
+    "pdfjs-dist": "^2.2.228",
+    "qrcode": "^1.4.4"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

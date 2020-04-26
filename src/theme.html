@@ -12,7 +12,17 @@
         height: 50px;
         text-align: center;
       }
+      :root {
+        --baseColor: black;
+      }
+      .theme-demo {
+        background: var(--baseColor);
+        width: 20vw;
+        height: 20vw;
+        border: 1px solid #ccc;
+      }
     </style>
+    <!-- <require src="./util/baseTag.js" inline=true gzip=true  > -->
   </head>
   <body>
     <div class="border">
@@ -21,11 +31,59 @@
     <label for="">red</label>
     <input type="radio" name="theme" data-type="a" />
     <input type="radio" name="theme" data-type="b" />
+    <hr />
+    <div class="theme-demo"> </div>
+    <div class="input-group">
+      <button type="button" class="theme-green">green</button>
+      <button type="button" class="theme-pink">pink</button>
+    </div>
+    <script>
+      let btnGroup = document.querySelector(".input-group");
+      let themtCache = null;
+
+      function getTheme() {
+        return fetch("http://localhost:8100/theme", {
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, same-origin, *omit
+          headers: {
+            "user-agent": navigator.userAgent,
+          },
+          method: "GET", // *GET, POST, PUT, DELETE, etc.
+          mode: "cors", // no-cors, cors, *same-origin
+          referrer: "no-referrer", // *client, no-referrer
+        }).then(response => response.json());
+      }
+
+      function setTheme(t) {
+        let root = document.querySelector("html");
+        root.style.cssText = `--baseColor: ${t}; --secondColor: #ff9800`;
+      }
+
+      btnGroup.addEventListener(
+        "click",
+        function(ev) {
+          let target = ev.target;
+
+          if (target.nodeName == "BUTTON") {
+            let theme = target.className.split("-")[1];
+            if (themtCache != null) {
+              setTheme(themtCache[theme].baseColor);
+            } else {
+              getTheme().then(res => {
+                setTheme(res[theme].baseColor);
+                themtCache = res;
+              });
+            }
+          }
+        },
+        { capture: false }
+      );
+    </script>
     <script>
       function preload() {
         ["a", "b"].forEach(item => {
           let l = document.createElement("link");
-          l.href = `${item}.css`;
+          l.href = `css/${item}.css`;
           l.rel = "stylesheet alternate";
           l.title = "disabled";
           l.type = "text/css";

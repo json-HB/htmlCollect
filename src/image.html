@@ -18,9 +18,7 @@
         false
       );
       function LoadingImg() {
-        let imageArr = new Array(12)
-          .fill(1)
-          .map((item, index) => `/img/pic1${index}.jpg`);
+        let imageArr = new Array(12).fill(1).map((item, index) => `/img/pic1${index}.jpg`);
         const imageHtml = imageArr
           .map(item => {
             return `<img src="${item}" title="${item}" />`;
@@ -33,8 +31,7 @@
         let loading = document.querySelector("div.loading");
         function update() {
           loading.setAttribute("data-process", count);
-          loading.style.width =
-            parseInt(Math.ceil((count / total) * 100)) + "%";
+          loading.style.width = parseInt(Math.ceil((count / total) * 100)) + "%";
           if (count == total) {
             // alert("finish");
             console.log(`finish: ${count}`);
@@ -50,7 +47,7 @@
             },
             {
               capture: false,
-              once: false
+              once: false,
             }
           );
           img.addEventListener(

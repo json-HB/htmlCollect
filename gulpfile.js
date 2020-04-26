@@ -9,6 +9,7 @@ const UglifyJS = require("uglify-js");
 const fs = require("fs");
 const sequence = require("run-sequence");
 const Babel = require("@babel/core");
+const htmlminify = require("html-minifier").minify;
 
 let Tasks = ["vendors", "del", "js", "html", "img", "less"];
 
@@ -93,7 +94,7 @@ gulp.task("js", function(cb) {
 
 gulp.task("less", function(cb) {
   return gulp
-    .src(["src/*.less"])
+    .src(["src/css/*.less"], { base: "src" })
     .pipe(less())
     .pipe(gulp.dest("dist"))
     .pipe(bs.stream());
@@ -101,7 +102,7 @@ gulp.task("less", function(cb) {
 
 gulp.task("html", function(cb) {
   return gulp
-    .src(["src/*.+(html|json|png|css|mp3)"])
+    .src(["src/**/*.+(html|json|png|css|mp3)"])
     .pipe(gulp.dest("dist"))
     .pipe(bs.stream());
 });
@@ -158,7 +159,7 @@ gulp.task("server", function() {
     sequence("html", "collectHtml", "inject");
   });
   gulp.watch("src/*.less", ["less"]);
-  gulp.watch("src/vendors/*.js", ["js"]);
+  gulp.watch(["src/vendors/*.js", "src/util/*.js"], ["js"]);
 });
 
 function concat(fileName, opt = {}) {
@@ -216,6 +217,8 @@ gulp.task("vendors", function(cb) {
       path.resolve(basePath, "exif-js", "exif.js"),
       path.resolve(basePath, "pdfjs-dist/build", "pdf.js"),
       path.resolve(basePath, "pdfjs-dist/build", "pdf.worker.js"),
+      path.resolve(basePath, "marked", "marked.min.js"),
+      path.resolve(basePath, "qrcode/build", "qrcode.min.js"),
     ])
     // .pipe(UglifyJS())
     .pipe(gulp.dest(path.resolve("src/vendors/")))
@@ -300,10 +303,11 @@ gulp.task("inject", function() {
                   restObj[child[0]] = child[1];
                 });
             }
-            if (path.extname(lastFile) == ".css") {
+            const extraName = path.extname(lastFile);
+            if (extraName == ".css") {
+              let data = fs.readFileSync(path.join(path.dirname(file.path), part), "utf8");
               if (restObj) {
                 if (restObj.inline == "true") {
-                  let data = fs.readFileSync(path.join(path.dirname(file.path), part), "utf8");
                   if (restObj.gzip == "true") {
                     data = data.replace(/\s*|\t|\n/g, "");
                   }
@@ -311,24 +315,51 @@ gulp.task("inject", function() {
                 }
               }
               return `<link href="${rest}" rel="stylesheet"></link>`;
-            } else if (path.extname(lastFile) == ".js") {
+            } else if (extraName == ".js") {
+              let data = fs.readFileSync(path.join(path.dirname(file.path), part), "utf8");
               if (restObj) {
                 if (restObj.inline == "true") {
-                  const option = {
-                    presets: [["@babel/preset-env", { loose: true }]],
-                    plugins: [["@babel/plugin-proposal-class-properties", { loose: true }]],
-                  };
-                  let data = fs.readFileSync(path.join(path.dirname(file.path), part), "utf8");
+                  const option = JSON.parse(
+                    fs.readFileSync(path.resolve(process.cwd(), ".babelrc.json"), "utf8")
+                  );
                   if (restObj.babel == "true") {
-                    code = Babel.transformSync(data, option).code;
+                    data = Babel.transformSync(data, option).code;
                   }
                   if (restObj.gzip == "true") {
-                    code = UglifyJS.minify(code).code;
+                    data = UglifyJS.minify(data).code;
                   }
-                  return `<script type='text/javascript' data-type='bable'>${code}</script>`;
+                  return `<script type='text/javascript' js-name='${
+                    lastFile.split(".")[0]
+                  }'>${data}</script>`;
                 }
               }
               return `<script src="${part}" type='text/javascript'></script>`;
+            } else if (extraName == ".html") {
+              let data = fs.readFileSync(path.join(path.dirname(file.path), part), "utf8");
+              if (restObj) {
+                if (restObj.gzip == "true") {
+                  const minifyOption = {
+                    collapseWhitespace: true,
+                    removeAttributeQuotes: true,
+                    removeComments: true,
+                    collapseWhitespace: true,
+                    minifyJS: true,
+                    minifyCSS: true,
+                  };
+                  data = htmlminify(data, minifyOption);
+                }
+              }
+              return data;
+            } else if ([".png", ".jpg"].includes(extraName)) {
+              let data = fs.readFileSync(path.join(path.dirname(file.path), part), "base64");
+              if (restObj) {
+                if (restObj.inline == "true") {
+                  data = `data:image/${extraName.slice(1)};base64,${data}`;
+                  const cn = restObj.class ? restObj.class.split("%").join(" ") : "";
+                  return `<img src='${data}' class='${cn}' />`;
+                }
+              }
+              return `<img src='${part}'/>`;
             }
             return full;
           }

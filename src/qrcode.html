@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>qrCode</title>
+    <!-- <require src="./vendors/qrcode.min.js" inline=true gzip=false  > -->
+    <style>
+      .form-input {
+        width: 30vw;
+        border: 1px solid #ccc;
+        padding: 10px;
+        box-shadow: none;
+        outline: none;
+        height: 100px;
+        font-size: 28px;
+        color: black;
+        height: 300px;
+        width: 90%;
+      }
+      .container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+      .container .col {
+        flex: 1;
+      }
+      .btn-change {
+        width: 100px;
+        display: block;
+        height: 50px;
+        background: white;
+        color: black;
+        font-size: 21px;
+        border-radius: 10px;
+        outline: none;
+        box-shadow: none;
+        -webkit-appearance: none;
+      }
+      canvas {
+        border: 1px solid #ccc;
+        width: 300px;
+        height: 300px;
+        margin-left: 25%;
+      }
+      .col-canvas {
+        position: relative;
+      }
+      .col-canvas .holder {
+        border: 1px solid #ccc;
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        left: 0;
+        top: 0;
+        margin-left: 25%;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>qrcode</h1>
+    <div class="container">
+      <div class="col">
+        <textarea row="10" col="6" placeholder="请输入" class="form-input"></textarea>
+      </div>
+      <div class="col col-canvas">
+        <canvas id="canvas"></canvas>
+        <div class="holder">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges">
+            <path fill="#ffffff" d="M0 0h29v29H0z" />
+            <path
+              stroke="#000000"
+              d="M4 4.5h7m1 0h1m1 0h1m3 0h7M4 5.5h1m5 0h1m1 0h1m2 0h2m1 0h1m5 0h1M4 6.5h1m1 0h3m1 0h1m2 0h3m2 0h1m1 0h3m1 0h1M4 7.5h1m1 0h3m1 0h1m1 0h1m1 0h3m1 0h1m1 0h3m1 0h1M4 8.5h1m1 0h3m1 0h1m3 0h2m2 0h1m1 0h3m1 0h1M4 9.5h1m5 0h1m4 0h2m1 0h1m5 0h1M4 10.5h7m1 0h1m1 0h1m1 0h1m1 0h7M12 11.5h5M4 12.5h1m1 0h2m1 0h3m2 0h3m1 0h1m2 0h1m1 0h2M7 13.5h3m3 0h1m1 0h2m1 0h2m1 0h1m2 0h1M5 14.5h3m1 0h3m2 0h2m2 0h1m1 0h1m1 0h1M7 15.5h3m1 0h1m1 0h1m1 0h1m1 0h2m3 0h2M4 16.5h7m1 0h1m3 0h2m3 0h1m2 0h1M12 17.5h2m1 0h1m2 0h1m1 0h1M4 18.5h7m1 0h1m2 0h2m2 0h1m1 0h2m1 0h1M4 19.5h1m5 0h1m1 0h2m6 0h2m1 0h1M4 20.5h1m1 0h3m1 0h1m2 0h2m1 0h1m1 0h1m1 0h3M4 21.5h1m1 0h3m1 0h1m1 0h1m2 0h1m2 0h1m2 0h1m1 0h1M4 22.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m1 0h3M4 23.5h1m5 0h1m3 0h1m2 0h1m1 0h1m1 0h2m1 0h1M4 24.5h7m1 0h1m4 0h1"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <button class="btn-change">change</button>
+
+    <script>
+      //   QRcode.create("hello", {
+      //     errorCorrectionLevel: "H", // Possible values are low, medium, quartile, high or L, M, Q, H.
+      //     maskPattern: 1, // Possible values are 0, 1, 2, 3, 4, 5, 6, 7. If not specified the more suitable value will be calculated.
+      //     margin: 4, // Define how much wide the quiet zone should be.
+      //     scale: 4, // Scale factor. A value of 1 means 1px per modules (black dots).
+      //     width: 100, // If width is too small to contain the qr symbol, this option will be ignored. Takes precedence over scale.
+      //     color: {
+      //       dark: "#000000ff",
+      //       light: "#ffffff",
+      //     }, // Color of dark module. Value must be in hex format (RGBA).
+      //   });
+      const change = document.querySelector(".btn-change");
+      let hasTouch = false;
+      change.addEventListener(
+        "click",
+        function() {
+          let value = document.querySelector(".form-input").value;
+          if (!value) return alert("please input");
+          hasTouch = true;
+          if (hasTouch) {
+            document.querySelector(".holder").classList.contains("hiddenn") ||
+              document.querySelector(".holder").classList.add("hidden");
+          }
+          QRCode.toCanvas(
+            document.querySelector("#canvas"),
+            value,
+            { errorCorrectionLevel: "H", width: 300, margin: 4 },
+            function(err) {
+              if (err) throw err;
+              console.info("success");
+            }
+          );
+        },
+        { capture: false }
+      );
+    </script>
+  </body>
+</html>
