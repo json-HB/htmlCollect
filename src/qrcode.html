@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>qrCode</title>
+    <title>QRcode</title>
+    <!-- <require src="./vendors/normalize.css" inline=true gzip=true  > -->
     <!-- <require src="./vendors/qrcode.min.js" inline=true gzip=false  > -->
     <style>
       .form-input {
-        width: 30vw;
         border: 1px solid #ccc;
         padding: 10px;
         box-shadow: none;
@@ -20,16 +20,16 @@
         width: 90%;
       }
       .container {
+        width: 100%;
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-items: center;
         align-items: center;
       }
       .container .col {
         flex: 1;
       }
       .btn-change {
-        width: 100px;
         display: block;
         height: 50px;
         background: white;
@@ -39,12 +39,19 @@
         outline: none;
         box-shadow: none;
         -webkit-appearance: none;
+        transition: all 0.2s linear 0s;
+        cursor: pointer;
+        margin-top: 10px;
+        margin-left: 20%;
+      }
+      .btn-change:hover {
+        background: black;
+        color: white;
       }
       canvas {
         border: 1px solid #ccc;
         width: 300px;
         height: 300px;
-        margin-left: 25%;
       }
       .col-canvas {
         position: relative;
@@ -56,15 +63,82 @@
         height: 300px;
         left: 0;
         top: 0;
-        margin-left: 25%;
       }
       .hidden {
         display: none;
       }
+      .flex {
+        width: 50%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+      .flex input,
+      .flex p {
+        text-align: center;
+        flex: 1;
+        outline: none;
+      }
+      .flex input {
+        margin: 0 10px;
+        margin-top: 30px;
+      }
+      .btn-change-submit {
+        margin-bottom: 20px !important;
+      }
+      @media screen and (max-width: 765px) {
+        h1 {
+          text-align: center;
+        }
+        .container {
+          flex-direction: column;
+        }
+        .container .col {
+          width: 100%;
+        }
+        .container .col textarea.form-input {
+          height: 100px;
+          width: 90%;
+          margin-left: 2%;
+        }
+
+        .col-canvas .holder {
+          margin-top: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        canvas {
+          margin: 0 auto;
+          display: block;
+          margin-top: 20px;
+        }
+        .btn-change {
+          margin: 0 auto;
+          margin-top: 20px;
+        }
+        .flex {
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          justify-items: center;
+          align-items: center;
+        }
+        .flex input,
+        .flex p {
+          text-align: center;
+          flex: 1;
+          outline: none;
+        }
+        .flex input {
+          margin: 0 10px;
+          margin-top: 30px;
+        }
+      }
     </style>
   </head>
   <body>
-    <h1>qrcode</h1>
+    <h1>QRcode</h1>
     <div class="container">
       <div class="col">
         <textarea row="10" col="6" placeholder="请输入" class="form-input"></textarea>
@@ -82,9 +156,55 @@
         </div>
       </div>
     </div>
-    <button class="btn-change">change</button>
+    <div class="change-color">
+      <div class="flex">
+        <input id="dark" class="btn-change" type="color" />
+        <input id="light" class="btn-change" type="color" />
+        <input id="reset" class="btn-change" type="button" value="重置颜色" />
+      </div>
+      <div class="flex">
+        <p>改变二维码前景颜色</p>
+        <p>改变二维码背景色</p>
+        <p></p>
+      </div>
+    </div>
+
+    <button class="btn-change btn-change-submit">生成二维码</button>
 
     <script>
+      function changeDL_color(type, color) {
+        if (type == "dark") {
+          darkColor = color;
+        } else if (type == "light") {
+          lightColor = color;
+        } else {
+          darkColor = defaultColor.dark;
+          lightColor = defaultColor.light;
+          document.querySelector("#dark").value = darkColor;
+          document.querySelector("#light").value = lightColor;
+        }
+      }
+      document.querySelector("#dark").addEventListener(
+        "change",
+        function(ev) {
+          changeDL_color("dark", ev.target.value);
+        },
+        { capture: false }
+      );
+      document.querySelector("#light").addEventListener(
+        "change",
+        function(ev) {
+          changeDL_color("light", ev.target.value);
+        },
+        { capture: false }
+      );
+      document.querySelector("#reset").addEventListener(
+        "click",
+        function(ev) {
+          changeDL_color("reset");
+        },
+        { capture: false }
+      );
       //   QRcode.create("hello", {
       //     errorCorrectionLevel: "H", // Possible values are low, medium, quartile, high or L, M, Q, H.
       //     maskPattern: 1, // Possible values are 0, 1, 2, 3, 4, 5, 6, 7. If not specified the more suitable value will be calculated.
@@ -96,8 +216,14 @@
       //       light: "#ffffff",
       //     }, // Color of dark module. Value must be in hex format (RGBA).
       //   });
-      const change = document.querySelector(".btn-change");
+      const change = document.querySelector(".btn-change-submit");
       let hasTouch = false;
+      const defaultColor = {
+        dark: "#000000ff",
+        light: "#ffffffff",
+      };
+      let darkColor = "#000000ff";
+      let lightColor = "#ffffffff";
       change.addEventListener(
         "click",
         function() {
@@ -111,7 +237,15 @@
           QRCode.toCanvas(
             document.querySelector("#canvas"),
             value,
-            { errorCorrectionLevel: "H", width: 300, margin: 4 },
+            {
+              errorCorrectionLevel: "H",
+              width: 300,
+              margin: 1,
+              color: {
+                dark: darkColor,
+                light: lightColor,
+              },
+            },
             function(err) {
               if (err) throw err;
               console.info("success");
