@@ -20,5 +20,13 @@
       "id": "5",
       "name": "rxjs"
     }
-  ]
+  ],
+  "theme": {
+    "green": {
+      "baseColor": "green"
+    },
+    "pink": {
+      "baseColor": "pink"
+    }
+  }
 }

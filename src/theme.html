@@ -41,8 +41,13 @@
       let btnGroup = document.querySelector(".input-group");
       let themtCache = null;
 
+      function isLocal() {
+        return location.href.includes("localhost");
+      }
+
       function getTheme() {
-        return fetch("http://localhost:8100/theme", {
+        const url = isLocal() ? "/mock/index.json" : "/htmlCollect/mock/index.json";
+        return fetch(url, {
           cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
           credentials: "same-origin", // include, same-origin, *omit
           headers: {
