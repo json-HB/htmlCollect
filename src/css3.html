@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script>
+      G = {
+        ENV: "qa"
+      }
+    </script>
+    <title>css3</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        position: relative;
+        width: 100%;
+        height: 300px;
+        border: 1px solid #ccc;
+        perspective: 800px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform-style: preserve-3d;
+      }
+      .container .transform {
+        width: 50%;
+        height: 300px;
+        transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+        position: absolute;
+        transition: all 0.3s linear 0s;
+        transform-origin: center center;
+      }
+      .container .transform div {
+        transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+        width: 100%;
+        height: 300px;
+        position: absolute;
+        background: black;
+        color: white;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        top: 0;
+        backface-visibility: hidden;
+      }
+      .container .transform .font {
+        z-index: 1;
+      }
+      .container .transform .back {
+        transform: rotate3d(0, 1, 0, 180deg);
+        background: blue;
+      }
+      .animate {
+        animation: move 2s linear 1 forwards;
+      }
+      @keyframes move {
+        0% {
+          transform: scale(1);
+        }
+        30% {
+          transform: translateZ(50px) scale(1.2);
+          transform-origin: 50% 50% 50px;
+        }
+        50% {
+          transform: rotate3d(0, 1, 0, -30deg) translateZ(50px);
+        }
+        75% {
+          transform: rotate3d(0, 1, 0, -100deg) translateZ(50px);
+        }
+        100% {
+          transform: rotate3d(0, 1, 0, -180deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>css3</h1>
+    <div class="container">
+      <div class="transform">
+        <div class="font">A</div>
+        <div class="back">B</div>
+      </div>
+    </div>
+    <script>
+      const container = document.querySelector(".container");
+
+      container.addEventListener(
+        "click",
+        function() {
+          console.log("mouseenter");
+          container.querySelector(".transform").classList.add("animate");
+          container.querySelector(".transform").addEventListener(
+            "animationiteration",
+            function() {
+              console.log("animationiteration");
+            },
+            false
+          );
+          container.querySelector(".transform").addEventListener(
+            "animationend",
+            function() {
+              container.querySelector(".transform").classList.remove("animate");
+            },
+            false
+          );
+        },
+        false
+      );
+    </script>
+  </body>
+</html>
