@@ -169,8 +169,8 @@
       // Object.setPrototypeOf(Super.prototype, Layer.prototype);
       Super.prototype = Object.create(Layer.prototype, {
         constructor: {
-          value: Super
-        }
+          value: Super,
+        },
       });
 
       var layerInstance = new Super(hoverDom);
