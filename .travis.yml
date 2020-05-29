@@ -12,8 +12,8 @@ branches:
 env:
   - project=htmlCollect
 install:
-  - npm i gulp-cli -g
-  - npm i
+  - yarn add gulp-cli -g
+  - yarn install
   - gulp -v
 before_script:
   - echo "before script"
@@ -24,7 +24,7 @@ script:
 deploy:
   provider: pages
   skip_cleanup: true
-  github_token: "$GITHUB_OAUTH_TOKEN"
+  github_token: '$GITHUB_OAUTH_TOKEN'
   keep_history: false
   local_dir: dist
   on:

@@ -377,9 +377,8 @@ gulp.task('inject', function() {
 });
 
 const transform = function(data) {
-  const res = require('@babel/core').transform(data, {
-    presets: ['@babel/preset-react'],
-  });
+  const option = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.babelrc.json'), 'utf8'));
+  const res = require('@babel/core').transform(data, option);
   return res.code;
 };
 
