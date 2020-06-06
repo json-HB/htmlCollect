@@ -25,32 +25,9 @@ function AddTodo() {
     return data.map((item, index) => <li key={index}>{item.text}</li>);
   }, [data.length]);
 
-  pro = () => {
-    return new Promise(function(resolve, reject) {
-      setTimeout(() => {
-        resolve(true);
-      }, 1000);
-    });
-  };
-
-  const addItem = async () => {
-    const res = await pro();
-    setData(data => {
-      return [
-        ...data,
-        {
-          text: textRef.current.value,
-          id: Math.random()
-            .toString(16)
-            .slice(2),
-        },
-      ];
-    });
-  };
   return (
     <div>
       <input ref={textRef} type="text" />
-      <button onClick={addItem}>add</button>
       <ul>{list}</ul>
     </div>
   );

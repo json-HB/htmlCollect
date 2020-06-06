@@ -1,5 +1,19 @@
 {
-  "presets": [["@babel/preset-env", { "loose": true }], "@babel/preset-react"],
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "loose": true,
+        "shippedProposals": false,
+        "include": [
+          "transform-async-to-generator",
+          "transform-regenerator",
+          "transform-exponentiation-operator"
+        ]
+      }
+    ],
+    "@babel/preset-react"
+  ],
   "plugins": [
     ["@babel/plugin-proposal-class-properties", { "loose": true }],
     "@babel/plugin-syntax-top-level-await"

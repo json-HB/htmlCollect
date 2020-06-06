@@ -378,7 +378,7 @@ gulp.task('inject', function() {
 
 const transform = function(data) {
   const option = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.babelrc.json'), 'utf8'));
-  const res = require('@babel/core').transform(data, option);
+  let res = require('@babel/core').transform(data, option);
   return res.code;
 };
 

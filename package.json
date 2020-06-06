@@ -31,6 +31,8 @@
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-syntax-top-level-await": "^7.10.1",
+    "@babel/plugin-transform-regenerator": "^7.10.1",
+    "@babel/plugin-transform-runtime": "^7.10.1",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.9.4",
     "async": "^3.1.0",
@@ -45,5 +47,8 @@
     "uglify-js": "^3.9.1",
     "vinyl": "^2.2.0"
   },
-  "browserslist": "> 0.25%, not dead"
+  "browserslist": {
+    "chrome": "58",
+    "ie": "11"
+  }
 }
