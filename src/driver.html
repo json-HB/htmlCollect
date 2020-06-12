@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>driver</title>
+    <!-- <require src="./vendors/driver.min.js" inline=true gzip=false  > -->
+    <!-- <require src="./vendors/driver.min.css" inline=true gzip=false  > -->
+  </head>
+  <body>
+    <h1 id="step1">driver</h1>
+    <div style="height: 100px" id="step2">step2</div>
+    <div style="height: 100px" id="step3">step3</div>
+    <div style="height: 100px" id="step4">step4</div>
+    <div style="height: 100px" id="step5">step5</div>
+    <div style="height: 100px" id="step6">step6</div>
+    <button type="button" class="start-btn">start</button>
+    <style>
+      :root {
+        --baseColor: red;
+        --secondaryColor: yellow;
+        --borderRadius: 5px;
+      }
+      .start-btn {
+        background: var(--baseColor);
+        padding: 10px;
+        font-size: 28px;
+        color: var(--secondaryColor);
+        border-radius: var(--borderRadius);
+        box-shadow: none;
+        appearance: none;
+      }
+    </style>
+    <script>
+      // README https://github.com/kamranahmedse/driver.js
+      function start(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const driver = new Driver();
+        function getStep() {
+          let domArr = [];
+          const length = 6;
+          domArr = Array.from({ length: length }, function(item, i) {
+            return { element: `#step${i + 1}` };
+          });
+          domArr = domArr.map((item, index) => ({
+            ...item,
+            popover: {
+              title: `step ${index + 1}`,
+              description: `description ${index + 1}`,
+              position: 'bottom',
+              offset: index * 10,
+            },
+          }));
+          return domArr;
+        }
+        console.log(getStep());
+        driver.defineSteps(getStep());
+        driver.start();
+      }
+      document
+        .querySelector('.start-btn')
+        .addEventListener('click', start, { capture: false, once: false });
+    </script>
+  </body>
+</html>

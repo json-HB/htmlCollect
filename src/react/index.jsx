@@ -13,7 +13,6 @@ function Button(props) {
       <button onClick={() => setCount(c => ++c)}>+</button>
       <button onClick={() => setCount(c => --c)}>-</button>
       <p>{count}</p>
-      <AddTodo />
     </div>
   );
 }

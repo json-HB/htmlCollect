@@ -7,18 +7,21 @@
     "start": "node ./bin/index.js",
     "p": "node ./bin/test.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "mock": "json-server -w -p 8100 db.json"
+    "mock": "json-server -w -p 8100 db.json",
+    "new": "plop"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "ali-oss": "^6.1.1",
+    "driver.js": "^0.9.8",
     "exif-js": "^2.3.0",
     "google-distance": "^1.0.1",
     "html-minifier": "^4.0.0",
     "marked": "^0.7.0",
     "mime": "^2.4.4",
+    "mockjs": "^1.1.0",
     "normalize.css": "^8.0.1",
     "pdfjs": "^2.3.2",
     "pdfjs-dist": "^2.2.228",

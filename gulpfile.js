@@ -223,6 +223,9 @@ gulp.task('vendors', function(cb) {
       path.resolve(basePath, 'sanitize-html/dist', `sanitize-html.min.js`),
       path.resolve(basePath, 'react/umd', `react.production.min.js`),
       path.resolve(basePath, 'react-dom/umd', `react-dom.production.min.js`),
+      path.resolve(basePath, 'mockjs/dist', `mock-min.js`),
+      path.resolve(basePath, 'driver.js/dist', `driver.min.js`),
+      path.resolve(basePath, 'driver.js/dist', `driver.min.css`),
     ])
     // .pipe(UglifyJS())
     .pipe(gulp.dest(path.resolve('src/vendors/')))
