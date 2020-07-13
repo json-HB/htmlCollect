@@ -151,6 +151,41 @@
         font-size: 20px;
       }
     </style>
+    <div class="background-move">move </div>
+    <script>
+      const dom = document.querySelector('.background-move');
+      dom.addEventListener(
+        'animationstart',
+        () => {
+          console.log('animationstart');
+        },
+        { capture: false }
+      );
+      dom.addEventListener(
+        'animationend',
+        () => {
+          console.log('animationend');
+        },
+        { capture: false }
+      );
+    </script>
+    <style>
+      .background-move {
+        border: 1px solid rebeccapurple;
+        padding: 5px;
+        background: linear-gradient(to right, white 0%, yellow 50%, #ccc 100%);
+        background-size: 400% 100%;
+        animation: bgMove 2s linear 0s 1;
+      }
+      @keyframes bgMove {
+        0% {
+          background-position: 0% 100%;
+        }
+        to {
+          background-position: 100% 100%;
+        }
+      }
+    </style>
     <section>
       <div style="height: 50vh;"></div>
       <h4 class="sticky">I am Top</h4>

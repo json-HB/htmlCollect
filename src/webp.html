@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>webp</title>
+  </head>
+  <body>
+    <h1>webp</h1>
+    <img id="img" src="./img/pic1.jpg" alt="" />
+    <style>
+      img {
+        display: inline-block;
+        width: 100vw;
+        height: auto;
+      }
+    </style>
+    <script>
+      window.onload = function() {
+        var canvas = document.createElement('canvas');
+
+        (ctx = canvas.getContext('2d')), (img = document.getElementById('img'));
+
+        var loadImg = function(url, fn) {
+          var image = new Image();
+          image.src = url;
+          image.onload = function() {
+            fn(image);
+          };
+        };
+        loadImg('./img/pic1.jpg', function(image) {
+          canvas.height = image.height;
+          canvas.width = image.width;
+          ctx.drawImage(image, 0, 0);
+          img.setAttribute('src', canvas.toDataURL('image/webp'));
+        });
+      };
+    </script>
+  </body>
+</html>

@@ -82,5 +82,18 @@
       <div class="left"></div>
       <div class="right"></div>
     </div>
+    <template class="tem">
+      <div>
+        hello
+      </div>
+    </template>
+    <div class="preDom"></div>
+    <script>
+      const tem = document.querySelector('.tem');
+      const target = document.querySelector('.preDom');
+      const content = tem.content;
+      const clone = document.importNode(content, true);
+      target.appendChild(clone);
+    </script>
   </body>
 </html>
