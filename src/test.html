@@ -95,5 +95,76 @@
       const clone = document.importNode(content, true);
       target.appendChild(clone);
     </script>
+    <div class="show">
+      <span>center</span>
+    </div>
+    <button class="control-btn">click</button>
+    <style>
+      .show {
+        width: 20vw;
+        height: 20vw;
+        border: 1px solid #ccc;
+        margin: 0 auto;
+        display: none;
+        background: aqua;
+      }
+      .show.hidden {
+        display: block;
+        animation: move 2s;
+      }
+      @keyframes move {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .show span {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+      }
+    </style>
+    <script>
+      let btn = document.querySelector('.control-btn');
+      btn.addEventListener(
+        'click',
+        function() {
+          const modal = document.querySelector('.show');
+          modal.classList.toggle('hidden');
+        },
+        false
+      );
+      const obj = { a: 1, b: 2 };
+      function itera(val) {
+        const keys = Object.keys(val);
+        const len = keys.length;
+        let index = 0;
+        Object.defineProperty(val, Symbol.iterator, {
+          value: function() {
+            return {
+              next: function() {
+                if (index < len) {
+                  return {
+                    value: Reflect.get(val, keys[index++]),
+                    done: false,
+                  };
+                } else {
+                  return {
+                    value: undefined,
+                    done: true,
+                  };
+                }
+              },
+            };
+          },
+        });
+        return val;
+      }
+      for (let a of itera(obj)) {
+        console.log(a);
+      }
+    </script>
   </body>
 </html>
