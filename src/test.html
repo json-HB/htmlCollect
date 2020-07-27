@@ -172,16 +172,19 @@
       function filter(data) {
         const res = [];
         const map = new Map();
+        // 数组扁平化并去重
         const flatternArr = new Set(data.flat(Infinity));
         function dealEmpty(arr) {
           return arr.filter(Boolean);
         }
+        // help 函数递归处理
         const help = function(innerArr) {
           let innerRes = [];
           if (!Array.isArray(innerArr)) return innerArr;
           innerArr.forEach((element, index) => {
             if (Array.isArray(element)) {
               innerRes[index] = dealEmpty(help(innerArr[index]));
+              // 扁平化的数组里面出现一次后就不加进数组呢
             } else if (flatternArr.has(element) && !map.get(element)) {
               map.set(element, 1);
               innerRes[index] = element;
