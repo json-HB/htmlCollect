@@ -162,9 +162,39 @@
         });
         return val;
       }
-      for (let a of itera(obj)) {
-        console.log(a);
+      // for (let a of itera(obj)) {
+      //   console.log(a);
+      // }
+      const arr = [
+        [1, 2, 3, 4, 5],
+        [1, 2, [1, '2', '3', 4, 5], 6],
+      ];
+      function filter(data) {
+        const res = [];
+        const map = new Map();
+        const flatternArr = new Set(data.flat(Infinity));
+        function dealEmpty(arr) {
+          return arr.filter(Boolean);
+        }
+        const help = function(innerArr) {
+          let innerRes = [];
+          if (!Array.isArray(innerArr)) return innerArr;
+          innerArr.forEach((element, index) => {
+            if (Array.isArray(element)) {
+              innerRes[index] = dealEmpty(help(innerArr[index]));
+            } else if (flatternArr.has(element) && !map.get(element)) {
+              map.set(element, 1);
+              innerRes[index] = element;
+            }
+          });
+          return innerRes;
+        };
+        for (let i = 0, l = data.length; i < l; i++) {
+          res[i] = dealEmpty(help(data[i]));
+        }
+        return res;
       }
+      console.log(filter(arr));
     </script>
   </body>
 </html>

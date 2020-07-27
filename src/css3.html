@@ -115,6 +115,23 @@
         false
       );
     </script>
+    <div class="animation">hello world javascript!</div>
+    <style>
+      .animation {
+        width: 100%;
+        border: 1px solid #ccc;
+        color: yellowgreen;
+        animation: stepAni 10s steps(10, start);
+      }
+      @keyframes stepAni {
+        from {
+          width: 0%;
+        }
+        to {
+          width: 100%;
+        }
+      }
+    </style>
     <div class="box-shadow"></div>
     <div class="table-cell">
       <span>center</span>
@@ -184,6 +201,21 @@
         to {
           background-position: 100% 100%;
         }
+      }
+    </style>
+    <div class="clip-path">
+      <img src="./img/pic0.jpg" alt="pic0.jgp" />
+    </div>
+    <style>
+      .clip-path img {
+        width: 50vw;
+        height: auto;
+        border: 1px solid #ccc;
+        clip-path: circle(10%);
+        transition: clip-path 0.3s linear 0s;
+      }
+      .clip-path img:hover {
+        clip-path: circle(40%);
       }
     </style>
     <section>

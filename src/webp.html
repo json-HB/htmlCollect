@@ -37,5 +37,57 @@
         });
       };
     </script>
+    <div class="parent">
+      <p class="inner">I am Inner</p>
+    </div>
+    <style>
+      .parent {
+        border: 10px solid #ccc;
+        padding: 20px;
+      }
+      .parent .inner {
+        width: 200px;
+        height: 200px;
+        background: red;
+        color: blue;
+        font-size: 40px;
+        text-align: center;
+      }
+    </style>
+    <script>
+      const parent = document.querySelector('.parent');
+      const inner = document.querySelector('.inner');
+      parent.addEventListener(
+        'click',
+        () => {
+          console.log('parent');
+        },
+        true
+      );
+      inner.addEventListener(
+        'click',
+        ev => {
+          ev.stopImmediatePropagation();
+
+          console.log('inner');
+        },
+        false
+      );
+      inner.addEventListener(
+        'click',
+        ev => {
+          ev.stopPropagation();
+          console.log('inner 2');
+        },
+        false
+      );
+      inner.addEventListener(
+        'click',
+        () => {
+          console.log('inner 3');
+        },
+        false
+      );
+    </script>
   </body>
 </html>

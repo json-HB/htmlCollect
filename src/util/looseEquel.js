@@ -1,7 +1,7 @@
 const isArray = Array.isArray;
 const isObject = val => val !== null && typeof val === 'object';
 
-export function looseEqual(a, b) {
+function looseEqual(a, b) {
   if (a === b) return true;
   const isObjectA = isObject(a);
   const isObjectB = isObject(b);
@@ -36,6 +36,6 @@ export function looseEqual(a, b) {
  * arr array
  * val any
  */
-export function looseIndexOf(arr, val) {
+function looseIndexOf(arr, val) {
   return arr.findIndex(item => looseEqual(item, val));
 }
