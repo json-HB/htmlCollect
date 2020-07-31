@@ -11,7 +11,7 @@
         --secondary: #ffff00;
         --third: #3399cc;
       }
-      body {
+      .body {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -19,7 +19,7 @@
         align-items: center;
         align-content: flex-start;
       }
-      body a {
+      .body a {
         position: relative;
         display: inline-block;
         padding: 10px;
@@ -33,7 +33,7 @@
         transition: opacity 0.2s ease-in 0s;
         overflow: hidden;
       }
-      body a:before {
+      .body a:before {
         content: attr(data-text);
         display: block;
         position: absolute;
@@ -47,7 +47,7 @@
       }
       /* a:hover {
       } */
-      body:hover a:not(:hover) {
+      .body:hover a:not(:hover) {
         opacity: 0.4;
       }
     </style>
@@ -55,10 +55,119 @@
   </head>
   <script>
     var G = {
-      BUILD_TIME: "{{BUILD_TIME}}",
+      BUILD_TIME: '{{BUILD_TIME}}',
     };
   </script>
   <body>
-    {{ _content_ }}
+    <div class="body"> {{ _content_ }}</div>
+
+    <div class="fixedButton">
+      <span>X</span>
+    </div>
+
+    <div class="loading">hello world </div>
+
+    <iframe id="wrapperContainer" src="" frameborder="0"></iframe>
+    <style>
+      #wrapperContainer {
+        position: absolute;
+        width: 100vw;
+        left: 0;
+        min-height: 100vh;
+        bottom: 0;
+        right: 0;
+        border: 1px solid #ccc;
+        overflow: auto;
+        display: block;
+        background: white;
+        transition: all 0.3s linear 0s;
+        top: 100%;
+      }
+      #wrapperContainer.show {
+        top: 0;
+      }
+      .fixedButton {
+        position: fixed;
+        right: 0px;
+        top: 20px;
+        width: 50px;
+        border: 1px solid #ccc;
+        border-radius: 50% 0 0 50%;
+        z-index: 9999;
+        text-align: center;
+        color: black;
+        background: white;
+        line-height: 50px;
+        cursor: pointer;
+        display: none;
+      }
+      .loading {
+        position: fixed;
+        top: 200px;
+        left: 50%;
+        display: inline-block;
+        margin: 0 auto;
+        padding: 10px;
+        text-align: center;
+        line-height: 1;
+        color: cadetblue;
+        border: 1px solid #ccc;
+        display: none;
+      }
+    </style>
+    <script>
+      const tagA = document.querySelector('.body').querySelectorAll('a');
+      const frame = document.querySelector('iframe');
+      const fixedBtn = document.querySelector('.fixedButton');
+      const loading = document.querySelector('.loading');
+
+      const Alert = {
+        show(str) {
+          loading.style.display = 'block';
+          loading.innerText = str;
+        },
+        hide() {
+          loading.style.display = 'none';
+        },
+      };
+
+      fixedBtn.addEventListener(
+        'click',
+        function() {
+          showFrame(false);
+        },
+        false
+      );
+
+      function showFrame(bol) {
+        bol && Alert.show('loading...');
+        function load() {
+          frame.classList.add('show');
+          Alert.hide();
+          frame.removeEventListener('load', load);
+        }
+        frame.addEventListener('load', load, false);
+        if (bol) {
+          fixedBtn.style.display = 'block';
+        } else {
+          fixedBtn.style.display = 'none';
+          frame.classList.remove('show');
+        }
+      }
+      for (let i = 0, l = tagA.length; i < l; i++) {
+        const currentDom = tagA[i];
+        currentDom.addEventListener(
+          'click',
+          function(ev) {
+            ev.preventDefault();
+
+            const html = this.getAttribute('href');
+            frame.setAttribute('src', html);
+            showFrame(true);
+          },
+          false
+        );
+      }
+    </script>
   </body>
 </html>
