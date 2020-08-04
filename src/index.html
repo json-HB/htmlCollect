@@ -10,6 +10,7 @@
         --baseColor: #ff6666;
         --secondary: #ffff00;
         --third: #3399cc;
+        min-height: 100vh;
       }
       .body {
         display: flex;
@@ -61,6 +62,8 @@
   <body>
     <div class="body"> {{ _content_ }}</div>
 
+    <div class="toggleIframe">open</div>
+
     <div class="fixedButton">
       <span>X</span>
     </div>
@@ -69,13 +72,28 @@
 
     <iframe id="wrapperContainer" src="" frameborder="0"></iframe>
     <style>
-      #wrapperContainer {
+      .toggleIframe {
         position: absolute;
+        color: #ccc;
+        text-align: center;
+        padding: 10px;
+        background: cornflowerblue;
+        cursor: pointer;
+        display: inline-block;
+        padding: 10px 30px;
+        border-radius: 5px;
+        display: none;
+      }
+      .toggleIframe:hover {
+        color: white;
+      }
+      #wrapperContainer {
+        position: fixed;
         width: 100vw;
         left: 0;
-        min-height: 100vh;
         bottom: 0;
         right: 0;
+        min-height: 100vh;
         border: 1px solid #ccc;
         overflow: auto;
         display: block;
@@ -120,9 +138,10 @@
       const frame = document.querySelector('iframe');
       const fixedBtn = document.querySelector('.fixedButton');
       const loading = document.querySelector('.loading');
+      let STATUS = 'open';
 
       const Alert = {
-        show(str) {
+        show(str = 'loading...') {
           loading.style.display = 'block';
           loading.innerText = str;
         },
@@ -130,6 +149,22 @@
           loading.style.display = 'none';
         },
       };
+
+      [
+        ['primary', 'rgb(204, 229, 255)'],
+        ['secondary', 'rgb(226, 227, 229)'],
+        ['success', 'rgb(212, 237, 218)'],
+        ['danger', 'rgb(248, 215, 218)'],
+        ['warning', 'rgb(255, 243, 205)'],
+        ['info', 'rgb(209, 236, 241)'],
+        ['light', 'rgb(254, 254, 254)'],
+        ['dark', 'rgb(214, 216, 217)'],
+      ].forEach((item, index) => {
+        Reflect.set(Alert, item[0], function() {
+          Alert.show();
+          loading.style.backgroundColor = item[1];
+        });
+      });
 
       fixedBtn.addEventListener(
         'click',
@@ -140,7 +175,7 @@
       );
 
       function showFrame(bol) {
-        bol && Alert.show('loading...');
+        bol && Alert.info('loading...');
         function load() {
           frame.classList.add('show');
           Alert.hide();
@@ -159,15 +194,51 @@
         currentDom.addEventListener(
           'click',
           function(ev) {
-            ev.preventDefault();
+            if (STATUS == 'close') {
+              ev.preventDefault();
 
-            const html = this.getAttribute('href');
-            frame.setAttribute('src', html);
-            showFrame(true);
+              const html = this.getAttribute('href');
+              frame.setAttribute('src', html);
+              showFrame(true);
+            }
           },
           false
         );
       }
+
+      function contextMenu() {
+        const dom = document.querySelector('.toggleIframe');
+        dom.addEventListener(
+          'click',
+          ev => {
+            const text = ev.target.innerText;
+            ev.target.innerText = text == 'close' ? 'open' : 'close';
+            STATUS = text;
+            ev.target.style.display = 'none';
+          },
+          false
+        );
+        document.documentElement.addEventListener('contextmenu', function(ev) {
+          ev.preventDefault();
+          let { clientX, clientY } = ev;
+          const { innderWidth, innerHeight } = window;
+          const { width, height } = dom.getBoundingClientRect();
+          dom.style.display = 'block';
+          if (clientX + width > innerWidth) {
+            clientX -= width;
+          }
+          if (clientY + height > innerHeight) {
+            clientY -= height;
+          }
+          dom.style.left = clientX + 'px';
+          dom.style.top = clientY + 'px';
+          return false;
+        });
+      }
+      window.onload = function() {
+        console.log('load');
+        contextMenu();
+      };
     </script>
   </body>
 </html>
