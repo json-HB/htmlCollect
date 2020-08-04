@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>image load</title>
-    <!-- <require src="./util/baseTag.js" inline=true > -->
   </head>
   <body>
     <script>
@@ -19,7 +18,7 @@
         false
       );
       function LoadingImg() {
-        let imageArr = new Array(12).fill(1).map((item, index) => `/img/pic${index}.jpg`);
+        let imageArr = new Array(12).fill(1).map((item, index) => `img/pic${index}.jpg`);
         const imageHtml = imageArr
           .map(item => {
             return `<img src="${item}" title="${item}" />`;
