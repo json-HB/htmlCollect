@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>vue-leaning</title>
+    <!-- <require src="./vendors/vue.min.js" inline=true gzip=false  > -->
+  </head>
+  <body>
+    <h1>vue</h1>
+    <div id="app" @click="handleClick">
+      {{ message }}
+      <div>
+        <el-count></el-count>
+      </div>
+    </div>
+    <script>
+      Vue.component('el-count', {
+        data: function() {
+          return {
+            count: 0,
+          };
+        },
+        template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>',
+      });
+      var app = new Vue({
+        el: '#app',
+        data: {
+          message: 'Hello Vue!',
+        },
+        methods: {
+          handleClick() {
+            console.log('click');
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

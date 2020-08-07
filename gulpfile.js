@@ -226,6 +226,7 @@ gulp.task('vendors', function(cb) {
       path.resolve(basePath, 'mockjs/dist', `mock-min.js`),
       path.resolve(basePath, 'driver.js/dist', `driver.min.js`),
       path.resolve(basePath, 'driver.js/dist', `driver.min.css`),
+      path.resolve(basePath, 'vue/dist/', `vue.min.js`),
     ])
     // .pipe(UglifyJS())
     .pipe(gulp.dest(path.resolve('src/vendors/')))

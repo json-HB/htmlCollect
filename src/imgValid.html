@@ -15,6 +15,48 @@
         border: 1px solid yellowgreen;
         height: auto;
       }
+      .image-valid-container.success {
+        border-color: greenyellow;
+        animation: scale 0.5s linear 0s infinite;
+      }
+      .image-valid-container.warn {
+        border-color: #e91e63;
+        animation: scaleWrong 0.5s linear 0s infinite;
+      }
+      @keyframes scale {
+        0% {
+          box-shadow: 0 0 5px greenyellow;
+        }
+        25% {
+          box-shadow: 0 0 20px greenyellow;
+        }
+        50% {
+          box-shadow: 0 0 10px greenyellow;
+        }
+        75% {
+          box-shadow: 0 0 0px greenyellow;
+        }
+        100% {
+          box-shadow: 0 0 10px greenyellow;
+        }
+      }
+      @keyframes scaleWrong {
+        0% {
+          box-shadow: 0 0 5px #e91e63;
+        }
+        25% {
+          box-shadow: 0 0 20px #e91e63;
+        }
+        50% {
+          box-shadow: 0 0 10px #e91e63;
+        }
+        75% {
+          box-shadow: 0 0 0px #e91e63;
+        }
+        100% {
+          box-shadow: 0 0 10px #e91e63;
+        }
+      }
       .image-valid-container .mask {
         position: absolute;
         top: 0;
@@ -29,7 +71,7 @@
         display: block;
         position: absolute;
         left: -10%;
-        top: -50%;
+        top: -30%;
         margin-left: 50%;
         margin-top: 50%;
         width: 50px;
@@ -156,9 +198,11 @@
           if (dis > 300 - this.diff && dis < 300 + this.diff) {
             alert(`success, cost ${costTime}s`);
             this.initPosition();
+            this.setStatus(0);
           } else {
             alert('fail');
             this.initPosition();
+            this.setStatus(1);
           }
         }
 
@@ -225,6 +269,17 @@
           });
         }
 
+        setStatus(type = 0, opt = {}) {
+          const status = type == 0 ? 'success' : 'warn';
+          this.imgRoot.classList.add(status);
+          if (opt.color) {
+            this.imgRoot.style.cssText = `border-color: ${opt.color}`;
+          }
+          setTimeout(() => {
+            this.imgRoot.classList.remove(status);
+          }, 2000);
+        }
+
         get tem() {
           return `<div class='image-valid-container'>
             <div class='mask'></div>
@@ -243,7 +298,7 @@
         }
       }
 
-      new ImageValie({
+      var ValidImage = new ImageValie({
         dom: '.container',
         width: 400,
         height: 300,
