@@ -18,7 +18,7 @@ gulp.task('default', Tasks.slice(1), function(cb) {
 });
 
 gulp.task('dev', function(cb) {
-  sequence(Tasks, 'inject', 'collectHtml', 'server', cb);
+  sequence(Tasks, 'inject', 'collectHtml', 'i18n', 'server', cb);
 });
 
 gulp.task('mergePro', function(cb) {
@@ -400,4 +400,63 @@ gulp.task('react-lib', function(cb) {
     )
     .pipe(gulp.dest('dist'))
     .pipe(bs.stream());
+});
+
+gulp.task('i18n', function(done) {
+  const langArr = ['en', 'zh'];
+  const defautlLang = 'zh';
+  const getLangFile = function() {
+    const files = fs.readdirSync('src/lang');
+    const content = {};
+    files.forEach((file, index) => {
+      const key = file.split('.')[0];
+      content[key] = JSON.parse(fs.readFileSync('src/lang/' + file).toString());
+    });
+    return content;
+  };
+  const langFile = getLangFile();
+  return gulp
+    .src(['dist/*.html'], { sourcemaps: false, base: 'src' })
+    .pipe(
+      through.obj(function(file, enc, cb) {
+        let content = String(file.contents);
+        const currentLang = langFile[defautlLang];
+        content = content.replace(/<%\s*([a-zA-Z\.]+)\s*%>/g, function(full, part) {
+          const ps = part.split('.');
+          let t = currentLang;
+          for (let i = 0; i < ps.length; i++) {
+            if (i == 0) {
+              continue;
+            } else {
+              t = t[ps[i]];
+            }
+          }
+          return t;
+        });
+        let newFileContent = String(file.contents).replace(/<%\s*([a-zA-Z\.]+)\s*%>/g, function(
+          full,
+          part
+        ) {
+          const ps = part.split('.');
+          let t = langFile['en'];
+          for (let i = 0; i < ps.length; i++) {
+            if (i == 0) {
+              continue;
+            } else {
+              t = t[ps[i]];
+            }
+          }
+          return t;
+        });
+        const newFile = new util.File({
+          contents: Buffer.from(newFileContent),
+          path: path.resolve(process.cwd(), `en/${path.basename(file.path)}`),
+        });
+        this.push(newFile);
+        file.contents = Buffer.from(content);
+        this.push(file);
+        cb();
+      })
+    )
+    .pipe(gulp.dest('dist'));
 });
