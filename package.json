@@ -6,9 +6,10 @@
   "scripts": {
     "start": "node ./bin/index.js",
     "p": "node ./bin/test.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "mock": "json-server -w -p 8100 db.json",
-    "new": "plop"
+    "new": "plop",
+    "jest": "jest"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
     "exif-js": "^2.3.0",
     "google-distance": "^1.0.1",
     "html-minifier": "^4.0.0",
+    "jest": "^26.2.2",
     "marked": "^0.7.0",
     "mime": "^2.4.4",
     "mockjs": "^1.1.0",

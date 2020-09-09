@@ -14,6 +14,10 @@
       <div>
         <el-count></el-count>
       </div>
+      <el-button @click="toggleVisible">toggle visible</el-button>
+      <div v-show="visible">show</div>
+
+      <transition name="fade"> </transition>
     </div>
     <script>
       Vue.component('el-count', {
@@ -24,14 +28,29 @@
         },
         template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>',
       });
+      Vue.component('el-button', {
+        data: function() {
+          return {};
+        },
+        methods: {},
+        template: '<button v-on="$listeners"><slot></slot></button>',
+      });
       var app = new Vue({
         el: '#app',
         data: {
           message: 'Hello Vue!',
+          visible: false,
+        },
+        mounted() {
+          console.log(this);
         },
         methods: {
           handleClick() {
             console.log('click');
+          },
+          toggleVisible() {
+            console.log('visible');
+            this.visible = !this.visible;
           },
         },
       });

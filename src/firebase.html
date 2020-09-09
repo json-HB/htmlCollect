@@ -31,17 +31,16 @@
       };
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
-      firebase.analytics();
-      console.log(firebase);
       let app = firebase.analytics();
       app.setAnalyticsCollectionEnabled(true);
       document.querySelector('.login').onclick = function() {
         console.log('login');
         app.logEvent('haibo', {
-          content_type: 'react',
-          description: 'react',
-          event_category: 'react',
-          name: 'react',
+          // content_type: 'react',
+          // description: 'react',
+          event_category: '大涨',
+          // name: 'react',
+          mobilePhone: '18255356580',
         });
       };
       document.querySelector('.share').onclick = function() {

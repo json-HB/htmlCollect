@@ -1,7 +1,7 @@
-const fs = require("fs");
-const path = require("path");
-const del = require("del");
-const async = require("async");
+const fs = require('fs');
+const path = require('path');
+const del = require('del');
+const async = require('async');
 
 // let a = del.sync(["dist/**/*", "!dist/index.html"], { force: true });
 
@@ -91,5 +91,5 @@ const { log } = console;
 //   }
 // );
 
-let res = del.sync(["dist/**/*", "!dist/a{b,}c.html"]);
+let res = del.sync(['dist/**/*', '!dist/a{b,}c.html']);
 console.log(res);
