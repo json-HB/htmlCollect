@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>N/A</title>
+    <!-- <require src="./vendors/normalize.css" inline=true gzip=true  > -->
+    <!-- <require src="./vendors/pdfmark.js" inline=true gzip=false  > -->
+    <!-- <require src="./vendors/pdffont.js" inline=true gzip=false  > -->
+  </head>
+  <body>
+    <h1>pdfMark</h1>
+    <button class="open">open</button>
+    <script>
+      const str = Array.from({ length: 1000 }, (item, i) => {
+        return `hello world ${i}`;
+      });
+      const createBlob = function() {
+        return new Promise(function(r, j) {
+          const img = new Image();
+          img.src = './img/pic1.jpg';
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = this.width;
+            canvas.height = this.height;
+            context.clearRect(0, 0, this.width, this.height);
+            context.drawImage(img, 0, 0, this.width, this.height);
+            canvas.toBlob(function(blobObj) {
+              let imgSrc = window.URL.createObjectURL(blobObj);
+              console.log(imgSrc);
+              r(imgSrc);
+            });
+          };
+        });
+      };
+
+      const open = document.querySelector('.open');
+      open.addEventListener(
+        'click',
+        () => {
+          createBlob().then(imgblob => {
+            const img = Array.from({ length: 10000 }, (item, i) => {
+              return {
+                image: imgblob,
+              };
+            });
+            var docDefinition = {
+              compress: false,
+              content: [
+                // if you don't need styles, you can use a simple string to define a paragraph
+                'This is a standard paragraph, using default style',
+                'I am is haobo',
+                ...img,
+
+                // using a { text: '...' } object lets you set styling properties
+                { text: 'This paragraph will have a bigger font', fontSize: 15 },
+
+                // if you set the value of text to an array instead of a string, you'll be able
+                // to style any part individually
+                {
+                  text: [
+                    'This paragraph is defined as an array of elements to make it possible to ',
+                    { text: 'restyle part of it and make it bigger ', fontSize: 15 },
+                    'than the rest.',
+                  ],
+                },
+                {
+                  // to treat a paragraph as a bulleted list, set an array of items under the ul key
+                  ul: ['Item 1', 'Item 2', 'Item 3', { text: 'Item 4', bold: true }],
+                },
+                {
+                  text: 'demo demo',
+                  fontSize: 28,
+                  style: ['haibo'],
+                },
+                ...str,
+              ],
+              styles: {
+                haibo: {
+                  color: 'red',
+                },
+              },
+            };
+            const pdf = pdfMake.createPdf(docDefinition).open('', window.open('', '_self'));
+          });
+          //   const win = window.open('', '_blank');
+        },
+        false
+      );
+
+      window.onload = function() {
+        console.log('done');
+      };
+    </script>
+  </body>
+</html>

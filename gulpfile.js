@@ -227,6 +227,7 @@ gulp.task('vendors', function(cb) {
       path.resolve(basePath, 'driver.js/dist', `driver.min.js`),
       path.resolve(basePath, 'driver.js/dist', `driver.min.css`),
       path.resolve(basePath, 'vue/dist/', `vue.min.js`),
+      path.resolve(basePath, 'js-md5/build/md5.min.js'),
     ])
     // .pipe(UglifyJS())
     .pipe(gulp.dest(path.resolve('src/vendors/')))
@@ -433,26 +434,29 @@ gulp.task('i18n', function(done) {
           }
           return t;
         });
-        let newFileContent = String(file.contents).replace(/<%\s*([a-zA-Z\.]+)\s*%>/g, function(
-          full,
-          part
-        ) {
-          const ps = part.split('.');
-          let t = langFile['en'];
-          for (let i = 0; i < ps.length; i++) {
-            if (i == 0) {
-              continue;
-            } else {
-              t = t[ps[i]];
+        langArr.forEach(lang => {
+          let newFileContent = String(file.contents).replace(/<%\s*([a-zA-Z\.]+)\s*%>/g, function(
+            full,
+            part
+          ) {
+            const ps = part.split('.');
+            let t = langFile[lang];
+            for (let i = 0; i < ps.length; i++) {
+              if (i == 0) {
+                continue;
+              } else {
+                t = t[ps[i]];
+              }
             }
-          }
-          return t;
+            return t;
+          });
+          const newFile = new util.File({
+            contents: Buffer.from(newFileContent),
+            path: path.resolve(process.cwd(), `${lang}/${path.basename(file.path)}`),
+          });
+          this.push(newFile);
         });
-        const newFile = new util.File({
-          contents: Buffer.from(newFileContent),
-          path: path.resolve(process.cwd(), `en/${path.basename(file.path)}`),
-        });
-        this.push(newFile);
+
         file.contents = Buffer.from(content);
         this.push(file);
         cb();
