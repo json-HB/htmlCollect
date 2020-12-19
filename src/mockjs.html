@@ -6,8 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>mockjs</title>
     <!-- <require src="./vendors/mock-min.js" inline=true gzip=false  > -->
+    <script crossorigin src="https://unpkg.com/react@17.0.0/umd/react.production.min.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@17.0.0/umd/react-dom.production.min.js"
+    ></script>
   </head>
   <body>
     <h1>mockjs</h1>
+    <div id="app"> </div>
+    <script>
+      function App() {
+        return <div>app</div>;
+      }
+      ReactDOM.render(<App />, app);
+    </script>
   </body>
 </html>

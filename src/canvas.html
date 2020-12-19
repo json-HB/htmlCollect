@@ -16,41 +16,41 @@
   <body>
     <h1 class="iden">canvas</h1>
     <button id="download">download</button>
-    <canvas id="canvas" width="108" height="108"></canvas>
+    <canvas id="canvas" width="200" height="200"></canvas>
     <button id="btn">change size</button>
     <br />
     <select id="composite"> </select>
     <script module>
       const composite = [
-        "source-over",
-        "source-in",
-        "source-out",
-        "source-atop",
-        "destination-over",
-        "destination-in",
-        "destination-out",
-        "destination-atop",
-        "lighter",
-        "copy",
-        "xor",
-        "multiply",
-        "screen",
-        "overlay",
-        "darken",
-        "lighten",
-        "color-dodge",
-        "color-burn",
-        "hard-light",
-        "soft-light",
-        "difference",
-        "exclusion",
-        "hue",
-        "saturation",
-        "color",
-        "luminosity"
+        'source-over',
+        'source-in',
+        'source-out',
+        'source-atop',
+        'destination-over',
+        'destination-in',
+        'destination-out',
+        'destination-atop',
+        'lighter',
+        'copy',
+        'xor',
+        'multiply',
+        'screen',
+        'overlay',
+        'darken',
+        'lighten',
+        'color-dodge',
+        'color-burn',
+        'hard-light',
+        'soft-light',
+        'difference',
+        'exclusion',
+        'hue',
+        'saturation',
+        'color',
+        'luminosity',
       ];
-      let select = document.querySelector("#composite");
-      let innerContent = "";
+      let select = document.querySelector('#composite');
+      let innerContent = '';
       composite.forEach(item => {
         innerContent += `<option value='${item}'>${item}</option>`;
       });
@@ -60,8 +60,15 @@
         globalCompositeOperation(value);
       };
       select.innerHTML = innerContent;
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.rotate((-45 * Math.PI) / 180);
+      ctx.font = '24px SimSun';
+      const text = ctx.measureText('haibo');
+      ctx.fillText('haibo', 10, 50);
+      const data = canvas.toDataURL();
+      console.log(data);
+
       //   ctx.fillStyle = "RGBA(255, 0, 0, 1)";
       //   const linear = ctx.createLinearGradient(0, 0, 100, 100);
       //   linear.addColorStop(0, "red");
@@ -278,20 +285,20 @@
       // document
       //   .querySelector(".iden")
       //   .parentNode.insertBefore(pic, document.querySelector(".iden"));
-      ctx.fillStyle = "blue";
-      ctx.arc(50, 50, 25, 0, 2 * Math.PI);
-      ctx.fill();
+      // ctx.fillStyle = "blue";
+      // ctx.arc(50, 50, 25, 0, 2 * Math.PI);
+      // ctx.fill();
 
-      let downBtn = document.querySelector("#download");
+      let downBtn = document.querySelector('#download');
       downBtn.onclick = function() {
-        let a = document.createElement("a");
-        a.setAttribute("hidden", true);
-        a.appendChild(document.createTextNode("download"));
+        let a = document.createElement('a');
+        a.setAttribute('hidden', true);
+        a.appendChild(document.createTextNode('download'));
         document.body.appendChild(a);
         let data = canvas.toDataURL();
         // let url = window.URL.createObjectURL(blob);
-        a.setAttribute("href", data);
-        a.setAttribute("download", "haibo");
+        a.setAttribute('href', data);
+        a.setAttribute('download', 'haibo');
         a.click();
         setTimeout(() => {
           a.parentNode.removeChild(a);

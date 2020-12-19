@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Lottery</title>
+  </head>
+  <body>
+    <h1>lottery</h1>
+    <div class="content">
+      <div class="lottery">
+        <div class="item-1">1</div>
+        <div class="item-2">2</div>
+        <div class="item-3">3</div>
+        <div class="item-4">4</div>
+        <div class="item-5">start</div>
+        <div class="item-6">6</div>
+        <div class="item-7">7</div>
+        <div class="item-8">8</div>
+        <div class="item-9">9</div>
+      </div>
+    </div>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --baseColor: rgb(25, 87, 219);
+      }
+      .content {
+        border: 1px solid var(--baseColor);
+        margin: 10px auto;
+      }
+      .content .lottery {
+        width: 600px;
+        height: 600px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin: 10px auto;
+      }
+      .content .lottery > div[class^='item'] {
+        width: 200px;
+        height: 200px;
+        border: 1px solid yellowgreen;
+        font-size: 28px;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 200px;
+        color: black;
+        text-shadow: 1px 1px 1px #ccc;
+      }
+      .content .lottery > div[class^='item'].active {
+        color: rgb(0, 255, 64);
+        font-size: 50px;
+        border-color: #e22967;
+        background: red;
+        box-shadow: 0px 0px 10px 9px #ff9800;
+      }
+      .item-5 {
+        cursor: pointer;
+      }
+      .disabled {
+        pointer-events: none;
+        cursor: wait;
+      }
+    </style>
+    <script>
+      class Lottery {
+        constructor(opt = {}) {
+          this.opt = opt;
+          this.startDom = this.$(opt.startDom);
+          this.container = this.$(opt.container);
+          this.queue = opt.queue || [1, 2, 3, 6, 9, 8, 7, 4];
+          this.time = opt.time || 1000;
+          this.preTimes = 5;
+          this.currentCount = 0;
+          this.currentIndex = 0;
+          this.prizeIndex = 0;
+          this.diffTime = opt.diff || 20;
+          this.timeLastQueue;
+          this.timeQueue = this.calcTime();
+          this.init();
+        }
+        $(dom) {
+          return document.querySelector(`.${dom}`);
+        }
+        addClass(dom, cs) {
+          !dom.classList.contains(cs) && dom.classList.add(cs);
+        }
+        removeClass(dom, cs) {
+          dom.classList.contains(cs) && dom.classList.remove(cs);
+        }
+        init() {
+          this.startDom.addEventListener('click', this.start.bind(this), {
+            capture: false,
+            once: false,
+            passive: false,
+          });
+        }
+        calcTime() {
+          const deltaTime = Array.from(
+            { length: this.queue.length - 1 },
+            (item, index) => index + 1
+          ).reduce((pre, next) => pre + next, 0);
+          const baseTime = (this.time - deltaTime * this.diffTime) / this.queue.length;
+          const queueTime = this.queue.map((item, index) => baseTime + index * this.diffTime);
+          this.timeLastQueue = this.queue.map(
+            (item, index) => queueTime.slice(-1)[0] + index * this.diffTime
+          );
+          return queueTime;
+        }
+        preOneTime() {
+          if (this.currentCount == 0) {
+            return this.timeQueue.reverse()[this.currentIndex];
+          } else if (this.currentCount == this.preTimes) {
+            return this.timeLastQueue[this.currentIndex + this.queue.length - this.prizeIndex - 1];
+          } else if (this.currentCount == this.preTimes - 1) {
+            if (this.currentIndex < this.prizeIndex) {
+              return this.timeQueue[this.currentIndex];
+            } else {
+              return this.timeLastQueue[this.currentIndex - this.prizeIndex];
+            }
+          }
+          return Math.min(...this.timeQueue);
+        }
+        getPrizeIndex() {
+          this.prizeIndex = Math.floor(Math.random() * this.queue.length);
+        }
+        setPrizeIndex(index) {
+          this.prizeIndex = index;
+        }
+        start() {
+          this.opt.start || this.getPrizeIndex();
+          if (this.opt.start && typeof this.opt.start === 'function') {
+            const res = this.opt.start(this);
+            if (
+              res &&
+              Object.prototype.toString.call(res) === '[object Promise]' &&
+              typeof res.then === 'function'
+            ) {
+              res.then(
+                index => {
+                  this.setPrizeIndex(index);
+                  this.preStart(this);
+                },
+                err => {
+                  this.removeClass(this.startDom, 'disabled');
+                  console.log(err);
+                }
+              );
+            } else {
+              this.preStart();
+            }
+          }
+        }
+        preStart() {
+          this.addClass(this.startDom, 'disabled');
+          this.currentCount = 0;
+          this.circle();
+        }
+        circle() {
+          const time = this.preOneTime();
+          setTimeout(() => {
+            this.addClass(
+              this.container.querySelector(`.item-${this.queue[this.currentIndex]}`),
+              'active'
+            );
+            if (this.currentIndex != 0) {
+              this.removeClass(
+                this.container.querySelector(`.item-${this.queue[this.currentIndex - 1]}`),
+                'active'
+              );
+            } else {
+              if (this.currentCount !== 0) {
+                this.removeClass(
+                  this.container.querySelector(`.item-${this.queue.slice(-1)[0]}`),
+                  'active'
+                );
+              }
+            }
+            console.log(this.prizeIndex, this.currentIndex, this.currentCount);
+            if (this.currentCount == this.preTimes && this.prizeIndex == this.currentIndex) {
+              return this.finish();
+            } else {
+              this.currentIndex++;
+              if (this.currentIndex == this.queue.length) {
+                if (this.currentCount == 0) {
+                  this.timeQueue = this.timeQueue.sort((a, b) => a - b);
+                }
+                this.currentCount++;
+                this.currentIndex = 0;
+              }
+            }
+            this.circle();
+          }, time);
+        }
+        finish() {
+          this.removeClass(this.startDom, 'disabled');
+          this.opt.done && this.opt.done(this.currentIndex);
+          const originQueue = this.timeQueue.concat();
+          this.timeQueue = this.timeQueue
+            .slice(this.currentIndex, this.queue.length)
+            .concat(this.timeQueue.slice(0, this.currentIndex));
+          console.log(this.timeQueue, this.timeLastQueue);
+        }
+      }
+
+      new Lottery({
+        startDom: 'item-5',
+        container: 'lottery',
+        done: () => {
+          console.log('done');
+        },
+        start(instance) {
+          console.log('start');
+          //   instance.setPrizeIndex(4);
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              reject(5);
+            }, 1000);
+          });
+        },
+      });
+    </script>
+  </body>
+</html>

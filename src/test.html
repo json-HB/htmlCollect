@@ -115,6 +115,7 @@
       }
       @keyframes move {
         from {
+          display: block;
           opacity: 0;
         }
         to {
@@ -275,6 +276,181 @@
         display: block;
       }
     </style>
-    <script></script>
+    <div class="blur">
+      blur
+    </div>
+    <style>
+      .blur {
+        --width: 200;
+        width: calc(var(--width) * 1px);
+        height: calc(var(--width) * 1px);
+        background: red;
+        border: 1px solid #ccc;
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 28px;
+        animation: blur 1s linear 0s infinite alternate;
+      }
+
+      @keyframes blur {
+        from {
+          transform: translateX(0px);
+          filter: motion-blur(0px);
+        }
+        to {
+          transform: translateX(100px);
+          filter: motion-blur(10px);
+        }
+      }
+    </style>
+
+    <script>
+      function suffix(arr) {
+        let res = [];
+        for (let i = 0, l = arr.length; i < l; i++) {
+          help(i);
+        }
+        function help(index) {
+          const cur = arr[index];
+          let item = [cur];
+          const rest = arr.filter(item => item != cur);
+          rest.forEach((c, j) => {
+            h = item.concat(j == 0 ? rest : rest.reverse());
+            res.push(h);
+          });
+        }
+        return res;
+      }
+    </script>
+    <script>
+      class Tree {
+        constructor(tree) {
+          this.root = null;
+          const type = typeof tree;
+          if (type == 'number') {
+            this.insertNode(tree);
+          } else if (Array.isArray(tree)) {
+            this.batchCreateNode(tree);
+          } else {
+            throw Error('tree shoule be number or array type');
+          }
+        }
+        insertNode(n) {
+          const newNode = this.createNode(n);
+          const _insert = function(node, newNode) {
+            if (node.key > newNode.key) {
+              if (node.left == null) {
+                node.left = newNode;
+              } else {
+                _insert(node.left, newNode);
+              }
+            } else {
+              if (node.right == null) {
+                node.right = newNode;
+              } else {
+                _insert(node.right, newNode);
+              }
+            }
+          };
+
+          if (this.root === null) {
+            this.root = newNode;
+          } else {
+            _insert(this.root, newNode);
+          }
+        }
+
+        createNode(val) {
+          const o = Object.create(null, {});
+          o.left = null;
+          o.right = null;
+          o.key = val;
+          return o;
+        }
+        batchCreateNode(tree) {
+          tree.forEach(item => {
+            this.insertNode(item);
+          });
+        }
+
+        showTree() {
+          return this.root;
+        }
+        inOrderTraverse(fn) {
+          const inOrderTraverseNode = function(node, cb) {
+            if (node !== null) {
+              inOrderTraverseNode(node.left, cb);
+              cb(node.key);
+              inOrderTraverseNode(node.right, cb);
+            }
+          };
+          inOrderTraverseNode(this.root, fn);
+        }
+        preOrderTraverse(fn) {
+          //先序遍历，传入一个回调函数
+          let preOrderTraverseNode = (node, callback) => {
+            if (node !== null) {
+              callback(node.key);
+              preOrderTraverseNode(node.left, callback);
+              preOrderTraverseNode(node.right, callback);
+            }
+          };
+          preOrderTraverseNode(this.root, fn);
+        }
+        postOrderTraverse(fn) {
+          //后序遍历，传入一个回调函数
+          let postOrderTraverseNode = (node, callback) => {
+            if (node !== null) {
+              postOrderTraverseNode(node.left, callback);
+              postOrderTraverseNode(node.right, callback);
+              callback(node.key);
+            }
+          };
+          postOrderTraverseNode(this.root, fn);
+        }
+        min() {
+          let node = this.root;
+          if (node) {
+            while (node && node.left != null) {
+              node = node.left;
+            }
+          }
+          return node.key;
+        }
+        max() {
+          let node = this.root;
+          if (node) {
+            while (node && node.right) {
+              node = node.right;
+            }
+          }
+          return node.key;
+        }
+        search(key) {
+          const help = function(node, k) {
+            if (k === null) {
+              return false;
+            } else if (k < node.key) {
+              return help(node.left, k);
+            } else if (k > node.key) {
+              return help(node.right, k);
+            } else {
+              return true;
+            }
+          };
+          return help(this.root, key);
+        }
+      }
+
+      const tree = new Tree([8, 3, 6, 4, 9, 11, 2, 5, 7]);
+      console.log(tree);
+      // console.log(tree.inOrderTraverse(key => console.log(key)));
+      // console.log(tree.preOrderTraverse(key => console.log(key)));
+      // console.log(tree.postOrderTraverse(key => console.log(key)));
+      console.log(tree.min());
+      console.log(tree.max());
+      console.log(tree.search(2));
+    </script>
   </body>
 </html>
