@@ -72,17 +72,17 @@
       class Lottery {
         constructor(opt = {}) {
           this.opt = opt;
-          this.startDom = this.$(opt.startDom);
-          this.container = this.$(opt.container);
-          this.queue = opt.queue || [1, 2, 3, 6, 9, 8, 7, 4];
-          this.time = opt.time || 1000;
-          this.preTimes = 5;
-          this.currentCount = 0;
-          this.currentIndex = 0;
-          this.prizeIndex = 0;
-          this.diffTime = opt.diff || 20;
-          this.timeLastQueue;
-          this.timeQueue = this.calcTime();
+          this.startDom = this.$(opt.startDom); // 开始的按钮
+          this.container = this.$(opt.container); // 包含奖项的容器
+          this.queue = opt.queue || [1, 2, 3, 6, 9, 8, 7, 4]; // 按顺序执行的旋转方向
+          this.time = opt.time || 1000; // 完成一次旋转的时间
+          this.preTimes = 5; // 总转圈次数
+          this.currentCount = 0; // 当前装圈的次数
+          this.currentIndex = 0; // 当前旋转的下标值
+          this.prizeIndex = 0; // 中奖的下标
+          this.diffTime = opt.diff || 20; // 每次转到下一个的时间差
+          this.timeLastQueue; // 最后一次旋转的时间数组
+          this.timeQueue = this.calcTime(); // 第一次旋转的时间数组
           this.init();
         }
         $(dom) {
@@ -101,6 +101,7 @@
             passive: false,
           });
         }
+        // 计算时间队列
         calcTime() {
           const deltaTime = Array.from(
             { length: this.queue.length - 1 },
@@ -113,6 +114,7 @@
           );
           return queueTime;
         }
+        // 计算下一个的时间
         preOneTime() {
           if (this.currentCount == 0) {
             return this.timeQueue.reverse()[this.currentIndex];
@@ -130,6 +132,7 @@
         getPrizeIndex() {
           this.prizeIndex = Math.floor(Math.random() * this.queue.length);
         }
+        // 设置中奖下标
         setPrizeIndex(index) {
           this.prizeIndex = index;
         }
@@ -155,6 +158,8 @@
             } else {
               this.preStart();
             }
+          } else {
+            this.preStart();
           }
         }
         preStart() {
@@ -162,6 +167,7 @@
           this.currentCount = 0;
           this.circle();
         }
+        // 循环执行
         circle() {
           const time = this.preOneTime();
           setTimeout(() => {
@@ -205,7 +211,6 @@
           this.timeQueue = this.timeQueue
             .slice(this.currentIndex, this.queue.length)
             .concat(this.timeQueue.slice(0, this.currentIndex));
-          console.log(this.timeQueue, this.timeLastQueue);
         }
       }
 
@@ -215,15 +220,15 @@
         done: () => {
           console.log('done');
         },
-        start(instance) {
-          console.log('start');
-          //   instance.setPrizeIndex(4);
-          return new Promise((resolve, reject) => {
-            setTimeout(() => {
-              reject(5);
-            }, 1000);
-          });
-        },
+        // start(instance) {
+        //   console.log('start');
+        //   //   instance.setPrizeIndex(4);
+        //   return new Promise((resolve, reject) => {
+        //     setTimeout(() => {
+        //       reject(5);
+        //     }, 1000);
+        //   });
+        // },
       });
     </script>
   </body>
