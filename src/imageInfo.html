@@ -21,8 +21,8 @@
       }
     </style>
     <script>
-      const file = document.querySelector("#file");
-      file.addEventListener("change", function(ev) {
+      const file = document.querySelector('#file');
+      file.addEventListener('change', function(ev) {
         let File = new FileReader();
         let f = ev.target.files[0];
         File.readAsDataURL(f);
@@ -33,12 +33,8 @@
           img.onload = function() {
             EXIF.getData(img, function() {
               var allMetaData = EXIF.getAllTags(this);
-              document.querySelector(".pre").src = res;
-              document.querySelector(".info").innerHTML = JSON.stringify(
-                allMetaData,
-                null,
-                "\n"
-              );
+              document.querySelector('.pre').src = res;
+              document.querySelector('.info').innerHTML = JSON.stringify(allMetaData, null, '\n');
             });
           };
         };

@@ -377,6 +377,7 @@
         showTree() {
           return this.root;
         }
+        // 前序遍历
         inOrderTraverse(fn) {
           const inOrderTraverseNode = function(node, cb) {
             if (node !== null) {
@@ -387,6 +388,7 @@
           };
           inOrderTraverseNode(this.root, fn);
         }
+        // 中序遍历
         preOrderTraverse(fn) {
           //先序遍历，传入一个回调函数
           let preOrderTraverseNode = (node, callback) => {
@@ -398,6 +400,7 @@
           };
           preOrderTraverseNode(this.root, fn);
         }
+        // 后序遍历
         postOrderTraverse(fn) {
           //后序遍历，传入一个回调函数
           let postOrderTraverseNode = (node, callback) => {

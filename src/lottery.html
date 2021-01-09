@@ -65,12 +65,15 @@
       }
       .disabled {
         pointer-events: none;
-        cursor: wait;
       }
     </style>
     <script>
       class Lottery {
         constructor(opt = {}) {
+          /*
+           ** opt.done: () => void  完成时的回调
+           ** opt.start: (instance: Lottery) => void | () => Promise<number>  完成时的回调
+           */
           this.opt = opt;
           this.startDom = this.$(opt.startDom); // 开始的按钮
           this.container = this.$(opt.container); // 包含奖项的容器
@@ -142,7 +145,7 @@
             const res = this.opt.start(this);
             if (
               res &&
-              Object.prototype.toString.call(res) === '[object Promise]' &&
+              Object.prototype.toString.call(res) === '[object Object]' &&
               typeof res.then === 'function'
             ) {
               res.then(
