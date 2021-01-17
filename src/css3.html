@@ -116,7 +116,18 @@
       );
     </script>
     <div class="animation">hello world javascript!</div>
+    <!-- <div class="paddingBefore"></div> -->
     <style>
+      .paddingBefore {
+        width: 100%;
+        background: red;
+      }
+      .paddingBefore:before {
+        content: '';
+        display: block;
+        padding-top: 100%;
+        position: relative;
+      }
       .animation {
         width: 100%;
         border: 1px solid #ccc;
