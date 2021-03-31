@@ -310,5 +310,42 @@
         letter-spacing: 2px;
       }
     </style>
+    <div class="radial-gradient"> </div>
+    <style>
+      :root {
+        --baseWidth: 100px;
+        --baseColor: red;
+      }
+      .radial-gradient {
+        width: var(--baseWidth, 200px);
+        height: var(--baseWidth);
+        border: 1px solid #ccc;
+        background: radial-gradient(circle at left center, red 10%, yellow 50%, blue);
+      }
+    </style>
+    <div class="mask-demo"> </div>
+    <style>
+      .mask-demo {
+        width: 50vmax;
+        height: 400px;
+        padding: 10px;
+        border: 1px solid red;
+        background: url('/img/pic0.jpg'), linear-gradient(to right, red 0%, yellow 100%);
+        background-repeat: no-repeat;
+        background-size: cover, cover;
+        mask-image: url('/img/hospital.png');
+        -webkit-mask-image: url('/img/hostipal.png');
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-mode: alpha;
+        -webkit-mask-position: 0 0;
+        -webkit-mask-clip: border-box;
+        -webkit-mask-size: cover;
+      }
+    </style>
+    <script>
+      window.onload = function() {
+        window.scrollTo({ top: document.body.scrollHeight });
+      };
+    </script>
   </body>
 </html>
