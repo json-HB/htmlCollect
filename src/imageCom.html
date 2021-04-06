@@ -33,17 +33,38 @@
         }
         return Math.round(size * 100) / 100 + types[i];
       }
+
+          // base64转file
+    function dataURLtoFile(dataurl, fileName) {
+        let arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        let file;
+		try {
+			file = new File([u8arr], fileName, {type: mime});
+		} catch(err) {
+			file = new Blob([u8arr], {type: mime});
+			file.name = fileName;
+		}
+        return file;
+    }
+
       const file = document.querySelector('#file');
       file.addEventListener(
         'change',
         function(ev) {
-          const File = new FileReader();
+          const file = new FileReader();
           const data = ev.target.files[0];
           const originSize = dealKb(data.size);
           const imageType = data.type;
           console.log('change111', data);
-          File.readAsDataURL(data);
-          File.onload = function(ev) {
+          file.readAsDataURL(data);
+          file.onload = function(ev) {
             console.log(ev, 'event');
             const img = new Image();
             img.src = ev.target.result;
@@ -70,7 +91,7 @@
               context.drawImage(img, 0, 0, targetW, targetH);
               const rate = document.querySelector('#rate').value || 0.92;
               const result = canvas.toDataURL(imageType, +rate);
-              let blob = new Blob([result], { type: imageType });
+              let blob = dataURLtoFile(result, Date.now());
               canvas.toBlob(function(blobObj) {
                 let imgSrc = window.URL.createObjectURL(blobObj);
                 console.log(imgSrc);

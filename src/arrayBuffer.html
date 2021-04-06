@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Array Buffer Api</title>
+</head>
+<body>
+    <h1>arrayBuffer</h1>
+    <script>
+        const len = 16;
+        const buffer = new ArrayBuffer(len);
+        const view = new DataView(buffer);
+        const str = 'hello world';
+        str.split('').forEach((i, index) => {
+            view.setInt8(index, i);
+        })
+        console.log(view.byteLength);
+    </script>
+</body>
+</html>

@@ -254,6 +254,28 @@
         },
         { capture: false }
       );
+
+      function initUrl() {
+        const search = window.location.search.replace(/^\?/, '');
+        const params = {};
+        if (search) {
+          const parts = search.split('&');
+          parts.forEach(item => {
+            const lf = item.split('=');
+            params[lf[0]]= decodeURIComponent(lf[1]);
+          })
+        }
+        console.log(params, 'params')
+        if (params.url) {
+          document.querySelector('.form-input').value = params.url;
+          change.click();
+          console.log(params.url, '=> init success')
+        }
+      }
+
+      window.onload = function() {
+        initUrl();
+      }
     </script>
   </body>
 </html>
