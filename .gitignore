@@ -1,2 +1,16 @@
-node_modules/
 dist
+node_modules
+.*
+!.travis.yml
+!.babelrc.json
+!.gitignore
+# bin
+# assert
+data
+src/a
+dev
+db.json
+package-lock.json
+main.out
+src/c/*.*
+bin/c.js
