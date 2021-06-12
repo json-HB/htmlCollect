@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>hover</title>
+    <style>
+      .hover {
+        border: 1px solid #ccc;
+        height: 50px;
+        color: red;
+        line-height: 50px;
+        padding: 2px;
+        width: 30vw;
+        overflow: hidden;
+      }
+      .hover > .child {
+        position: absolute;
+        overflow-x: auto;
+        overflow-y: hidden;
+        display: block;
+        height: 50px;
+        visibility: hidden;
+      }
+      .move {
+        height: 50px;
+        position: absolute;
+        overflow: hidden;
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hover">
+      <span class="child">
+        I an a world, but i dont know the text that how long to cale! I an a
+        world, but i dont know the text that how long to cale!</span
+      >
+      <div class="move">
+        I an a world, but i dont know the text that how long to cale! I an a
+        world, but i dont know the text that how long to cale!
+      </div>
+    </div>
+    <script type="module">
+      const content = document.querySelector(".hover");
+      const child = document.querySelector(".child");
+      const fullWidth = child.offsetWidth;
+      const diffWidth = fullWidth - content.offsetWidth;
+      const width = content.offsetWidth;
+      const { log } = console;
+      function move(ev) {
+        // ev.stopProgagation();
+        log(ev.target);
+        const x = ev.offsetX;
+        let rate = x / width;
+        const res = rate * fullWidth;
+        const dis = res - x + 5;
+        document.querySelector(
+          ".move"
+        ).style.transform = `translate(${-dis}px)`;
+      }
+      content.addEventListener(
+        "mouseenter",
+        function(ev) {
+          move(ev);
+        },
+        false
+      );
+      content.addEventListener(
+        "mousemove",
+        function(ev) {
+          move(ev);
+        },
+        false
+      );
+      content.addEventListener(
+        "mouseout",
+        function() {
+          document.querySelector(".move").style.transform = `translate(0px)`;
+        },
+        false
+      );
+    </script>
+  </body>
+</html>

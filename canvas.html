@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>canvas</title>
+    <style>
+      canvas {
+        background: white;
+        border: 1px solid black;
+      }
+    </style>
+    <style>/*!normalize.cssv8.0.1|MITLicense|github.com/necolas/normalize.css*//*Document==========================================================================*//***1.Correctthelineheightinallbrowsers.*2.PreventadjustmentsoffontsizeafterorientationchangesiniOS.*/html{line-height:1.15;/*1*/-webkit-text-size-adjust:100%;/*2*/}/*Sections==========================================================================*//***Removethemargininallbrowsers.*/body{margin:0;}/***Renderthe`main`elementconsistentlyinIE.*/main{display:block;}/***Correctthefontsizeandmarginon`h1`elementswithin`section`and*`article`contextsinChrome,Firefox,andSafari.*/h1{font-size:2em;margin:0.67em0;}/*Groupingcontent==========================================================================*//***1.AddthecorrectboxsizinginFirefox.*2.ShowtheoverflowinEdgeandIE.*/hr{box-sizing:content-box;/*1*/height:0;/*1*/overflow:visible;/*2*/}/***1.Correcttheinheritanceandscalingoffontsizeinallbrowsers.*2.Correcttheodd`em`fontsizinginallbrowsers.*/pre{font-family:monospace,monospace;/*1*/font-size:1em;/*2*/}/*Text-levelsemantics==========================================================================*//***RemovethegraybackgroundonactivelinksinIE10.*/a{background-color:transparent;}/***1.RemovethebottomborderinChrome57-*2.AddthecorrecttextdecorationinChrome,Edge,IE,Opera,andSafari.*/abbr[title]{border-bottom:none;/*1*/text-decoration:underline;/*2*/text-decoration:underlinedotted;/*2*/}/***AddthecorrectfontweightinChrome,Edge,andSafari.*/b,strong{font-weight:bolder;}/***1.Correcttheinheritanceandscalingoffontsizeinallbrowsers.*2.Correcttheodd`em`fontsizinginallbrowsers.*/code,kbd,samp{font-family:monospace,monospace;/*1*/font-size:1em;/*2*/}/***Addthecorrectfontsizeinallbrowsers.*/small{font-size:80%;}/***Prevent`sub`and`sup`elementsfromaffectingthelineheightin*allbrowsers.*/sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline;}sub{bottom:-0.25em;}sup{top:-0.5em;}/*Embeddedcontent==========================================================================*//***RemovetheborderonimagesinsidelinksinIE10.*/img{border-style:none;}/*Forms==========================================================================*//***1.Changethefontstylesinallbrowsers.*2.RemovethemargininFirefoxandSafari.*/button,input,optgroup,select,textarea{font-family:inherit;/*1*/font-size:100%;/*1*/line-height:1.15;/*1*/margin:0;/*2*/}/***ShowtheoverflowinIE.*1.ShowtheoverflowinEdge.*/button,input{/*1*/overflow:visible;}/***RemovetheinheritanceoftexttransforminEdge,Firefox,andIE.*1.RemovetheinheritanceoftexttransforminFirefox.*/button,select{/*1*/text-transform:none;}/***CorrecttheinabilitytostyleclickabletypesiniOSandSafari.*/button,[type="button"],[type="reset"],[type="submit"]{-webkit-appearance:button;}/***RemovetheinnerborderandpaddinginFirefox.*/button::-moz-focus-inner,[type="button"]::-moz-focus-inner,[type="reset"]::-moz-focus-inner,[type="submit"]::-moz-focus-inner{border-style:none;padding:0;}/***Restorethefocusstylesunsetbythepreviousrule.*/button:-moz-focusring,[type="button"]:-moz-focusring,[type="reset"]:-moz-focusring,[type="submit"]:-moz-focusring{outline:1pxdottedButtonText;}/***CorrectthepaddinginFirefox.*/fieldset{padding:0.35em0.75em0.625em;}/***1.CorrectthetextwrappinginEdgeandIE.*2.Correctthecolorinheritancefrom`fieldset`elementsinIE.*3.Removethepaddingsodevelopersarenotcaughtoutwhentheyzeroout*`fieldset`elementsinallbrowsers.*/legend{box-sizing:border-box;/*1*/color:inherit;/*2*/display:table;/*1*/max-width:100%;/*1*/padding:0;/*3*/white-space:normal;/*1*/}/***AddthecorrectverticalalignmentinChrome,Firefox,andOpera.*/progress{vertical-align:baseline;}/***RemovethedefaultverticalscrollbarinIE10+.*/textarea{overflow:auto;}/***1.AddthecorrectboxsizinginIE10.*2.RemovethepaddinginIE10.*/[type="checkbox"],[type="radio"]{box-sizing:border-box;/*1*/padding:0;/*2*/}/***CorrectthecursorstyleofincrementanddecrementbuttonsinChrome.*/[type="number"]::-webkit-inner-spin-button,[type="number"]::-webkit-outer-spin-button{height:auto;}/***1.CorrecttheoddappearanceinChromeandSafari.*2.CorrecttheoutlinestyleinSafari.*/[type="search"]{-webkit-appearance:textfield;/*1*/outline-offset:-2px;/*2*/}/***RemovetheinnerpaddinginChromeandSafarionmacOS.*/[type="search"]::-webkit-search-decoration{-webkit-appearance:none;}/***1.CorrecttheinabilitytostyleclickabletypesiniOSandSafari.*2.Changefontpropertiesto`inherit`inSafari.*/::-webkit-file-upload-button{-webkit-appearance:button;/*1*/font:inherit;/*2*/}/*Interactive==========================================================================*//**AddthecorrectdisplayinEdge,IE10+,andFirefox.*/details{display:block;}/**Addthecorrectdisplayinallbrowsers.*/summary{display:list-item;}/*Misc==========================================================================*//***AddthecorrectdisplayinIE10+.*/template{display:none;}/***AddthecorrectdisplayinIE10.*/[hidden]{display:none;}</style>
+  </head>
+  <body>
+    <h1 class="iden">canvas</h1>
+    <button id="download">download</button>
+    <canvas id="canvas" width="200" height="200"></canvas>
+    <button id="btn">change size</button>
+    <br />
+    <select id="composite"> </select>
+    <script module>
+      const composite = [
+        'source-over',
+        'source-in',
+        'source-out',
+        'source-atop',
+        'destination-over',
+        'destination-in',
+        'destination-out',
+        'destination-atop',
+        'lighter',
+        'copy',
+        'xor',
+        'multiply',
+        'screen',
+        'overlay',
+        'darken',
+        'lighten',
+        'color-dodge',
+        'color-burn',
+        'hard-light',
+        'soft-light',
+        'difference',
+        'exclusion',
+        'hue',
+        'saturation',
+        'color',
+        'luminosity',
+      ];
+      let select = document.querySelector('#composite');
+      let innerContent = '';
+      composite.forEach(item => {
+        innerContent += `<option value='${item}'>${item}</option>`;
+      });
+      select.onchange = function(ev) {
+        console.log(ev.target.value);
+        let value = ev.target.value;
+        globalCompositeOperation(value);
+      };
+      select.innerHTML = innerContent;
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.rotate((-45 * Math.PI) / 180);
+      ctx.font = '24px SimSun';
+      const text = ctx.measureText('haibo');
+      ctx.fillText('haibo', 10, 50);
+      const data = canvas.toDataURL();
+      console.log(data);
+
+      //   ctx.fillStyle = "RGBA(255, 0, 0, 1)";
+      //   const linear = ctx.createLinearGradient(0, 0, 100, 100);
+      //   linear.addColorStop(0, "red");
+      //   linear.addColorStop(0.5, "yellow");
+      //   linear.addColorStop(1, "blue");
+      //   ctx.fillStyle = linear;
+      //   ctx.fillRect(0, 0, 100, 100);
+      // const radial = ctx.createRadialGradient(75, 75, 0, 75, 75, 25);
+      // radial.addColorStop(0, "red");
+      // radial.addColorStop(1, "blue");
+      // ctx.fillStyle = radial;
+      // ctx.fillRect(50, 50, 50, 50);
+
+      // 十字架
+      //   const w = canvas.width / 2;
+      //   const h = canvas.height / 2;
+      //   console.log(w, h);
+      //   ctx.fillStyle = "#ccc";
+      //   ctx.fillRect(w - 50, h - 6, 100, 12);
+      //   ctx.fillRect(w - 6, h - 50, 12, 100);
+
+      // img
+      //   const img = new Image();
+      //   img.src = "./img/pic2.jpg";
+      //   img.onload = function(ev) {
+      //     const imgW = ev.target.width;
+      //     const imgH = ev.target.height;
+      //     const rate = imgW / imgH;
+      //     ctx.drawImage(this, 0, 0, imgW, imgH, 300, 100, 300, 300 / rate);
+      //   };
+      //   img.style.display = "none";
+      //   document.body.appendChild(img);
+
+      // font
+      //   ctx.font = "bold 30px SimSun";
+      //   const en = ctx.measureText("text");
+      //   const zh = ctx.measureText("测试");
+      //   ctx.fillText("text", 200, 100);
+      //   ctx.fillText("测试", 200, 150);
+      //   ctx.font = "12px SimSun";
+      //   ctx.fillStyle = "red";
+      //   ctx.fillText(`text ${en.width}`, 200 + en.width, 100);
+      //   ctx.fillText(`测试 ${zh.width}`, 200 + zh.width, 150);
+
+      // globalAlpha
+      //   ctx.save();
+      //   ctx.globalAlpha = 0.5;
+      //   ctx.fillStyle = "blue";
+      //   ctx.fillRect(200, 200, 50, 50);
+      //   ctx.globalAlpha = 0.7;
+      //   //   ctx.restore();
+      //   ctx.fillStyle = "red";
+      //   ctx.fillRect(220, 220, 50, 50);
+      //   function a() {
+      //     ctx.fillStyle = "red";
+      //     ctx.fillRect(10, 10, w++, w++);
+      //   }
+      //   let w = 10;
+
+      // loading
+      //   ctx.lineCap = "butt";
+      //   const center = [150, 150];
+      //   const offset = 10;
+      //   const length = 10;
+      //   ctx.lineCap = "round";
+      //   ctx.lineWidth = 4;
+      //   for (let angle = 0; angle < 360; angle += 45) {
+      //     const sin = Math.sin((angle / 180) * Math.PI);
+      //     const cos = Math.cos((angle / 180) * Math.PI);
+      //     ctx.beginPath();
+      //     ctx.moveTo(center[0] + offset * cos, center[0] + offset * sin);
+      //     ctx.lineTo(
+      //       center[0] + (offset + length) * cos,
+      //       center[0] + (offset + length) * sin
+      //     );
+      //     ctx.strokeStyle = `rgba(0,0,0, ${0.25 + (0.75 * angle) / 360})`;
+      //     ctx.stroke();
+      //   }
+
+      // setLineDash
+      //   ctx.beginPath();
+      //   ctx.setLineDash([4, 4, 4, 4]);
+      //   ctx.lineCap = "round";
+      //   ctx.lineWidth = 4;
+      //   ctx.moveTo(100, 100);
+      //   ctx.lineTo(200, 200);
+      //   ctx.stroke();
+
+      // strokeRect
+
+      //   function draw() {
+      //     ctx.save();
+      //     ctx.clearRect(100, 100, 200, 200);
+      //     ctx.lineWidth = 2;
+      //     ctx.setLineDash([8, 4]);
+      //     ctx.lineDashOffset = offset;
+      //     ctx.strokeRect(100, 100, 200, 200);
+      //   }
+      //   let run1;
+      //   let offset = 0;
+      //   function run() {
+      //     offset += 0.5;
+      //     if (offset > 24) {
+      //       offset = 0;
+      //     }
+      //     draw();
+      //     run1 = requestAnimationFrame(run);
+      //   }
+      //   //   run();
+      //   setTimeout(() => {
+      //     cancelAnimationFrame(run1);
+      //   }, 20000);
+      //   ctx.setLineDash([10, 4]);
+      //   ctx.strokeRect(100, 100, 200, 200);
+
+      //   ctx.save();
+      //   ctx.beginPath();
+      //   ctx.lineWidth = 8;
+      //   ctx.lineCap = "round";
+      //   ctx.lineJoin = "round";
+      //   ctx.moveTo(100, 100);
+      //   ctx.lineTo(100, 200);
+      //   ctx.lineTo(200, 200);
+      //   ctx.closePath();
+      //   ctx.stroke();
+      //   ctx.fillStyle = "yellow";
+      //   ctx.fill();
+      //   ctx.restore();
+
+      // shadow
+      //   ctx.save();
+      //   ctx.shadowColor = "red";
+      //   ctx.shadowBlur = 10;
+      //   ctx.fillStyle = "pink";
+      //   ctx.fillRect(100, 100, 200, 200);
+      //   ctx.restore();
+      //   ctx.font = "bold 20px SimSun";
+      //   ctx.fillStyle = "black";
+      //   ctx.fillText("hello world", 150, 150);
+      //   ctx.restore();
+      //   ctx.shadowColor = "purple";
+      //   ctx.shadowOffsetX = 2;
+      //   ctx.shadowOffsetY = 2;
+      //   ctx.font = "bold 30px simHei";
+      //   ctx.fillText("Color", 300, 100);
+
+      // strokeStyle
+      //   ctx.strokeStyle = "red";
+      //   ctx.save();
+      //   ctx.lineWidth = 10;
+      //   //   ctx.lineCap = "round";
+      //   ctx.setLineDash([10, 4]);
+      //   ctx.strokeRect(100, 100, 200, 200);
+
+      // textAlign
+      // ctx.font = "bold 28px simHei";
+
+      // ctx.beginPath();
+      // ctx.arc(100, 100, 50, 0, Math.PI / 2, true);
+      // ctx.closePath();
+      // ctx.stroke();
+
+      // ctx.beginPath();
+      // ctx.moveTo(200, 200);
+
+      // ctx.arcTo(250, 250, 300, 200, 50);
+      // ctx.lineTo(300, 200);
+      // ctx.closePath();
+      // ctx.stroke();
+
+      // let x = 10;
+      // let toggle = false;
+      // function clear() {
+      //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+      //   ctx.font = "28px fold SimHei";
+      //   ctx.fillText("Clear", 100, 30);
+      //   setTimeout(() => {
+      //     draw();
+      //   }, 100);
+      // }
+      // function draw() {
+      //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+      //   ctx.beginPath();
+      //   x += 20;
+      //   if (x + 50 > canvas.width) x = 50;
+      //   ctx.fillText("draw", 100, 30);
+      //   ctx.arc(x, 200, 50, 0, Math.PI * 2);
+      //   toggle = !toggle;
+      //   ctx.fillStyle = toggle ? "blue" : "red";
+      //   ctx.fill();
+      //   ctx.stroke();
+      //   setTimeout(() => {
+      //     clear();
+      //   }, 100);
+      // }
+      // draw();
+
+      // createImageData
+
+      // let data = ctx.createImageData(100, 100);
+      // for (let x = 1; x <= data.width; x += 5) {
+      //   for (let y = 1; y <= data.height; y += 5) {
+      //     var index = 4 * (data.width * (y - 1) + (x - 1));
+      //     data.data[index] = 0;
+      //     data.data[index + 1] = 128;
+      //     data.data[index + 2] = 0;
+      //     data.data[index + 3] = 256;
+      //   }
+      // }
+      // ctx.putImageData(data, 0, 0);
+      // const img = canvas.toDataURL();
+      // let pic = new Image();
+      // pic.src = img;
+      // document
+      //   .querySelector(".iden")
+      //   .parentNode.insertBefore(pic, document.querySelector(".iden"));
+      // ctx.fillStyle = "blue";
+      // ctx.arc(50, 50, 25, 0, 2 * Math.PI);
+      // ctx.fill();
+
+      let downBtn = document.querySelector('#download');
+      downBtn.onclick = function() {
+        let a = document.createElement('a');
+        a.setAttribute('hidden', true);
+        a.appendChild(document.createTextNode('download'));
+        document.body.appendChild(a);
+        let data = canvas.toDataURL();
+        // let url = window.URL.createObjectURL(blob);
+        a.setAttribute('href', data);
+        a.setAttribute('download', 'haibo');
+        a.click();
+        setTimeout(() => {
+          a.parentNode.removeChild(a);
+          // URL.revokeObjectURL(blob);
+        });
+      };
+      // ctx.rotate((45 * Math.PI) / 180);
+      // ctx.font = "bold 24px SimSun";
+      // ctx.fillText("hello world", 10, 10);
+      // ctx.setTransform(1, 0, 0, 1, 0, 0);
+      // ctx.rect(100, 100, 200, 200);
+      // ctx.stroke();
+      // let img = new Image();
+      // img.src = "/img/pic11.jpg";
+      // img.onload = function(ev) {
+      //   const { width, height } = ev.target;
+      //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+      //   ctx.translate(canvas.width / 2, canvas.height / 2);
+      //   ctx.rotate(90 * (Math.PI / 180));
+      //   ctx.translate(-canvas.width / 2, -canvas.height / 2);
+      //   canvas.width = height;
+      //   canvas.height = width;
+      //   ctx.drawImage(
+      //     this,
+      //     0,
+      //     0,
+      //     width,
+      //     height,
+      //     0,
+      //     0,
+      //     canvas.width,
+      //     canvas.height
+      //   );
+      // };
+
+      // globalCompositeOperation
+      // function globalCompositeOperation(type = "source-over") {
+      //   ctx.fillStyle = "red";
+      //   ctx.fillRect(100, 100, 100, 100);
+      //   ctx.globalCompositeOperation = type;
+      //   ctx.fillStyle = "blue";
+      //   ctx.fillRect(150, 150, 100, 100);
+      // }
+      // globalCompositeOperation();
+    </script>
+  </body>
+</html>

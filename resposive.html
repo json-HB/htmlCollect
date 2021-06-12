@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      ul {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-around;
+        align-items: center;
+      }
+      li {
+      }
+    </style>
+  </head>
+  <body>
+    <ul>
+      <li>
+        <h3>HEAD</h3>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+      </li>
+      <li>
+        <h3>HEAD</h3>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+      </li>
+      <li>
+        <h3>HEAD</h3>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+      </li>
+      <li>
+        <h3>HEAD</h3>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+      </li>
+      <li>
+        <h3>HEAD</h3>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+        <p>list - item1</p>
+      </li>
+    </ul>
+    <script>
+      window.addEventListener(
+        "onorientationchange" in window ? "orientationchange" : "resize",
+        function() {
+          console.log(window.screen.width);
+          if (window.orientation === 180 || window.orientation === 0) {
+            alert("竖屏状态！");
+          }
+          if (window.orientation === 90 || window.orientation === -90) {
+            alert("横屏状态！");
+          }
+        },
+        false
+      );
+      // window.onbeforeunload = function(e) {
+      //   e = e || window.event;
+      //   e.returnValue = "are you want to exit the web";
+      //   return "helllo";
+      // };
+    </script>
+  </body>
+</html>

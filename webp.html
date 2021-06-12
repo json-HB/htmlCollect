@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>webp</title>
+  </head>
+  <body>
+    <h1>webp</h1>
+    <div class="paste"> </div>
+    <img class="preview" src="" alt="" />
+    <img id="img" src="./img/pic1.jpg" alt="" />
+
+    <style>
+      .preview {
+        width: 200px;
+        height: auto;
+      }
+      img {
+        display: inline-block;
+        width: 100vw;
+        height: auto;
+      }
+    </style>
+    <script>
+      //图转base64
+      function getBase64Image(img) {
+        var canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+        var ext = img.src.substring(img.src.lastIndexOf('.') + 1).toLowerCase();
+        console.log(img, canvas, ctx);
+
+        var dataURL = canvas.toDataURL();
+        return dataURL;
+      }
+
+      //base64转file
+      function dataURLtoFile(dataurl, filename) {
+        var arr = dataurl.split(','),
+          mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]),
+          n = bstr.length,
+          u8arr = new Uint8Array(n);
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, { type: mime });
+      }
+
+      window.onload = function() {
+        const paste = document.querySelector('.paste');
+
+        paste.addEventListener('dragover', function(ev) {
+          ev.preventDefault();
+          console.log('hover');
+          this.style.borderColor = 'red';
+        });
+
+        paste.addEventListener('dragleave', function(ev) {
+          ev.preventDefault();
+          console.log('leave');
+          this.style.borderColor = 'blue';
+        });
+
+        paste.addEventListener('drop', function(ev) {
+          ev.preventDefault();
+          console.log(ev.dataTransfer.files);
+        });
+
+        paste.addEventListener(
+          'paste',
+          function(ev) {
+            console.log(ev);
+            if (ev.clipboardData || ev.originalEvent) {
+              var clipboardData =
+                event.clipboardData || window.clipboardData || event.originalEvent.clipboardData;
+              if (clipboardData.items) {
+                const items = clipboardData.items;
+                console.log(items);
+                let file = null;
+                let str = null;
+                if (items && items.length) {
+                  // 搜索剪切板items
+                  for (var i = 0; i < items.length; i++) {
+                    console.log(items[i]);
+                    if (items[i].type.indexOf('image') !== -1) {
+                      console.log(items[i].kind, items[i]);
+                      //getAsFile() 此方法只是living standard firefox ie11 并不支持
+                      file = items[i].getAsFile();
+                      // console.log(file);
+                      break;
+                    } else if (items[i].type.includes('text/plain')) {
+                      items[i].getAsString(s => {
+                        if (/^[\/\/|https?]/.test(s)) {
+                          console.log(s, 'img');
+                          const img = new Image();
+                          // img.crossOrigin = 'Anonymous';
+                          img.src = s;
+                          img.onload = function(ev) {
+                            var dataBase64 = getBase64Image(img); //转化为base64格式
+                            var file = dataURLtoFile(dataBase64, 'avatar'); //转化为file类型文件
+                            console.log(file);
+                          };
+                          img.onerror = function() {
+                            console.log('error');
+                          };
+                        }
+                      });
+                    }
+                  }
+                }
+                if (file) {
+                  const fileReader = new FileReader();
+                  fileReader.onload = ev => {
+                    // console.log(ev.target.result);
+                    document.querySelector('.preview').setAttribute('src', ev.target.result);
+                  };
+                  fileReader.readAsDataURL(file);
+                } else {
+                  console.log(str);
+                }
+                clipboardData.clearData();
+              }
+            }
+          },
+          false
+        );
+
+        var canvas = document.createElement('canvas');
+
+        (ctx = canvas.getContext('2d')), (img = document.getElementById('img'));
+
+        var loadImg = function(url, fn) {
+          var image = new Image();
+          image.src = url;
+          image.onload = function() {
+            fn(image);
+          };
+        };
+        loadImg('./img/pic1.jpg', function(image) {
+          canvas.height = image.height;
+          canvas.width = image.width;
+          ctx.drawImage(image, 0, 0);
+          img.setAttribute('src', canvas.toDataURL('image/webp'));
+        });
+      };
+    </script>
+    <div class="parent">
+      <p class="inner">I am Inner</p>
+    </div>
+    <style>
+      .paste {
+        width: 100px;
+        height: 100px;
+        background: yellow;
+      }
+      .parent {
+        border: 10px solid #ccc;
+        padding: 20px;
+      }
+      .parent .inner {
+        width: 200px;
+        height: 200px;
+        background: red;
+        color: blue;
+        font-size: 40px;
+        text-align: center;
+      }
+    </style>
+    <script>
+      const parent = document.querySelector('.parent');
+      const inner = document.querySelector('.inner');
+      parent.addEventListener(
+        'click',
+        () => {
+          console.log('parent');
+        },
+        true
+      );
+      inner.addEventListener(
+        'click',
+        ev => {
+          ev.stopImmediatePropagation();
+
+          console.log('inner');
+        },
+        false
+      );
+      inner.addEventListener(
+        'click',
+        ev => {
+          ev.stopPropagation();
+          console.log('inner 2');
+        },
+        false
+      );
+      inner.addEventListener(
+        'click',
+        () => {
+          console.log('inner 3');
+        },
+        false
+      );
+    </script>
+  </body>
+</html>

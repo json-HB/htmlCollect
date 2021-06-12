@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>svg</title>
+  </head>
+  <body>
+    <h1>svg</h1>
+    <svg
+      version="1.1"
+      baseProfile="full"
+      width="300"
+      height="200"
+      viewBox="0 0 600 400"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect width="100%" height="100%" fill="red" />
+      <circle cx="150" cy="100" r="80" fill="green" />
+      <text x="150" y="100" font-size="30" fill="white" text-anchor="middle">hello world</text>
+    </svg>
+    <svg width="300" height="200">
+      <rect width="100%" height="100%" fill="red" />
+      <circle cx="150" cy="100" r="80" fill="green" />
+      <text x="150" y="100" font-size="30" fill="white" text-anchor="middle">hello world</text>
+    </svg>
+    <svg width="400px" height="400px">
+      <rect
+        x="10"
+        y="10"
+        width="30"
+        height="30"
+        stroke="red"
+        fill="transparent"
+        stroke-width="4"
+      ></rect>
+      <rect
+        x="30"
+        y="50"
+        width="30"
+        height="30"
+        rx="3"
+        ry="3"
+        stroke-width="3"
+        stroke="black"
+        fill="yellow"
+      ></rect>
+      <circle cx="100" cy="100" r="30" stroke="blue" stroke-width="2" fill="pink"></circle>
+      <ellipse
+        cx="100"
+        cy="200"
+        stroke="yellow"
+        stroke-width="4"
+        fill="orange"
+        rx="30"
+        ry="15"
+      ></ellipse>
+      <line x1="10" y1="10" x2="100" y2="200" stroke="blue" fill="red" stroke-width="2"></line>
+      <polygon
+        points="50 50 100 50 100 100 50 100"
+        stroke="green"
+        fill="transparent"
+        stroke-width="5"
+      />
+      <polygon
+        points="50 160 55 180 70 180 60 190 65 205 50 195 35 205 40 190 30 180 45 180"
+        stroke="green"
+        fill="transparent"
+        stroke-width="5"
+      />
+      <path d="M20,230 Q40,205 50,230 T90,230" fill="none" stroke="blue" stroke-width="5" />
+    </svg>
+    <svg width="400" height="400">
+      <!-- <rect width="100" height="100" fill="red" stroke="green"></rect> -->
+      <path d="M 10 10 H 100 V 100 L 10 100"></path>
+      <path d="M 100 10 L 150 100 L 150 10" fill="red"></path>
+      <line x1="50" y1="50" x2="150" y2="150" fill="blue" stroke="blue"></line>
+      <polygon points="200 200 200 300 300 300" fill="red"></polygon>
+      <!-- <circle cx="100" cy="100" r="50" fill="yellow" stroke="red" stroke-width="2"></circle> -->
+    </svg>
+    <svg width="200" height="200">
+      <path d="M 10 10 C 20 20 50 30 60 10" fill="red" stroke="blue"></path>
+      <rect
+        width="100"
+        height="100"
+        fill="red"
+        stroke="blue"
+        fill-opacity="0.5"
+        stroke-opacity="0.5"
+        stroke-width="10"
+        stroke-linecap="round"
+      ></rect>
+      <line
+        x1="50"
+        y1="50"
+        x2="100"
+        y2="100"
+        stroke="red"
+        stroke-width="10"
+        stroke-opacity="0.5"
+        stroke-linecap="round"
+      ></line>
+    </svg>
+    <svg width="200" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- <linearGradient id="Gradient1">
+          <stop class="stop1" offset="0%" />
+          <stop class="stop2" offset="50%" />
+          <stop class="stop3" offset="100%" />
+        </linearGradient>
+        <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="red" />
+          <stop offset="50%" stop-color="black" stop-opacity="0" />
+          <stop offset="100%" stop-color="blue" />
+        </linearGradient> -->
+        <linearGradient id="linear">
+          <stop class="stop1" offset="0%" />
+          <stop class="stop2" offset="50%" />
+          <stop class="stop3" offset="100%" />
+        </linearGradient>
+        <linearGradient id="linear2" x1="0" y1="0" x2="1" y2="1">
+          <stop class="stop1" offset="0%" />
+          <stop class="stop2" offset="50%" />
+          <stop class="stop3" offset="100%" />
+        </linearGradient>
+        <radialGradient id="RadialGradient1">
+          <stop offset="0%" stop-color="red" />
+          <stop offset="100%" stop-color="blue" />
+        </radialGradient>
+        <style type="text/css">
+          <![CDATA[
+            .stop1 {
+              stop-color: red;
+            }
+            .stop2 {
+              stop-color: yellow;
+            }
+            .stop3 {
+              stop-color: blue;
+            }
+            #rect1 {
+              fill: url(#linear);
+            }
+            #rect2 {
+              fill: url(#linear2);
+            }
+            #radial1 {
+              fill: url(#RadialGradient1)
+            }
+          ]]>
+        </style>
+      </defs>
+      <rect x="0" y="0" width="100" height="100" id="radial1" />
+      <!-- <rect x="0" y="0" width="100" height="100" id="rect1" />
+      <rect x="100" y="100" width="100" height="100" id="rect2" /> -->
+    </svg>
+    <!-- <svg width="200" height="200">
+      <text id="demo" x="10" y="10" fill="red" stroke-width="1" stroke="blue" stroke-opacity="0.5">
+        hello world
+        <tspan font-weight="bold" rotate="20">I am children</tspan>
+      </text>
+      <text id="example">This is an example text.</text>
+
+      <text>
+        <tref xlink:href="#example" />
+      </text>
+    </svg> -->
+    <!-- <svg width="300" height="300">
+      <g fill="red" transfrom="scale(2)">
+        <rect x="0" y="0" width="100" height="100" transform="translate(20 30), rotate(30)" />
+        <rect x="101" y="0" width="100" height="100" transform="skewY(10)" />
+      </g>
+    </svg> -->
+    <svg width="200" height="200">
+      <g transform="scale(2)">
+        <rect x="0" y="0" width="50" height="50" />
+      </g>
+    </svg>
+
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+      <svg width="100" height="100" viewBox="0 0 50 50">
+        <rect width="50" height="50" />
+      </svg>
+    </svg> -->
+
+    <svg width="200" height="200">
+        <defs>
+          <clipPath id="demo">
+
+          </clipPath> 
+        </defs> 
+      </svg>
+
+    <script>
+      const svg = document.getElementsByName('svg');
+    </script>
+  </body>
+</html>

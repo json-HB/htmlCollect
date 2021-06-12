@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Vue3</title>
+  </head>
+  <body>
+    <h1>vue3</h1>
+    <user-card></user-card>
+    <script>
+      class CustomDom extends HTMLElement {
+        constructor(props) {
+          super(props);
+          this.innerHTML = 'hello world';
+          this.style.cssText =
+            'border: 1px solid #ccc; padding: 10px;background:linear-gradient(45deg, red, yellow)';
+        }
+        connectedCallback() {
+          console.log('innerst');
+        }
+      }
+      window.customElements.define('user-card', CustomDom);
+
+      let obj = {
+        name: 'haibo',
+        age: 30,
+      };
+      obj = new Proxy(obj, {
+        get(target, key) {},
+        set(target, key, value, receive) {
+          console.log(`obj ${target[key]}  => ${value}`);
+        },
+      });
+      document.onclick = () => {
+        obj.name = 'haifeng';
+      };
+    </script>
+  </body>
+</html>

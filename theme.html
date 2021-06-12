@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>theme</title>
+    <style>
+      .border {
+        border: 2px solid #ccc;
+        width: 50px;
+        height: 50px;
+        text-align: center;
+      }
+      :root {
+        --baseColor: black;
+      }
+      .theme-demo {
+        background: var(--baseColor);
+        width: 20vw;
+        height: 20vw;
+        border: 1px solid #ccc;
+      }
+    </style>
+    <script type='text/javascript' js-name='baseTag'>var base;"json-hb.github.io"==document.domain&&((base=document.createElement("base")).href="/htmlCollect/",base.target="_self",document.head.appendChild(base));</script>
+  </head>
+  <body>
+    <div class="border">
+      hello world
+    </div>
+    <label for="">red</label>
+    <input type="radio" name="theme" data-type="a" />
+    <input type="radio" name="theme" data-type="b" />
+    <hr />
+    <div class="theme-demo"> </div>
+    <div class="input-group">
+      <button type="button" class="theme-green">green</button>
+      <button type="button" class="theme-pink">pink</button>
+    </div>
+    <script>
+      let btnGroup = document.querySelector('.input-group');
+      let themtCache = null;
+
+      function isLocal() {
+        return location.href.includes('localhost');
+      }
+
+      function getTheme() {
+        const url = isLocal() ? '/mock/index.json' : '/htmlCollect/mock/index.json';
+        return fetch(url, {
+          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: 'same-origin', // include, same-origin, *omit
+          headers: {
+            'user-agent': navigator.userAgent,
+          },
+          method: 'GET', // *GET, POST, PUT, DELETE, etc.
+          mode: 'cors', // no-cors, cors, *same-origin
+          referrer: 'no-referrer', // *client, no-referrer
+        }).then(response => response.json());
+      }
+
+      function setTheme(t) {
+        let root = document.querySelector('html');
+        root.style.cssText = `--baseColor: ${t}; --secondColor: #ff9800`;
+      }
+
+      btnGroup.addEventListener(
+        'click',
+        function(ev) {
+          let target = ev.target;
+
+          if (target.nodeName == 'BUTTON') {
+            let theme = target.className.split('-')[1];
+            if (themtCache != null) {
+              setTheme(themtCache['theme'][theme].baseColor);
+            } else {
+              getTheme().then(res => {
+                console.log(res);
+                setTheme(res['theme'][theme].baseColor);
+                themtCache = res;
+              });
+            }
+          }
+        },
+        { capture: false }
+      );
+    </script>
+    <script>
+      function preload() {
+        ['a', 'b'].forEach(item => {
+          let l = document.createElement('link');
+          l.href = `css/${item}.css`;
+          l.rel = 'stylesheet alternate';
+          l.title = 'disabled';
+          l.type = 'text/css';
+          document.head.appendChild(l);
+          l.addEventListener('load', () => {
+            console.log(`loading`);
+          });
+        });
+      }
+      window.onload = function() {
+        preload();
+        let radios = document.querySelectorAll('input');
+        let links = document.querySelectorAll("link[rel*='stylesheet']");
+        Array.from(radios).forEach(item => {
+          item.addEventListener('change', function(ev) {
+            const type = ev.target.dataset.type;
+            Array.from(links).forEach(l => {
+              l.disabled = true;
+              if (l.getAttribute('href').includes(type)) {
+                l.disabled = false;
+              }
+            });
+          });
+        });
+      };
+    </script>
+  </body>
+</html>

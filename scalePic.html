@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>scalePic</title>
+    <style>
+      .container {
+        border-radius: 4px;
+        position: relative;
+        display: inline-block;
+      }
+      .container .layer-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 1px solid #ccc;
+      }
+      .imageTran img {
+        display: block;
+        width: 50%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>scalePic</h1>
+    <div class="container"></div>
+    <div class="imageTran">
+      <img src="./img/pic1.jpg" alt="" />
+    </div>
+    <div class="xy"></div>
+    <script>
+      const dom = document.querySelector('.imageTran img');
+      document.body.addEventListener(
+        'mousemove',
+        function(ev) {
+          console.log(ev);
+          const { pageX, pageY } = ev;
+          console.log(pageX, pageY);
+          const { width, height } = screen;
+          const rate = 10;
+          dom.style.transform = `translate3d(${(rate * pageX) / width}px, ${(rate * pageY) /
+            height}px, 0)`;
+        },
+        { capture: false, once: false }
+      );
+    </script>
+    <script>
+      class Scale {
+        constructor(dom, opt = {}) {
+          this.root = document.querySelector(dom);
+          if (!opt.img) {
+            throw new Error(`img must be required`);
+          }
+          this.img = opt.img;
+          this.layerWidth = 100;
+          this.width = opt.width || 400;
+          this.heigth = opt.height || 400;
+          this.targetWidth = 0;
+          this.targetHeight = 0;
+          this.x = null;
+          this.y = null;
+          this.layerDom = null;
+          this.hasLayer = false;
+          this.rate = 3;
+          this.init();
+          this.bindEvent();
+        }
+
+        init() {
+          const Img = new Image();
+          Img.src = this.img;
+          const that = this;
+          Img.onload = function(ev) {
+            const { width, height } = ev.target;
+            console.log(width, height);
+            this.width = width / that.rate;
+            this.height = height / that.rate;
+            that.targetWidth = this.width;
+            that.targetHeight = this.height;
+            that.root.appendChild(Img);
+          };
+        }
+        bindEvent() {
+          this.root.addEventListener('mousemove', this.move, false);
+          this.root.addEventListener('mouseenter', this.enter, false);
+          this.root.addEventListener('mouseleave', this.leave, false);
+        }
+
+        renderLayer(opt) {
+          if (this.hasLayer) {
+            console.log('move');
+            this.toggleLayer(true);
+          } else {
+            console.log('renderLayer');
+            const layerDom = document.createElement('div');
+            layerDom.classList.add('layer-container');
+            this.layerDom = layerDom;
+            layerDom.style.background = `url(${this.img})`;
+            this.root.appendChild(this.layerDom);
+            this.hasLayer = true;
+          }
+          this.initLayer(opt);
+        }
+
+        initLayer = opt => {
+          let { x, y } = opt;
+          if (x < this.layerWidth) {
+            x = 0;
+          }
+          if (y < this.layerWidth) {
+            y = 0;
+          }
+          console.log(this.targetWidth);
+          if (x >= this.targetWidth - this.layerWidth) {
+            x = this.targetWidth - this.layerWidth;
+          }
+          if (y >= this.targetHeight - this.layerWidth) {
+            y = this.targetHeight - this.layerWidth;
+          }
+          [x, y] = [
+            x < this.layerWidth
+              ? 0
+              : x >= this.targetWidth - this.layerWidth
+              ? this.targetWidth - this.layerWidth
+              : x - this.layerWidth / 2,
+            y < this.layerWidth
+              ? 0
+              : y >= this.targetHeight - this.layerWidth
+              ? this.targetHeight - this.layerWidth
+              : y - this.layerWidth / 2,
+          ];
+          const [bgx, bgy] = [
+            (x + this.layerWidth / 2) * this.rate,
+            (y + this.layerWidth / 2) * this.rate,
+          ];
+          this.layerDom.style.left = `${x}px`;
+          this.layerDom.style.top = `${y}px`;
+          this.layerDom.style.backgroundPositionX = `-${bgx}px`;
+          this.layerDom.style.backgroundPositionY = `-${bgy}px`;
+        };
+
+        move = ev => {
+          if (ev.target.classList.contains('layer-container')) {
+            console.log(ev);
+            return;
+          }
+          const { offsetX, offsetY } = ev;
+          document.querySelector('.xy').innerHTML = `x: ${offsetX}, y: ${offsetY}`;
+          this.renderLayer({ x: offsetX, y: offsetY });
+        };
+        enter = ev => {
+          const { offsetX, offsetY } = ev;
+          this.renderLayer({ x: offsetX, y: offsetY });
+        };
+        leave = () => {
+          console.log('leave');
+          this.toggleLayer(false);
+        };
+        toggleLayer = bol => {
+          this.layerDom.style.display = bol ? 'block' : 'none';
+        };
+      }
+      // new Scale('.container', {
+      //   img: './img/pic7.jpg',
+      // });
+    </script>
+  </body>
+</html>
