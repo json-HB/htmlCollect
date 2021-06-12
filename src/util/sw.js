@@ -17,8 +17,14 @@ self.addEventListener('fetch', function(event) {
     caches.match(event.request).then(res => {
       if (res === undefined) {
         return new Response('hello');
+      } else {
+        return fetch(event.request).then(resp => {
+          caches.open('v1').then(cache => {
+            cache.put(event.request, resp.clone());
+            return resp;
+          });
+        });
       }
-      return res;
     })
   );
 });
