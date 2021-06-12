@@ -228,6 +228,7 @@ gulp.task('vendors', function(cb) {
       path.resolve(basePath, 'driver.js/dist', `driver.min.css`),
       path.resolve(basePath, 'vue/dist/', `vue.min.js`),
       path.resolve(basePath, 'js-md5/build/md5.min.js'),
+      path.resolve(basePath, 'js-md5/build/md5.min.js'),
     ])
     // .pipe(UglifyJS())
     .pipe(gulp.dest(path.resolve('src/vendors/')))
