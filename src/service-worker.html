@@ -12,7 +12,7 @@
     <script>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker
-          .register('/util/sw.js')
+          .register('./util/sw.js')
           .then(res => {
             console.log('service worker register success!');
           })
@@ -31,6 +31,7 @@
       const btn2 = document.querySelector('.btn2');
       const btn3 = document.querySelector('.btn3');
       const btn4 = document.querySelector('.btn4');
+      const btn5 = document.querySelector('.btn5');
 
       function createImg(index) {
         const img = document.createElement('img');
