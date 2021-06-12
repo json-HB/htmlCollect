@@ -1,63 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>service-worker</title>
-</head>
-<body>
+    <!-- <require src="./util/baseTag.js" inline=true gzip=true  > -->
+  </head>
+  <body>
     <h1>service-worker</h1>
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/util/sw.js').then((res) => {
-                console.log('service worker register success!')
-            }).catch(err => {
-
-            })
-        }
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .register('/util/sw.js')
+          .then(res => {
+            console.log('service worker register success!');
+          })
+          .catch(err => {});
+      }
     </script>
 
-    <button class='btn1'>add img1</button>
-    <button class='btn2'>add img2</button>
-    <button class='btn3'>add img3</button>
-    <button class='btn4'>fetch</button>
+    <button class="btn1">add img1</button>
+    <button class="btn2">add img2</button>
+    <button class="btn3">add img3</button>
+    <button class="btn5">add img4</button>
+    <button class="btn4">fetch</button>
 
     <script>
-        const btn1 = document.querySelector('.btn1');
-        const btn2 = document.querySelector('.btn2');
-        const btn3 = document.querySelector('.btn3');
-        const btn4 = document.querySelector('.btn4');
+      const btn1 = document.querySelector('.btn1');
+      const btn2 = document.querySelector('.btn2');
+      const btn3 = document.querySelector('.btn3');
+      const btn4 = document.querySelector('.btn4');
 
-        function createImg(index) {
-            const img = document.createElement('img');
-            img.setAttribute('src', `/img/pic${index}.jpg`);
-            document.body.appendChild(img);
-        }
+      function createImg(index) {
+        const img = document.createElement('img');
+        img.setAttribute('src', `/img/pic${index}.jpg`);
+        document.body.appendChild(img);
+      }
 
-        [btn1, btn2, btn3].forEach((dom, index) => {
-            dom.addEventListener('click', () => {
-                createImg(index + 1)
-            }, {capture: false})
-        })
+      [btn1, btn2, btn3, btn5].forEach((dom, index) => {
+        dom.addEventListener(
+          'click',
+          () => {
+            createImg(index + 1);
+          },
+          { capture: false }
+        );
+      });
 
-        btn4.addEventListener('click', () => {
-            fetch('http://localhost:8100/posts', {
-                method: 'GET'
-            }).then(res => {
-                return res.json();
-            }).then(res => {
-                console.log(res);
+      btn4.addEventListener(
+        'click',
+        () => {
+          fetch('http://localhost:8100/posts', {
+            method: 'GET',
+          })
+            .then(res => {
+              return res.json();
             })
-        }, false)
-
+            .then(res => {
+              console.log(res);
+            });
+        },
+        false
+      );
     </script>
     <style>
-        img {
-            width: 30vw;
-            display: block;
-            height: auto;
-        }
+      img {
+        width: 30vw;
+        display: block;
+        height: auto;
+      }
     </style>
-</body>
+  </body>
 </html>
