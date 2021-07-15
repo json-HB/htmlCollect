@@ -1,127 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>N/A</title>
-  </head>
-  <body>
-    <!-- <require src="./vendors/md5.min.js" inline=true gzip=false  > -->
-    <h1>taotao</h1>
-    <button class="btn">
-      商品列表
-    </button>
-    <hr />
-    <div class="container">
-      <ul> </ul>
-    </div>
-    <br />
-    <script>
-      const btn = document.querySelector('.btn');
-      const fetchGoodList = function() {
-        const now = Date.now();
-        const random = Math.random()
-          .toString()
-          .slice(-6);
-        let screct = `appKey=5f807697ce768&timer=${now}&nonce=${random}&key=1142283cba22dfda852ac6c5e33aa9c3`;
-        let mdsScrect = md5(screct)
-          .toString()
-          .toUpperCase();
-        const api = 'https://openapi.dataoke.com/api/goods/get-goods-list';
-        let query = `appKey=5f807697ce768&nonce=${random}&timer=${now}&version=v1.2.3&pageId=1&signRan=${mdsScrect}`;
-        fetch(`${api}?${query}`)
-          .then(res => {
-            return res.json();
-          })
-          .then(res => {
-            const data = res.data.list;
-            let str = '';
-            data.forEach(item => {
-              str += `<li><a href="${item.couponLink}"><img src='${item.mainPic}' />
-                    <p>${item.desc}</p>
-                    <p>商品原价: ${item.originalPrice}</p>
-                    <p class='red'>券后价: ${item.actualPrice}</p>
-                    <p>折扣力度: ${item.discounts}</p>
-                    <p class='red'>30天销量: ${item.monthSales}</p>
-                    <p>热推值: ${item.hotPush}</p>
-                    <p>描述分: ${item.descScore}</p>
-                </a></li>`;
-            });
-            console.log(str);
-            document.querySelector('.container ul').innerHTML = str;
-          });
-      };
-      btn.addEventListener('click', fetchGoodList, false);
-    </script>
-    <style>
-      .container {
-        width: 100%;
-        border: 1px solid #ccc;
-        padding: 5px;
-      }
-      .container ul {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
-      .container ul li {
-        width: 200px;
-        height: auto;
-        padding: 5px;
-        border: 1px solid red;
-        margin-right: 5px;
-        list-style-type: none;
-        margin-bottom: 5px;
-      }
-      .container ul li img {
-        display: block;
-        width: 100%;
-        height: auto;
-      }
-      .container ul li p {
-        font-weight: bold;
-        color: black;
-      }
-      .container ul li p.red {
-        color: red;
-      }
-    </style>
-    <button class="firstOrder">首单礼金</button>
-    <hr />
-    <script>
-      const fetchFirstList = function() {
-        const now = Date.now();
-        const random = Math.random()
-          .toString()
-          .slice(-6);
-        let screct = `appKey=5f807697ce768&timer=${now}&nonce=${random}&key=1142283cba22dfda852ac6c5e33aa9c3`;
-        let mdsScrect = md5(screct)
-          .toString()
-          .toUpperCase();
-        const api = 'https://openapi.dataoke.com/api/goods/first-order-gift-money';
-        let query = `appKey=5f807697ce768&nonce=${random}&timer=${now}&version=v1.2.3&pageId=1&signRan=${mdsScrect}&pageSize=10&pageId=1`;
-        fetch(`${api}?${query}`)
-          .then(res => {
-            return res.json();
-          })
-          .then(res => {
-            const data = res.data.list;
-            // data.forEach(item => {
-            //   str += `<li><a href="${item.couponLink}"><img src='${item.mainPic}' />
-            //         <p>${item.desc}</p>
-            //         <p>商品原价: ${item.originalPrice}</p>
-            //         <p class='red'>券后价: ${item.actualPrice}</p>
-            //         <p>折扣力度: ${item.discounts}</p>
-            //         <p class='red'>30天销量: ${item.monthSales}</p>
-            //         <p>热推值: ${item.hotPush}</p>
-            //         <p>描述分: ${item.descScore}</p>
-            //     </a></li>`;
-            // });
-            console.log(data);
-          });
-      };
-      document.querySelector('.firstOrder').addEventListener('click', fetchFirstList, false);
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <p class="output">iFrame body</p>
+</body>
+<script>
+var output = document.querySelector('.output');
+
+window.addEventListener('message', onMessage);
+
+function onMessage(e) {
+  output.innerHTML = e.data;
+  // Use the transfered port to post a message back to the main frame
+  e.ports[0].postMessage('Message back from the IFrame');
+}
+</script>
 </html>

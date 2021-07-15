@@ -347,5 +347,176 @@
         window.scrollTo({ top: document.body.scrollHeight });
       };
     </script>
+
+    <ul class="scroll-container">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+    </ul>
+    <style>
+      .scroll-container {
+        overflow-x: scroll;
+        overflow-y: hidden;
+        width: 300px;
+        height: 200px;
+        display: flex;
+        flex-flow: row nowrap;
+        border: 1px solid aquamarine;
+        scroll-snap-type: x mandatory;
+      }
+      .scroll-container li {
+        list-style: none;
+        height: 100%;
+        display: inline-block;
+        text-align: center;
+        font-size: 28px;
+        flex: 0 0 200px;
+        line-height: 200px;
+        color: black;
+        border-right: 1px solid red;
+      }
+    </style>
+
+    <div class='gap-demo'>
+      <div>123</div>
+      <div>1234</div>
+      <div>14</div>
+      <div>1adfsd</div>
+    </div>
+    <hr>
+
+    <style>
+      .gap-demo {
+        width: 100%;
+        columns: 100px;
+        column-gap: 50px;
+        column-count: 4;
+        column-rule: 1px solid red;
+      }
+    </style>
+
+    <img class="scale-img" src="img/pic0.jpg" alt="">
+    <style>
+      .scale-img {
+        display: inline-block;
+        width: 400px;
+        height: auto;
+        margin: 0 auto;
+        will-change: transform;
+        transition: transform linear 0s;
+      }
+      .scale-t {
+        will-change: transform;
+        transition: transform linear 0s;
+      }
+    </style>
+
+    <div class="mask"></div>
+
+    <style>
+
+      .mask {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+        transition: opacity .3s ease-in 0s;
+        background: black;
+        opacity: 0;
+        z-index: -99;
+      }
+      .mask.show {
+        opacity: 0.4;
+        display: block;
+        z-index: 99;
+      }
+    </style>
+
+    <script>
+      const img = document.querySelector('.scale-img');
+      img.addEventListener('click', scale, {
+        capture: false,
+        passive: true
+      });
+
+     const getOffset = (dom, dir) => {
+      let res = dir === 'top' ? dom.offsetTop : dom.offsetLeft;
+      while(dom.offsetParent) {
+        dom = dom.offsetParent;
+        res += dir === 'top' ? dom.offsetTop : dom.offsetLeft;
+      }
+      return res;
+     }
+
+    function setVisible(dom, bol) {
+      dom.style.visibility = bol ? 'visible' : 'hidden'
+    }
+
+    function showMask(bol) {
+      const dom = document.querySelector('.mask');
+      if (!dom.classList.contains('show')) {
+        const fn = () => {
+          showMask();
+          document.querySelector('[data-zoom]').parentNode.removeChild(document.querySelector('[data-zoom]'))
+          document.querySelector('.scale-img').style.visibility = 'visible'
+          setOverFlow(false)
+        }
+        dom.onclick = fn;
+      }
+      dom.classList.toggle('show');
+    }
+
+    function setOverFlow(bol) {
+      const s = document.body.style.overflow;
+      document.body.style.overflow = s === 'hidden' ? 'auto' : 'hidden'
+    }
+
+      function scale() {
+        setVisible(this, false);
+        showMask(true)
+        setOverFlow(true);
+        const w = this.width;
+        const h = this.height;
+        const windowW = window.innerWidth;
+        const windowH = window.innerHeight;
+        const sle = (windowH - 100) / h;
+        const targetH = sle * windowH / w;
+        const img = document.createElement('img');
+        img.setAttribute('src', this.getAttribute('src'));
+        img.width = this.width;
+        img.height = this.height;
+        img.setAttribute('data-scale', this.getAttribute('src'))
+        img.style.position = 'absolute'
+        img.style.zIndex = 9999;
+        img.setAttribute('data-zoom', 'true')
+        img.style.className = 'scale-t'
+        const top = getOffset(this, 'top');
+        const left = getOffset(this, 'left');
+        img.style.left = left;
+        console.log(top)
+        img.style.top = top;
+        img.style.transition = `all .3s linear 0s`;
+        document.body.appendChild(img)
+        img.style.transformOrigin = 'center'
+        setTimeout(() => {
+          const l = (windowW - w) / 2 + document.documentElement.scrollLeft - left;
+          const t = (windowH - h) / 2 + document.documentElement.scrollTop - top;
+          img.style.transform = `scale(1) translate3d(${l}px,${t}px,0)`;
+          img.addEventListener('transitionend', () => {
+            img.onclick = () => {
+              img.parentNode.removeChild(img);
+              showMask();
+              setVisible(this, true)
+              setOverFlow(false)
+            }
+          })
+        })
+      }
+    </script>
   </body>
 </html>
