@@ -113,4 +113,6 @@ window.addEventListener(
     }
   },
   false
-);
+)
+
+console.log(document.currentScript)

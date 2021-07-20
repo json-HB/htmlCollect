@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>petite-vue</title>
+</head>
+<body>
+    <h1>petite-vue</h1>
+    <div v-scope id="app1">
+        {{count}}
+        <div>{{plusOne}}</div>
+        <button @click="increate" >add</button>
+        <div v-if="show" @mounted="mounted($el)" @unmounted="unmounted($el)">show</div>
+        <div @click="toggle">toggle</div>
+
+        <div class="" v-effect="$el.textContent= count"></div>
+        <input type="text">
+        <button @click='addItem'>add</button>
+    </div>
+    <script src="https://unpkg.com/petite-vue@0.2.3/dist/petite-vue.iife.js"></script>
+    <script>
+        const option = {
+            count: 0,
+            get plusOne() {
+                return this.count + 1
+            },
+            increate() {
+                this.count++;
+            },
+            show: false,
+            toggle() {
+                this.show = !this.show
+            },
+            mounted(el) {
+                console.log(el)
+            },
+            unmounted(el) {
+                console.log(el)
+            }
+        };
+        PetiteVue.createApp(option).mount('#app1');
+    </script>
+</body>
+</html>

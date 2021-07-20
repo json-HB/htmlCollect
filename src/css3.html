@@ -9,6 +9,7 @@
         ENV: 'qa',
       };
     </script>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2686582_dljrvs9ivbc.css">
     <title>css3</title>
     <style>
       * {
@@ -416,6 +417,40 @@
 
     <div class="mask"></div>
 
+      <div class="img-tool">
+        <ul>
+          <li><i class="icon-plus iconfont"></i></li>
+          <li><i class="icon-Scale iconfont"></i></li>
+          <li><i class="icon-rotate iconfont"></i></li>
+          <li><i class="icon-delete iconfont"></i></li>
+        </ul>
+      </div>
+      <style>
+        .img-tool {
+          position: fixed;
+          bottom: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          height: auto;
+          z-index: 99999;
+        }
+        .img-tool ul {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: row;
+          height: 80px;
+        }
+        .img-tool ul li {
+          background-color: #ccc;
+          height: auto;
+          width: 100px;
+          text-align: center;
+        }
+        .img-tool ul li:hover {
+          cursor: pointer;
+        }
+      </style>
     <style>
 
       .mask {
@@ -476,6 +511,35 @@
       document.body.style.overflow = s === 'hidden' ? 'auto' : 'hidden'
     }
 
+    class Tool {
+      constructor(dom) {
+        this.dom = dom;
+        this.t = document.querySelector('.img-tool');
+        this.init();
+      }
+
+      init() {
+        Array.from(this.t.querySelectorAll('li')).forEach((item, index) => {
+          item.addEventListener('click', this.bind(index), {
+            capture: false
+          })
+        })
+      }
+
+      bind(index) {
+        return () => {
+          if (index === 0) {
+            let transform = this.dom.style.transform;
+            console.log(333)
+            this.dom.style.transform = this.dom.style.transform.replace(/scale\(([^)]+)\)/g, (full, part) => {
+              console.log(full, part)
+              return `scale(${+part + 0.1})`
+            })
+          }
+        }
+      }
+    }
+
       function scale() {
         setVisible(this, false);
         showMask(true)
@@ -487,6 +551,7 @@
         const sle = (windowH - 100) / h;
         const targetH = sle * windowH / w;
         const img = document.createElement('img');
+        new Tool(img);
         img.setAttribute('src', this.getAttribute('src'));
         img.width = this.width;
         img.height = this.height;
@@ -507,9 +572,21 @@
           const l = (windowW - w) / 2 + document.documentElement.scrollLeft - left;
           const t = (windowH - h) / 2 + document.documentElement.scrollTop - top;
           img.style.transform = `scale(1) translate3d(${l}px,${t}px,0)`;
+          let flag = false;
           img.addEventListener('transitionend', () => {
+            console.log(flag)
             img.onclick = () => {
-              img.parentNode.removeChild(img);
+              console.log(flag)
+              if (flag) {
+                const transform = img.style.transform.replace(/translate3d\(.*px,\s+?.*px,\s+?0px\)/, 'translate3d(0px,0px,0)');
+                console.log(transform)
+                img.style.transform = transform;
+              }
+            }
+            if (!flag) {
+              flag = true;
+            } else {
+              img.parentNode.removeChild(img)
               showMask();
               setVisible(this, true)
               setOverFlow(false)
