@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>videocapture</title>
+</head>
+<body>
+    <h1>videocapture</h1>
+    <video src="/img/weipaitang.mp4" class="captrue-video" controls loop poster="/img/pic0.jpg"></video>
+    <style>
+        video {
+            width: 50vw;
+            height: auto;
+        }
+    </style>
+    <div>
+        <button class="btn-capture">截图</button>
+        <style>
+            .btn-capture {
+                color: black;
+                padding: .2rem;
+                font-size: .28rem;
+                cursor: pointer;
+            }
+        </style>
+    </div>
+    <script>
+        // 生成图片
+        function createVideoPic(dom) {
+            let canvasEl, dataUrl;
+            try {
+                const styles = getComputedStyle(dom);
+                const w = styles.getPropertyValue('width').replace(/px/, '');
+                const h = styles.getPropertyValue('height').replace(/px/, '');
+                canvasEl = document.createElement('canvas');
+                canvasEl.style.cssText = 'position: fixed; left: -9999;'
+                canvasEl.width = w;
+                canvasEl.height = h;
+                document.body.appendChild(canvasEl);
+                const ctx = canvasEl.getContext('2d');
+                ctx.drawImage(dom, 0,0, w, h);
+                dataUrl = canvasEl.toDataURL();
+                return dataUrl;
+            } finally {
+                if (canvasEl) {
+                    canvasEl.parentNode.removeChild(canvasEl);
+                }
+                if (dataUrl) {
+                    dataUrl = null;
+                }
+            }
+        }
+
+        function download(url) {
+           const a = document.createElement('a');
+           a.setAttribute('href', url);
+           document.body.appendChild(a);
+           a.download = `${Date.now()}`;
+           a.click();
+           document.body.removeChild(a);
+        }
+
+        function doCapture() {
+            const url = createVideoPic(document.querySelector('.captrue-video'));
+            download(url)
+        }
+        document.querySelector('.btn-capture').addEventListener('click', () => {
+            doCapture();
+        })
+    </script>
+</body>
+</html>
