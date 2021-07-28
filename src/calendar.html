@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>N/A</title>
+    <!-- <require src="./vendors/dayjs.js" inline=true gzip=true  > -->
+</head>
+<body>
+    <h1>calendar</h1>
+    <style id="calendar">
+        .calendar-container {
+            position: relative;
+            margin: 0 auto;
+            width: 65vw;
+            height: 70vh;
+            overflow: hidden;
+        }
+        .wrap-container {
+            position: relative;
+            display: grid;
+            width: 65vw;
+            height: 70vh;
+            border: 1px solid #ccc;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(auto-fill, 1fr);
+            grid-column-gap: 10px;
+            grid-row-gap: 10px;
+            grid-auto-flow: row;
+            justify-content: center;
+            align-items: stretch;
+            position: absolute;
+            left: 0;
+            top: 0;
+            will-change: transform;
+        }
+
+        .wrap-container.next {
+            z-index: -1;
+        }
+        
+        .wrap-container div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .wrap-container div.mark {
+            position: relative;
+        }
+        .wrap-container div.mark:before {
+            position: absolute;
+            content: '';
+            display: block;
+            right: 5px;
+            top: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color:#CC0033;
+            animation: scale 1s linear 0s infinite alternate;
+        }
+        .wrap-container div.gray {
+            filter: grayscale(1);
+            cursor: not-allowed;
+        }
+        .wrap-container div.date {
+            /* transition: all .3s linear 0s; */
+        }
+        .wrap-container div.transition {
+            transform: rotateX(360deg);
+            transform-origin: center;
+        }
+        .wrap-container div.active {
+            box-shadow: #2c37b7d6 0 0 0 4px;
+        }
+        .wrap-container div:nth-child(4n+1) {
+            background-color: #CCFF99;
+        }
+        .wrap-container div:nth-child(4n+2) {
+            background-color: #99CCFF;
+        }
+        .wrap-container div:nth-child(4n+3) {
+            background-color: #CCFF99;
+        }
+        .wrap-container div:nth-child(4n+4) {
+            background-color: #66CCCC;
+        }
+        .wrap-container div:nth-child(4n+5) {
+            background-color: #CCCCFF;
+        }
+        .wrap-container div:nth-child(4n+6) {
+            background-color: #CCFFCC;
+        }
+        .wrap-container div:nth-child(4n+7) {
+            background-color: #CCFFFF;
+        }
+        .opt {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        .opt div {
+            margin-right: 10px;
+            border: 1px solid blue;
+            padding: 10px;
+            font-size: 28px;
+            border-radius: 10%;
+            cursor: pointer;
+        }
+        .opt div.left {
+            color: #0099CC;
+        }
+        .opt div.right {
+            color: #666699;
+        }
+        .opt div.current {
+            color: #FF9966;
+        }
+        @keyframes scale {
+            from {
+                box-shadow: #FFCC00 0 0 0px 0px;
+            }
+            100% {
+                box-shadow: #FFCC00 0 0 4px 6px;
+            }
+        }
+
+    </style>
+    <div class="calendar-container">
+        <div class="wrap-container">
+        </div>
+    </div>
+    <div class="opt">
+        <div class="left">pre</div>
+        <div class="current"></div>
+        <div class="right">next</div>
+    </div>
+    <script>
+        class Calendar {
+            constructor(dom, opt = {}) {
+                this.root = document.querySelector(`.${dom}`);
+                this.opt = opt;
+                this.currentMonth = dayjs();
+                this.currentDate = dayjs();
+                this.optRoot = document.querySelector('.opt');
+                this.cacheMap = new Map();
+                this.isMoving = false;
+                this.init();
+            }
+
+            init() {
+                this.createDom(this.root);
+                this.renderList(this.root, this.currentMonth);
+                this.listenOpt();
+                this.renderCurrentMonth();
+                this.createNextContainer();
+                this.initOpt();
+            }
+
+            initOpt() {
+                this.animation = false
+                if (this.opt.animation) {
+                    if (typeof this.opt.animation == 'object') {
+                        this.animation = true;
+                    } else {
+                        this.animation = !!this.opt.animation;
+                    }
+                }
+            }
+
+            createNextContainer() {
+                const div = document.createElement('div');
+                div.setAttribute('class', 'wrap-container next');
+                this.createDom(div);
+                div.style.transform = 'translateX(-9999px)';
+                this.root.parentNode.appendChild(div);
+            }
+
+            renderCurrentMonth() {
+                const text = this.currentMonth.format('YYYY-MM')
+                this.optRoot.querySelector('.current').innerHTML = text;
+            }
+
+            listenOpt() {
+                const options = {captrue: false, once: false};
+                this.optRoot.querySelector('.left').addEventListener('click', this.preOpt.bind(this), options);
+                this.optRoot.querySelector('.right').addEventListener('click', this.nextOpt.bind(this), options);
+            }
+
+            preOpt() {
+                this.changeDir('pre');
+            }
+
+            nextOpt() {
+                this.changeDir('next');
+            }
+
+            changeDir(dir) {
+                const isPre = dir == 'pre';
+                this.currentMonth = this.currentMonth[isPre ? 'subtract' : 'add'](1, 'M');
+                if (this.animation) {
+                    if (this.isMoving) return;
+                    const nextRoot = this.root.parentNode.querySelector('.next');
+                    this.renderList(nextRoot, this.currentMonth);
+                    nextRoot.style.transform = `translateX(${isPre ? '-' : ''}100%)`;
+                    setTimeout((() => {
+                        this.isMoving = true;
+                        [nextRoot, this.root].forEach(node => {
+                            if (typeof this.opt.animation !== 'object') {
+                                node.style.transition = `transform .3s linear 0s`
+                            } else {
+                                node.style.transition = `transform ${this.opt.animation.time || '.3s'} ${this.opt.animation.timing || 'linear'} ${this.opt.animation.delay || '0s'}`;
+                            }
+                        })
+
+                        nextRoot.style.transform = `translateX(0%)`;
+                        this.root.style.transform = `translateX(${isPre ? '' : '-'}100%)`;
+                        this.root.ontransitionend = () => {
+                            console.log('ontransitionend')
+                            nextRoot.style.removeProperty('transition');
+                            this.root.style.removeProperty('transition');
+                            this.root.ontransitionend = null;
+                            this.root = nextRoot;
+                            this.isMoving = false;
+                            this.changeNext();
+                        }
+                    }))
+                } else {
+                    this.renderList(this.root, this.currentMonth);
+                }
+                this.renderCurrentMonth();
+            }
+
+            changeNext() {
+                const arr = this.root.parentNode.querySelectorAll('.wrap-container');
+                Array.from(arr).forEach(item => {
+                    item.classList.toggle('next');
+                })
+            }
+
+            changeStyle() {
+
+            }
+
+            get weekMap() {
+                return {
+                    0: "周一",
+                    1: "周二",
+                    2: "周三",
+                    3: "周四",
+                    4: "周五",
+                    5: "周六",
+                    6: "周日",
+                }
+            }
+            createDom (root) {
+                let str = '';
+                const num = 42;
+                for (let i = 0; i < num; i++) {
+                    if (i < 7) {
+                        str += `<div>${this.weekMap[i]}</div>`;
+                    } else {
+                        str += `<div></div>`
+                    }
+                }
+                root.innerHTML = str;
+            }
+
+            calc(currentDate) {
+                const cacheKey = currentDate.format('YYYY-MM');
+                if (this.cacheMap.has(cacheKey)) {
+                    return this.cacheMap.get(cacheKey);
+                }
+                let arr = [];
+                let lastMonth;
+                let nextmonth;
+                const firstDay = currentDate.date(1);
+                let firstWeek = firstDay.day();
+                firstWeek = firstWeek == 0 ? 7 : firstWeek;
+                if (firstWeek > 1) {
+                    const diffdays = firstWeek - 1;
+                    for (let i = 0; i < diffdays; i++) {
+                        const date = currentDate.date(-1 * i);
+                        arr.push({
+                            date,
+                            currentMonth: false,
+                            active: this.currentDate.isSame(date, 'date')
+                        })
+                    }
+                    arr = arr.reverse();
+                }
+                const lastLen = 35 - arr.length;
+                for (let i = 1; i <= lastLen; i++) {
+                    const date = currentDate.date(i);
+                    arr.push({
+                        date,
+                        currentMonth: currentDate.month() === date.month(),
+                        active: this.currentDate.isSame(date, 'date')
+                    })
+                }
+                this.cacheMap.set(cacheKey, arr);
+                return arr;
+            }
+
+            renderList(root, month) {
+                const res = this.calc(month);
+                const restDomArr = root.querySelectorAll('div');
+                Array.from(restDomArr).slice(7).forEach((item, index) => {
+                    const date = res[index];
+                    const text = date.date.format('MM-DD');
+                    ['gray', 'active', 'date', 'mark'].forEach(name => {
+                        item.classList.remove(name)
+                    })
+                    item.classList.add('date')
+                    if (this.opt.renderItem) {
+                        const resItem = this.opt.renderItem(date.date);
+                        if (typeof resItem === 'object') {
+                            if (resItem.mark) {
+                                item.classList.add('mark');
+                            }
+                            item.innerHTML = resItem.text;
+                        } else {
+                            item.innerHTML = resItem;
+                        }
+                    } else {
+                        item.innerHTML = text;
+                    }
+                    if (this.opt.bindEvents && Array.isArray(this.opt.bindEvents) && this.opt.bindEvents.length) {
+                        this.opt.bindEvents.forEach(event => {
+                            if (date.date.format('YYYY-MM-DD') == event.key) {
+                                const fn = () => {
+                                    event.cb(date.date);
+                                }
+                                item[`on${event.event}`] = fn
+                            }
+                        })
+                    }
+                    !date.currentMonth &&  item.classList.add('gray');
+                    date.active &&  item.classList.add('active');
+                })
+            }
+        }
+
+        new Calendar('wrap-container', {bindEvents: [
+            {
+                key: '2021-07-28',
+                event: 'click',
+                cb: (date) => {
+                    alert(date.format('YYYY-MM-DD'))
+                }
+            }
+        ],
+        animation: {
+            time: '0.8s',
+            timing: 'ease-in'
+        },
+        renderItem(date) {
+            const res = date.format('YYYY-MM-DD');
+            const text = date.format('MM-DD');
+            if (res > '2021-07-28') {
+                return {
+                    mark: true,
+                    text: text
+                }
+            }
+            return text;
+        }
+    })
+    </script>
+</body>
+</html>
