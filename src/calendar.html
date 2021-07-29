@@ -102,13 +102,14 @@
             justify-content: center;
             margin-top: 40px;
         }
-        .opt div {
+        .opt > div {
             margin-right: 10px;
             border: 1px solid blue;
             padding: 10px;
             font-size: 28px;
             border-radius: 10%;
             cursor: pointer;
+            height: 40px;
         }
         .opt div.left {
             color: #0099CC;
@@ -116,8 +117,28 @@
         .opt div.right {
             color: #666699;
         }
+        .opt div.current div {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            line-height: 60px;
+           
+        }
+        .opt div.current div.transition {
+            transition: transform .3s linear 0s;
+        }
+        .opt div.current div.next {
+            position: absolute;
+            transform: translateX(100%);
+        }
         .opt div.current {
+            position: relative;
             color: #FF9966;
+            overflow: hidden;
+            width: 110px;
+            text-align: center;
         }
         @keyframes scale {
             from {
@@ -135,12 +156,15 @@
     </div>
     <div class="opt">
         <div class="left">pre</div>
-        <div class="current"></div>
+        <div class="current">
+            <div class="next"></div>
+            <div class="active"></div>
+        </div>
         <div class="right">next</div>
     </div>
     <script>
         class Calendar {
-            constructor(dom, opt = {}) {
+            constructor(dom, opt = {showCurrentDate: false}) {
                 this.root = document.querySelector(`.${dom}`);
                 this.opt = opt;
                 this.currentMonth = dayjs();
@@ -179,9 +203,29 @@
                 this.root.parentNode.appendChild(div);
             }
 
-            renderCurrentMonth() {
+            renderCurrentMonth(isPre) {
                 const text = this.currentMonth.format('YYYY-MM')
-                this.optRoot.querySelector('.current').innerHTML = text;
+                if (this.animation) {
+                    const all = Array.from(this.optRoot.querySelectorAll('.current div'))
+                    this.optRoot.querySelector('.current .next').style.transform = `translateX(${isPre ? '+' : '-'}100%)`;
+                    setTimeout(() => {
+                        all.forEach(item => {
+                            item.classList.add('transition');
+                        });
+                        this.optRoot.querySelector('.current .next').innerHTML = text;
+                        this.optRoot.querySelector('.current .active').style.transform = `translateX(${isPre ? '-' : ''}100%)`;
+                        this.optRoot.querySelector('.current .next').style.transform = `translateX(0)`;
+                        this.optRoot.querySelector('.current .active').ontransitionend = () => {
+                            this.optRoot.querySelector('.current .active').ontransitionend = null;
+                            all.forEach(item => {
+                                item.classList.remove('transition');
+                                item.classList.contains('active') ? (item.classList.add('next') || item.classList.remove('active')) : (item.classList.add('active') || item.classList.remove('next'))
+                            })
+                        }
+                    })
+                } else {
+                    this.optRoot.querySelector('.current .active').innerHTML = text;
+                }
             }
 
             listenOpt() {
@@ -219,7 +263,6 @@
                         nextRoot.style.transform = `translateX(0%)`;
                         this.root.style.transform = `translateX(${isPre ? '' : '-'}100%)`;
                         this.root.ontransitionend = () => {
-                            console.log('ontransitionend')
                             nextRoot.style.removeProperty('transition');
                             this.root.style.removeProperty('transition');
                             this.root.ontransitionend = null;
@@ -231,7 +274,7 @@
                 } else {
                     this.renderList(this.root, this.currentMonth);
                 }
-                this.renderCurrentMonth();
+                this.renderCurrentMonth(!isPre);
             }
 
             changeNext() {
@@ -239,10 +282,6 @@
                 Array.from(arr).forEach(item => {
                     item.classList.toggle('next');
                 })
-            }
-
-            changeStyle() {
-
             }
 
             get weekMap() {
@@ -305,6 +344,44 @@
                 return arr;
             }
 
+            bindEvent(item, date) {
+                // bind events
+                if (this.opt.bindEvents && Array.isArray(this.opt.bindEvents) && this.opt.bindEvents.length) {
+                        this.opt.bindEvents.forEach(event => {
+                            if (date.format('YYYY-MM-DD') == event.key) {
+                                const fn = () => {
+                                    event.cb(date);
+                                }
+                                item[`on${event.event}`] = fn
+                            }
+                        })
+                    }
+            }
+
+            renderItem(item, {date, currentMonth}) {
+                if (this.opt.renderItem) {
+                        const resItem = this.opt.renderItem(date);
+                        if (typeof resItem === 'object') {
+                            if (resItem.mark && (currentMonth && !this.opt.showCurrentDate)) {
+                                item.classList.add('mark');
+                            }
+                            item.innerHTML = this.canRenderItem(resItem.text, currentMonth);
+                        } else {
+                            item.innerHTML = this.canRenderItem(resItem, currentMonth);
+                        }
+                    } else {
+                        item.innerHTML = this.canRenderItem(text, currentMonth);
+                    }
+            }
+
+            canRenderItem(data, currentMonth) {
+                if (this.opt.showCurrentDate) {
+                    return currentMonth ? data : '';
+                } else {
+                    return data;
+                }
+            }
+
             renderList(root, month) {
                 const res = this.calc(month);
                 const restDomArr = root.querySelectorAll('div');
@@ -315,29 +392,8 @@
                         item.classList.remove(name)
                     })
                     item.classList.add('date')
-                    if (this.opt.renderItem) {
-                        const resItem = this.opt.renderItem(date.date);
-                        if (typeof resItem === 'object') {
-                            if (resItem.mark) {
-                                item.classList.add('mark');
-                            }
-                            item.innerHTML = resItem.text;
-                        } else {
-                            item.innerHTML = resItem;
-                        }
-                    } else {
-                        item.innerHTML = text;
-                    }
-                    if (this.opt.bindEvents && Array.isArray(this.opt.bindEvents) && this.opt.bindEvents.length) {
-                        this.opt.bindEvents.forEach(event => {
-                            if (date.date.format('YYYY-MM-DD') == event.key) {
-                                const fn = () => {
-                                    event.cb(date.date);
-                                }
-                                item[`on${event.event}`] = fn
-                            }
-                        })
-                    }
+                    this.renderItem(item, date)
+                    this.bindEvent(item, date.date);
                     !date.currentMonth &&  item.classList.add('gray');
                     date.active &&  item.classList.add('active');
                 })
@@ -354,20 +410,21 @@
             }
         ],
         animation: {
-            time: '0.8s',
+            time: '0.4s',
             timing: 'ease-in'
         },
         renderItem(date) {
             const res = date.format('YYYY-MM-DD');
             const text = date.format('MM-DD');
-            if (res > '2021-07-28') {
+            if (res == dayjs().format('YYYY-MM-DD')) {
                 return {
                     mark: true,
                     text: text
                 }
             }
             return text;
-        }
+        },
+        showCurrentDate: false
     })
     </script>
 </body>
