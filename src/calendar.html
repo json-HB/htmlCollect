@@ -172,6 +172,7 @@
                 this.optRoot = document.querySelector('.opt');
                 this.cacheMap = new Map();
                 this.isMoving = false;
+                this.allDiv = 49;
                 this.init();
             }
 
@@ -297,7 +298,7 @@
             }
             createDom (root) {
                 let str = '';
-                const num = 42;
+                const num = this.allDiv;
                 for (let i = 0; i < num; i++) {
                     if (i < 7) {
                         str += `<div>${this.weekMap[i]}</div>`;
@@ -331,7 +332,7 @@
                     }
                     arr = arr.reverse();
                 }
-                const lastLen = 42 - arr.length;
+                const lastLen = this.allDiv - arr.length - 7;
                 for (let i = 1; i <= lastLen; i++) {
                     const date = currentDate.date(i);
                     arr.push({
