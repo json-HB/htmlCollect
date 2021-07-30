@@ -22,6 +22,9 @@ jobs:
           yarn add gulp-cli -g
           yarn install
           gulp -v
+          export date=`date`
+          BUILD_TIME=$date gulp
+          ls
       - name: Deploy
         if: success()
         uses: crazy-max/ghaction-github-pages@v1
