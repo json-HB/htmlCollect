@@ -12,7 +12,7 @@ branches:
 env:
   - project=htmlCollect
 install:
-  - yarn add gulp-cli -g
+  - yarn add gulp-cli
   - yarn install
   - gulp -v
 before_script:
