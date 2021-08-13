@@ -428,5 +428,98 @@
         showCurrentDate: false
     })
     </script>
+
+    <div class="fixed-jump">
+        can you see me;
+    </div>
+
+    <style>
+        .fixed-jump {
+            position: fixed;
+            right: 50px;
+            bottom: 50px;
+            width: 50px;
+            border-radius: 50%;
+            height: 50px;
+            border: 1px solid #ccc;
+            text-align: center;
+            vertical-align: middle;
+            overflow: hidden;
+            white-space: nowrap;
+            line-height: 50px;
+            transition: all .3s linear 0s;
+        }
+        .fixed-jump.hidden {
+            opacity: 0;
+            z-index: -999;
+            pointer-events: none;
+        }
+        .fixed-jump:hover {
+            cursor: pointer;
+        }
+        .fixed-jump.full-width {
+            width: 150px;
+            border-radius: 20px;
+        }
+        body {
+            height: 200vh;
+        }
+    </style>
+
+    <script>
+
+        const throuth = function(fn, delay) {
+            let time;
+            return () => {
+                let now = Date.now();
+                if (!time || now - time >= delay) {
+                    time = Date.now();
+                    fn();
+                }
+            }
+        }
+
+        window.onload = function() {
+            const dom = document.querySelector('.fixed-jump');
+            let preScrollDis = 0;
+            let flag = 0;
+            let timer = null;
+            const showAnimation = () => {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    if (!dom.classList.contains('hidden')) {
+                        dom.classList.add('full-width');
+                    }
+                }, 300)
+            }
+            const showHide = () => {
+                if (flag === -1 && (document.documentElement || document.body).scrollTop > 300 && dom.classList.contains('hidden')) {
+                    dom.classList.remove('hidden')
+                } else if (flag === 1 && (document.documentElement || document.body).scrollTop <= 300 && !dom.classList.contains('hidden')) {
+                    dom.classList.remove('full-width')
+                    dom.classList.add('hidden')
+                }
+            }
+            const scrollFn = () => {
+                const scrollTop = (document.documentElement || document.body).scrollTop;
+                if (preScrollDis - scrollTop > 0) {
+                    console.log('top')
+                    flag = 1;
+                } else {
+                    console.log('bottom')
+                    flag = -1;
+                }
+                showHide();
+                showAnimation();
+                preScrollDis = scrollTop;
+            }
+            const cb = throuth(scrollFn, 50);
+            window.addEventListener('scroll', cb, {
+                capture: false,
+                passive: true
+            })
+        }
+        
+    </script>
 </body>
 </html>

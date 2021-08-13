@@ -26,6 +26,9 @@
             }
         </style>
     </div>
+    <video class='video' controls></video>
+    <button class="capture-1">截图</button>
+
     <script>
         // 生成图片
         function createVideoPic(dom) {
@@ -62,13 +65,42 @@
            document.body.removeChild(a);
         }
 
-        function doCapture() {
-            const url = createVideoPic(document.querySelector('.captrue-video'));
+        function doCapture(dom) {
+            const url = createVideoPic(document.querySelector(`.${dom}`));
             download(url)
         }
         document.querySelector('.btn-capture').addEventListener('click', () => {
-            doCapture();
+            doCapture('captrue-video')
         })
+
+        !(function () {
+
+            navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+            .then(function(stream) {
+            var video = document.querySelector('.video');
+            console.log(stream)
+            stream.onactive = (a) => {
+                console.log(a)
+            }
+            // 旧的浏览器可能没有srcObject
+            if ("srcObject" in video) {
+                video.srcObject = stream;
+            } else {
+                // 防止在新的浏览器里使用它，应为它已经不再支持了
+                video.src = window.URL.createObjectURL(stream);
+            }
+            video.onloadedmetadata = function(e) {
+                video.play();
+            };
+            })
+            .catch(function(err) {
+            console.log(err.name + ": " + err.message);
+            });
+            })();
+
+            document.querySelector('.capture-1').addEventListener('click', () => {
+                doCapture('video')
+            }, false)
     </script>
 </body>
 </html>
