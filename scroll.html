@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <style>
+      .hidden {
+        visibility: visible;
+      }
+      /* :root {
+        background: blueviolet;
+      } */
+      html {
+        background: palevioletred;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="headline hidden">
+      Widget Inc.
+    </h1>
+    <div style="height: 600px;"></div>
+    <p class="tagline">
+      The perfect widgets.
+      <span class="punchline">Forever.</span>
+    </p>
+    <div style="height: 500px;">
+      visibility can you see me, fundamentally! reveal
+    </div>
+    <div class="last" style="background: red;">
+      visibility can you see me, fundamentally! reveal
+    </div>
+    <div class="flip">flip</div>
+    <script>
+      var slideUp = {
+        distance: "100px",
+        origin: "right",
+        opacity: 0.6,
+        interval: 16
+      };
+      ScrollReveal({ reset: true });
+      ScrollReveal().reveal(".headline");
+      ScrollReveal().reveal(".tagline", { delay: 1000 });
+      ScrollReveal().reveal(".punchline", { delay: 2000 });
+      ScrollReveal().reveal("div.last", slideUp);
+      ScrollReveal().reveal(".flip", {
+        rotate: {
+          x: 20,
+          z: 20
+        }
+      });
+      //   ScrollReveal().destroy();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>N/A</title>
+    <script type='text/javascript' js-name='dayjs'>!function(t,n){"object"==typeof exports&&"undefined"!=typeof module?module.exports=n():"function"==typeof define&&define.amd?define(n):t.dayjs=n()}(this,function(){"use strict";function s(t,n,e){var r=String(t);return!r||r.length>=n?t:""+Array(n+1-r.length).join(e)+t}var a="millisecond",$="second",l="minute",m="hour",y="day",M="week",g="month",h="quarter",D="year",i=/^(\d{4})-?(\d{1,2})-?(\d{0,2})[^0-9]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?.?(\d{1,3})?$/,S=/\[([^\]]+)]|Y{2,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g,t={s:s,z:function(t){var n=-t.utcOffset(),e=Math.abs(n),r=Math.floor(e/60),i=e%60;return(n<=0?"+":"-")+s(r,2,"0")+":"+s(i,2,"0")},m:function(t,n){var e=12*(n.year()-t.year())+(n.month()-t.month()),r=t.clone().add(e,g),i=n-r<0,s=t.clone().add(e+(i?-1:1),g);return Number(-(e+(n-r)/(i?r-s:s-r))||0)},a:function(t){return t<0?Math.ceil(t)||0:Math.floor(t)},p:function(t){return{M:g,y:D,w:M,d:y,D:"date",h:m,m:l,s:$,ms:a,Q:h}[t]||String(t||"").toLowerCase().replace(/s$/,"")},u:function(t){return void 0===t}},n={name:"en",weekdays:"Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"),months:"January_February_March_April_May_June_July_August_September_October_November_December".split("_")},u="en",o={};o[u]=n;function f(t){return t instanceof v}function c(t,n,e){var r,i;return t?("string"==typeof t?(o[t]&&(r=t),n&&(o[t]=n,r=t)):(i=t.name,o[i]=t,r=i),e||(u=r),r):u}function d(t,n,e){if(f(t))return t.clone();var r=n?"string"==typeof n?{format:n,pl:e}:n:{};return r.date=t,new v(r)}var p=t;p.l=c,p.i=f,p.w=function(t,n){return d(t,{locale:n.$L,utc:n.$u,$offset:n.$offset})};var e,v=((e=r.prototype).parse=function(r){this.$d=function(){var t=r.date,n=r.utc;if(null===t)return new Date(NaN);if(p.u(t))return new Date;if(t instanceof Date)return new Date(t);if("string"==typeof t&&!/Z$/i.test(t)){var e=t.match(i);if(e)return n?new Date(Date.UTC(e[1],e[2]-1,e[3]||1,e[4]||0,e[5]||0,e[6]||0,e[7]||0)):new Date(e[1],e[2]-1,e[3]||1,e[4]||0,e[5]||0,e[6]||0,e[7]||0)}return new Date(t)}(),this.init()},e.init=function(){var t=this.$d;this.$y=t.getFullYear(),this.$M=t.getMonth(),this.$D=t.getDate(),this.$W=t.getDay(),this.$H=t.getHours(),this.$m=t.getMinutes(),this.$s=t.getSeconds(),this.$ms=t.getMilliseconds()},e.$utils=function(){return p},e.isValid=function(){return!("Invalid Date"===this.$d.toString())},e.isSame=function(t,n){var e=d(t);return this.startOf(n)<=e&&e<=this.endOf(n)},e.isAfter=function(t,n){return d(t)<this.startOf(n)},e.isBefore=function(t,n){return this.endOf(n)<d(t)},e.$g=function(t,n,e){return p.u(t)?this[n]:this.set(e,t)},e.year=function(t){return this.$g(t,"$y",D)},e.month=function(t){return this.$g(t,"$M",g)},e.day=function(t){return this.$g(t,"$W",y)},e.date=function(t){return this.$g(t,"$D","date")},e.hour=function(t){return this.$g(t,"$H",m)},e.minute=function(t){return this.$g(t,"$m",l)},e.second=function(t){return this.$g(t,"$s",$)},e.millisecond=function(t){return this.$g(t,"$ms",a)},e.unix=function(){return Math.floor(this.valueOf()/1e3)},e.valueOf=function(){return this.$d.getTime()},e.startOf=function(t,n){function e(t,n){var e=p.w(i.$u?Date.UTC(i.$y,n,t):new Date(i.$y,n,t),i);return s?e:e.endOf(y)}function r(t,n){return p.w(i.toDate()[t].apply(i.toDate(),(s?[0,0,0,0]:[23,59,59,999]).slice(n)),i)}var i=this,s=!!p.u(n)||n,u=p.p(t),o=this.$W,a=this.$M,h=this.$D,f="set"+(this.$u?"UTC":"");switch(u){case D:return s?e(1,0):e(31,11);case g:return s?e(1,a):e(0,a+1);case M:var c=this.$locale().weekStart||0,d=(o<c?o+7:o)-c;return e(s?h-d:h+(6-d),a);case y:case"date":return r(f+"Hours",0);case m:return r(f+"Minutes",1);case l:return r(f+"Seconds",2);case $:return r(f+"Milliseconds",3);default:return this.clone()}},e.endOf=function(t){return this.startOf(t,!1)},e.$set=function(t,n){var e,r,i=p.p(t),s="set"+(this.$u?"UTC":""),u=((e={})[y]=s+"Date",e.date=s+"Date",e[g]=s+"Month",e[D]=s+"FullYear",e[m]=s+"Hours",e[l]=s+"Minutes",e[$]=s+"Seconds",e[a]=s+"Milliseconds",e[i]),o=i===y?this.$D+(n-this.$W):n;return i===g||i===D?((r=this.clone().set("date",1)).$d[u](o),r.init(),this.$d=r.set("date",Math.min(this.$D,r.daysInMonth())).toDate()):u&&this.$d[u](o),this.init(),this},e.set=function(t,n){return this.clone().$set(t,n)},e.get=function(t){return this[p.p(t)]()},e.add=function(e,t){var n,r=this;function i(t){var n=d(r);return p.w(n.date(n.date()+Math.round(t*e)),r)}e=Number(e);var s=p.p(t);if(s===g)return this.set(g,this.$M+e);if(s===D)return this.set(D,this.$y+e);if(s===y)return i(1);if(s===M)return i(7);var u=((n={})[l]=6e4,n[m]=36e5,n[$]=1e3,n[s]||1),o=this.$d.getTime()+e*u;return p.w(o,this)},e.subtract=function(t,n){return this.add(-1*t,n)},e.format=function(t){var i=this;if(!this.isValid())return"Invalid Date";function n(t,n,e,r){return t&&(t[n]||t(i,s))||e[n].substr(0,r)}function e(t){return p.s(o%12||12,t,"0")}var s=t||"YYYY-MM-DDTHH:mm:ssZ",r=p.z(this),u=this.$locale(),o=this.$H,a=this.$m,h=this.$M,f=u.weekdays,c=u.months,d=u.meridiem||function(t,n,e){var r=t<12?"AM":"PM";return e?r.toLowerCase():r},$={YY:String(this.$y).slice(-2),YYYY:this.$y,M:h+1,MM:p.s(h+1,2,"0"),MMM:n(u.monthsShort,h,c,3),MMMM:c[h]||c(this,s),D:this.$D,DD:p.s(this.$D,2,"0"),d:String(this.$W),dd:n(u.weekdaysMin,this.$W,f,2),ddd:n(u.weekdaysShort,this.$W,f,3),dddd:f[this.$W],H:String(o),HH:p.s(o,2,"0"),h:e(1),hh:e(2),a:d(o,a,!0),A:d(o,a,!1),m:String(a),mm:p.s(a,2,"0"),s:String(this.$s),ss:p.s(this.$s,2,"0"),SSS:p.s(this.$ms,3,"0"),Z:r};return s.replace(S,function(t,n){return n||$[t]||r.replace(":","")})},e.utcOffset=function(){return 15*-Math.round(this.$d.getTimezoneOffset()/15)},e.diff=function(t,n,e){var r=p.p(n),i=d(t),s=6e4*(i.utcOffset()-this.utcOffset()),u=this-i,o=p.m(this,i),a={};return a[D]=o/12,a[g]=o,a[h]=o/3,a[M]=(u-s)/6048e5,a[y]=(u-s)/864e5,a[m]=u/36e5,a[l]=u/6e4,a[$]=u/1e3,o=a[r]||u,e?o:p.a(o)},e.daysInMonth=function(){return this.endOf(g).$D},e.$locale=function(){return o[this.$L]},e.locale=function(t,n){if(!t)return this.$L;var e=this.clone(),r=c(t,n,!0);return r&&(e.$L=r),e},e.clone=function(){return p.w(this.$d,this)},e.toDate=function(){return new Date(this.valueOf())},e.toJSON=function(){return this.isValid()?this.toISOString():null},e.toISOString=function(){return this.$d.toISOString()},e.toString=function(){return this.$d.toUTCString()},r);function r(t){this.$L=this.$L||c(t.locale,null,!0),this.parse(t)}return d.prototype=v.prototype,d.extend=function(t,n){return t(n,v,d),d},d.locale=c,d.isDayjs=f,d.unix=function(t){return d(1e3*t)},d.en=o[u],d.Ls=o,d});</script>
+</head>
+<body>
+    <h1>calendar</h1>
+    <style id="calendar">
+        .calendar-container {
+            position: relative;
+            margin: 0 auto;
+            width: 65vw;
+            height: 70vh;
+            overflow: hidden;
+        }
+        .wrap-container {
+            position: relative;
+            display: grid;
+            width: 65vw;
+            height: 70vh;
+            border: 1px solid #ccc;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(auto-fill, 1fr);
+            grid-column-gap: 10px;
+            grid-row-gap: 10px;
+            grid-auto-flow: row;
+            justify-content: center;
+            align-items: stretch;
+            position: absolute;
+            left: 0;
+            top: 0;
+            will-change: transform;
+        }
+
+        .wrap-container.next {
+            z-index: -1;
+        }
+        
+        .wrap-container div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .wrap-container div.mark {
+            position: relative;
+        }
+        .wrap-container div.mark:before {
+            position: absolute;
+            content: '';
+            display: block;
+            right: 5px;
+            top: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color:#CC0033;
+            animation: scale 1s linear 0s infinite alternate;
+        }
+        .wrap-container div.gray {
+            filter: grayscale(1);
+            cursor: not-allowed;
+        }
+        .wrap-container div.date {
+            /* transition: all .3s linear 0s; */
+        }
+        .wrap-container div.transition {
+            transform: rotateX(360deg);
+            transform-origin: center;
+        }
+        .wrap-container div.active {
+            box-shadow: #2c37b7d6 0 0 0 4px;
+        }
+        .wrap-container div:nth-child(4n+1) {
+            background-color: #CCFF99;
+        }
+        .wrap-container div:nth-child(4n+2) {
+            background-color: #99CCFF;
+        }
+        .wrap-container div:nth-child(4n+3) {
+            background-color: #CCFF99;
+        }
+        .wrap-container div:nth-child(4n+4) {
+            background-color: #66CCCC;
+        }
+        .wrap-container div:nth-child(4n+5) {
+            background-color: #CCCCFF;
+        }
+        .wrap-container div:nth-child(4n+6) {
+            background-color: #CCFFCC;
+        }
+        .wrap-container div:nth-child(4n+7) {
+            background-color: #CCFFFF;
+        }
+        .opt {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        .opt > div {
+            margin-right: 10px;
+            border: 1px solid blue;
+            padding: 10px;
+            font-size: 28px;
+            border-radius: 10%;
+            cursor: pointer;
+            height: 40px;
+        }
+        .opt div.left {
+            color: #0099CC;
+        }
+        .opt div.right {
+            color: #666699;
+        }
+        .opt div.current div {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            line-height: 60px;
+           
+        }
+        .opt div.current div.transition {
+            transition: transform .3s linear 0s;
+        }
+        .opt div.current div.next {
+            position: absolute;
+            transform: translateX(100%);
+        }
+        .opt div.current {
+            position: relative;
+            color: #FF9966;
+            overflow: hidden;
+            width: 110px;
+            text-align: center;
+        }
+        @keyframes scale {
+            from {
+                box-shadow: #FFCC00 0 0 0px 0px;
+            }
+            100% {
+                box-shadow: #FFCC00 0 0 4px 6px;
+            }
+        }
+
+    </style>
+    <div class="calendar-container">
+        <div class="wrap-container">
+        </div>
+    </div>
+    <div class="opt">
+        <div class="left">pre</div>
+        <div class="current">
+            <div class="next"></div>
+            <div class="active"></div>
+        </div>
+        <div class="right">next</div>
+    </div>
+    <script>
+        class Calendar {
+            constructor(dom, opt = {showCurrentDate: false}) {
+                this.root = document.querySelector(`.${dom}`);
+                this.opt = opt;
+                this.currentMonth = dayjs();
+                this.currentDate = dayjs();
+                this.optRoot = document.querySelector('.opt');
+                this.cacheMap = new Map();
+                this.isMoving = false;
+                this.allDiv = 49;
+                this.init();
+            }
+
+            init() {
+                this.createDom(this.root);
+                this.renderList(this.root, this.currentMonth);
+                this.listenOpt();
+                this.renderCurrentMonth();
+                this.createNextContainer();
+                this.initOpt();
+            }
+
+            initOpt() {
+                this.animation = false
+                if (this.opt.animation) {
+                    if (typeof this.opt.animation == 'object') {
+                        this.animation = true;
+                    } else {
+                        this.animation = !!this.opt.animation;
+                    }
+                }
+            }
+
+            createNextContainer() {
+                const div = document.createElement('div');
+                div.setAttribute('class', 'wrap-container next');
+                this.createDom(div);
+                div.style.transform = 'translateX(-9999px)';
+                this.root.parentNode.appendChild(div);
+            }
+
+            renderCurrentMonth(isPre) {
+                const text = this.currentMonth.format('YYYY-MM')
+                if (this.animation) {
+                    const all = Array.from(this.optRoot.querySelectorAll('.current div'))
+                    this.optRoot.querySelector('.current .next').style.transform = `translateX(${isPre ? '+' : '-'}100%)`;
+                    setTimeout(() => {
+                        all.forEach(item => {
+                            item.classList.add('transition');
+                        });
+                        this.optRoot.querySelector('.current .next').innerHTML = text;
+                        this.optRoot.querySelector('.current .active').style.transform = `translateX(${isPre ? '-' : ''}100%)`;
+                        this.optRoot.querySelector('.current .next').style.transform = `translateX(0)`;
+                        this.optRoot.querySelector('.current .active').ontransitionend = () => {
+                            this.optRoot.querySelector('.current .active').ontransitionend = null;
+                            all.forEach(item => {
+                                item.classList.remove('transition');
+                                item.classList.contains('active') ? (item.classList.add('next') || item.classList.remove('active')) : (item.classList.add('active') || item.classList.remove('next'))
+                            })
+                        }
+                    })
+                } else {
+                    this.optRoot.querySelector('.current .active').innerHTML = text;
+                }
+            }
+
+            listenOpt() {
+                const options = {captrue: false, once: false};
+                this.optRoot.querySelector('.left').addEventListener('click', this.preOpt.bind(this), options);
+                this.optRoot.querySelector('.right').addEventListener('click', this.nextOpt.bind(this), options);
+            }
+
+            preOpt() {
+                this.changeDir('pre');
+            }
+
+            nextOpt() {
+                this.changeDir('next');
+            }
+
+            changeDir(dir) {
+                const isPre = dir == 'pre';
+                this.currentMonth = this.currentMonth[isPre ? 'subtract' : 'add'](1, 'M');
+                if (this.animation) {
+                    if (this.isMoving) return;
+                    const nextRoot = this.root.parentNode.querySelector('.next');
+                    this.renderList(nextRoot, this.currentMonth);
+                    nextRoot.style.transform = `translateX(${isPre ? '-' : ''}100%)`;
+                    setTimeout((() => {
+                        this.isMoving = true;
+                        [nextRoot, this.root].forEach(node => {
+                            if (typeof this.opt.animation !== 'object') {
+                                node.style.transition = `transform .3s linear 0s`
+                            } else {
+                                node.style.transition = `transform ${this.opt.animation.time || '.3s'} ${this.opt.animation.timing || 'linear'} ${this.opt.animation.delay || '0s'}`;
+                            }
+                        })
+
+                        nextRoot.style.transform = `translateX(0%)`;
+                        this.root.style.transform = `translateX(${isPre ? '' : '-'}100%)`;
+                        this.root.ontransitionend = () => {
+                            nextRoot.style.removeProperty('transition');
+                            this.root.style.removeProperty('transition');
+                            this.root.ontransitionend = null;
+                            this.root = nextRoot;
+                            this.isMoving = false;
+                            this.changeNext();
+                        }
+                    }))
+                } else {
+                    this.renderList(this.root, this.currentMonth);
+                }
+                this.renderCurrentMonth(!isPre);
+            }
+
+            changeNext() {
+                const arr = this.root.parentNode.querySelectorAll('.wrap-container');
+                Array.from(arr).forEach(item => {
+                    item.classList.toggle('next');
+                })
+            }
+
+            get weekMap() {
+                return {
+                    0: "周一",
+                    1: "周二",
+                    2: "周三",
+                    3: "周四",
+                    4: "周五",
+                    5: "周六",
+                    6: "周日",
+                }
+            }
+            createDom (root) {
+                let str = '';
+                const num = this.allDiv;
+                for (let i = 0; i < num; i++) {
+                    if (i < 7) {
+                        str += `<div>${this.weekMap[i]}</div>`;
+                    } else {
+                        str += `<div></div>`
+                    }
+                }
+                root.innerHTML = str;
+            }
+
+            calc(currentDate) {
+                const cacheKey = currentDate.format('YYYY-MM');
+                if (this.cacheMap.has(cacheKey)) {
+                    return this.cacheMap.get(cacheKey);
+                }
+                let arr = [];
+                let lastMonth;
+                let nextmonth;
+                const firstDay = currentDate.date(1);
+                let firstWeek = firstDay.day();
+                firstWeek = firstWeek == 0 ? 7 : firstWeek;
+                if (firstWeek > 1) {
+                    const diffdays = firstWeek - 1;
+                    for (let i = 0; i < diffdays; i++) {
+                        const date = currentDate.date(-1 * i);
+                        arr.push({
+                            date,
+                            currentMonth: false,
+                            active: this.currentDate.isSame(date, 'date')
+                        })
+                    }
+                    arr = arr.reverse();
+                }
+                const lastLen = this.allDiv - arr.length - 7;
+                for (let i = 1; i <= lastLen; i++) {
+                    const date = currentDate.date(i);
+                    arr.push({
+                        date,
+                        currentMonth: currentDate.month() === date.month(),
+                        active: this.currentDate.isSame(date, 'date')
+                    })
+                }
+                this.cacheMap.set(cacheKey, arr);
+                return arr;
+            }
+
+            bindEvent(item, date) {
+                // bind events
+                if (this.opt.bindEvents && Array.isArray(this.opt.bindEvents) && this.opt.bindEvents.length) {
+                        this.opt.bindEvents.forEach(event => {
+                            if (date.format('YYYY-MM-DD') == event.key) {
+                                const fn = () => {
+                                    event.cb(date);
+                                }
+                                item[`on${event.event}`] = fn
+                            }
+                        })
+                    }
+            }
+
+            renderItem(item, {date, currentMonth}) {
+                if (this.opt.renderItem) {
+                        const resItem = this.opt.renderItem(date);
+                        if (typeof resItem === 'object') {
+                            if (resItem.mark && (currentMonth && !this.opt.showCurrentDate)) {
+                                item.classList.add('mark');
+                            }
+                            item.innerHTML = this.canRenderItem(resItem.text, currentMonth);
+                        } else {
+                            item.innerHTML = this.canRenderItem(resItem, currentMonth);
+                        }
+                    } else {
+                        item.innerHTML = this.canRenderItem(text, currentMonth);
+                    }
+            }
+
+            canRenderItem(data, currentMonth) {
+                if (this.opt.showCurrentDate) {
+                    return currentMonth ? data : '';
+                } else {
+                    return data;
+                }
+            }
+
+            renderList(root, month) {
+                const res = this.calc(month);
+                const restDomArr = root.querySelectorAll('div');
+                Array.from(restDomArr).slice(7).forEach((item, index) => {
+                    const date = res[index];
+                    const text = date.date.format('MM-DD');
+                    ['gray', 'active', 'date', 'mark'].forEach(name => {
+                        item.classList.remove(name)
+                    })
+                    item.classList.add('date')
+                    this.renderItem(item, date)
+                    this.bindEvent(item, date.date);
+                    !date.currentMonth &&  item.classList.add('gray');
+                    date.active &&  item.classList.add('active');
+                })
+            }
+        }
+
+        new Calendar('wrap-container', {bindEvents: [
+            {
+                key: '2021-07-28',
+                event: 'click',
+                cb: (date) => {
+                    alert(date.format('YYYY-MM-DD'))
+                }
+            }
+        ],
+        animation: {
+            time: '0.4s',
+            timing: 'ease-in'
+        },
+        renderItem(date) {
+            const res = date.format('YYYY-MM-DD');
+            const text = date.format('MM-DD');
+            if (res == dayjs().format('YYYY-MM-DD')) {
+                return {
+                    mark: true,
+                    text: text
+                }
+            }
+            return text;
+        },
+        showCurrentDate: false
+    })
+    </script>
+
+    <div class="fixed-jump">
+        can you see me;
+    </div>
+
+    <style>
+        .fixed-jump {
+            position: fixed;
+            right: 50px;
+            bottom: 50px;
+            width: 50px;
+            border-radius: 50%;
+            height: 50px;
+            border: 1px solid #ccc;
+            text-align: center;
+            vertical-align: middle;
+            overflow: hidden;
+            white-space: nowrap;
+            line-height: 50px;
+            transition: all .3s linear 0s;
+        }
+        .fixed-jump.hidden {
+            opacity: 0;
+            z-index: -999;
+            pointer-events: none;
+        }
+        .fixed-jump:hover {
+            cursor: pointer;
+        }
+        .fixed-jump.full-width {
+            width: 150px;
+            border-radius: 20px;
+        }
+        body {
+            height: 200vh;
+        }
+    </style>
+
+    <script>
+
+        const throuth = function(fn, delay) {
+            let time;
+            return () => {
+                let now = Date.now();
+                if (!time || now - time >= delay) {
+                    time = Date.now();
+                    fn();
+                }
+            }
+        }
+
+        window.onload = function() {
+            const dom = document.querySelector('.fixed-jump');
+            let preScrollDis = 0;
+            let flag = 0;
+            let timer = null;
+            const showAnimation = () => {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    if (!dom.classList.contains('hidden')) {
+                        dom.classList.add('full-width');
+                    }
+                }, 300)
+            }
+            const showHide = () => {
+                if (flag === -1 && (document.documentElement || document.body).scrollTop > 300 && dom.classList.contains('hidden')) {
+                    dom.classList.remove('hidden')
+                } else if (flag === 1 && (document.documentElement || document.body).scrollTop <= 300 && !dom.classList.contains('hidden')) {
+                    dom.classList.remove('full-width')
+                    dom.classList.add('hidden')
+                }
+            }
+            const scrollFn = () => {
+                const scrollTop = (document.documentElement || document.body).scrollTop;
+                if (preScrollDis - scrollTop > 0) {
+                    console.log('top')
+                    flag = 1;
+                } else {
+                    console.log('bottom')
+                    flag = -1;
+                }
+                showHide();
+                showAnimation();
+                preScrollDis = scrollTop;
+            }
+            const cb = throuth(scrollFn, 50);
+            window.addEventListener('scroll', cb, {
+                capture: false,
+                passive: true
+            })
+        }
+        
+    </script>
+</body>
+</html>

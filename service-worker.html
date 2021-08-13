@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>service-worker</title>
+    <script type='text/javascript' js-name='baseTag'>var base;"json-hb.github.io"==document.domain&&((base=document.createElement("base")).href="/htmlCollect/",base.target="_self",document.head.appendChild(base));</script>
+  </head>
+  <body>
+    <h1>service-worker</h1>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/util/sw.js').then((res) => {
+                if (res.installing) {
+                    console.log('installing')
+                } else if (res.waiting) {
+                    console.log('waiting')
+                } else if (res.active) {
+                    console.log('active')
+                }
+                console.log('service worker register success!')
+            }).catch(err => {
+                console.log('server worker register wrong')
+            })
+        }
+    </script>
+
+    <button class='btn1'>add img1</button>
+    <button class='btn2'>add img2</button>
+    <button class='btn3'>add img3</button>
+    <button class='btn4'>fetch</button>
+    <img src="" alt="" id="target">
+
+    <script>
+      const btn1 = document.querySelector('.btn1');
+      const btn2 = document.querySelector('.btn2');
+      const btn3 = document.querySelector('.btn3');
+      const btn4 = document.querySelector('.btn4');
+      const btn5 = document.querySelector('.btn5');
+
+      function createImg(index) {
+        const img = document.createElement('img');
+        img.setAttribute('src', `/img/pic${index}.jpg`);
+        document.body.appendChild(img);
+      }
+
+      [btn1, btn2, btn3, btn5].forEach((dom, index) => {
+        dom.addEventListener(
+          'click',
+          () => {
+            createImg(index + 1);
+          },
+          { capture: false }
+        );
+      });
+
+      btn4.addEventListener(
+        'click',
+        () => {
+          fetch('http://localhost:8100/posts', {
+            method: 'GET',
+          })
+            .then(res => {
+              return res.json();
+            })
+            .then(res => {
+              console.log(res);
+            });
+        },
+        false
+      );
+    </script>
+
+    <script>
+
+const image = document.getElementById('target');
+
+// Fetch the original image
+fetch('./img/pic0.jpg', {
+    method: 'get',
+    mode: 'cors',
+    referrer: 'no-referrer',
+    credentials: 'include',
+    cache: 'no-cache'
+})
+// Retrieve its body as ReadableStream
+.then(response => response.body)
+.then(rs => {
+    const reader = rs.getReader();
+
+    return new ReadableStream({
+        async start(control) {
+            while(true) {
+                const {done, value} = await reader.read();
+                if (done) {
+                    break;
+                }
+                control.enqueue(value);
+            }
+            control.close();
+            reader.releaseLock();
+        }
+    })
+})
+// Create a new response out of the stream
+.then(rs => new Response(rs, {'content-type': 'image/jpg'}))
+// Create an object URL for the response
+.then(res => res.blob())
+.then(blob => URL.createObjectURL(blob))
+// Update image
+.then(url => image.src = url)
+.catch(console.error);
+    </script>
+
+    <script>
+     fetch("https://www.baidu.com", {
+         mode: 'no-cors'
+     }).then((response) => {
+        console.log(response)
+     });
+    </script>
+    <style>
+      img {
+        width: 30vw;
+        display: block;
+        height: auto;
+      }
+    </style>
+  </body>
+</html>

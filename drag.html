@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Drag</title>
+    <style>
+      :root {
+        --baseWidth: 100px;
+      }
+      .drag {
+        border: 1px solid sandybrown;
+        width: var(--baseWidth);
+        height: var(--baseWidth);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .target {
+        width: var(--baseWidth);
+        height: var(--baseWidth);
+        margin-top: calc(var(--baseWidth) / 2);
+        border: 1px solid yellowgreen;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>drag</h1>
+    <div class="drag" draggable="true">drag me</div>
+    <div class="target">hover me</div>
+    <script>
+      const origin = document.querySelector('.drag');
+      const target = document.querySelector('.target');
+      origin.addEventListener(
+        'dragstart',
+        function(ev) {
+          console.log('dragstart');
+          ev.dataTransfer.setData('text/plain', ev.target.innerText);
+          ev.dataTransfer.dropEffect = 'copy';
+        },
+        { capture: false }
+      );
+      origin.addEventListener(
+        'dragend',
+        function(ev) {
+          console.log('dragend');
+        },
+        { capture: false }
+      );
+      origin.addEventListener(
+        'drag',
+        function(ev) {
+          ev.preventDefault();
+          console.log('drag');
+        },
+        { capture: false }
+      );
+      target.addEventListener(
+        'dragover',
+        function(ev) {
+          ev.preventDefault();
+          console.log('dragover');
+        },
+        { capture: false }
+      );
+      target.addEventListener(
+        'dragenter',
+        function(ev) {
+          ev.preventDefault();
+          ev.target.style.backgroundColor = 'yellow';
+          console.log('dropenter');
+        },
+        { capture: false }
+      );
+      target.addEventListener(
+        'dragleave',
+        function(ev) {
+          ev.preventDefault();
+          console.log('dragleave');
+        },
+        { capture: false }
+      );
+      target.addEventListener(
+        'drop',
+        function(ev) {
+          ev.preventDefault();
+          console.log('drop');
+          ev.target.style.backgroundColor = 'red';
+          console.log(ev.dataTransfer.getData('text/plain'));
+        },
+        { capture: false }
+      );
+    </script>
+  </body>
+</html>

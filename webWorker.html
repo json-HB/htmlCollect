@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>webWorker</title>
+    <style>
+      .content {
+        white-space: pre;
+      }
+      .hover {
+        background: #ccc;
+        color: black;
+        padding: 10px;
+        border: 1px solid #ddd;
+        font-size: 20px;
+        display: inline-block;
+        position: relative;
+      }
+      .hover:hover {
+        cursor: pointer;
+      }
+      .layer {
+        position: absolute;
+        transition: opacity 0.3s ease-in 0s;
+      }
+      .layer:before {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 0;
+        height: 0;
+        border: 10px solid transparent;
+        border-bottom-color: yellowgreen;
+        left: 50%;
+        transform: translateX(-50%);
+        top: -20px;
+      }
+      .layer .container {
+        min-width: 100px;
+        min-height: 50px;
+        border: red;
+        padding: 10px;
+        background: rgb(144, 146, 137);
+        color: blue;
+        text-align: center;
+      }
+      .hide {
+        opacity: 0;
+        z-index: -999;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="btn">click</button>
+    <div class="hover hover2">hover me</div>
+    <div class="hover1 hover">hover me Two</div>
+    <div class="client"></div>
+    <div class="content"></div>
+    <script>
+      const content = document.body.querySelector(".content");
+      let worker;
+      function initWorker() {
+        worker = new Worker("vendors/worker.js", { name: "myWorker" });
+        worker.onmessage = function(e) {
+          const data = e.data;
+          const type = data.type;
+          if (type == "fetch") {
+            const name = data.data.name;
+            layerInstance.updateText(name);
+            content.innerHTML += data.data.name + "\n";
+          }
+        };
+      }
+
+      initWorker();
+      const btn = document.body.querySelector("#btn");
+      btn.onclick = function() {
+        id = 0;
+        let timer = setInterval(
+          function(data) {
+            console.log(data);
+            id++;
+            if (id >= 6) {
+              clearInterval(timer);
+              return;
+            }
+            worker.postMessage({ type: "fetch", data: { id } });
+          },
+          1000,
+          id
+        );
+      };
+      addEventListener("visibilitychange", () => {
+        console.log(document.visibilityState);
+        if (document.visibilityState == "hidden") {
+          worker.postMessage({ type: "close", data: { msg: "tag change" } });
+        } else {
+          initWorker();
+        }
+      });
+    </script>
+    <template id="layer-template">
+      <div class="layer hide">
+        <div class="container">
+          暂无数据
+        </div>
+      </div>
+    </template>
+    <script>
+      const hoverDom = document.querySelector(".hover2");
+      const hoverDom1 = document.querySelector(".hover1");
+      const clientDom = document.querySelector(".client");
+
+      function Layer(dom) {
+        this.defaultVale = this.getInnerText();
+        this.dom = dom;
+        this.LayerDom = null;
+        this.hasDis = false;
+        this.init();
+        this.bindEvent();
+      }
+
+      Layer.prototype.init = function() {
+        const tem = document.getElementById("layer-template");
+        document.body.appendChild(tem.content);
+        this.LayerDom = document.querySelector(".layer");
+        this.updateText(this.defaultVale);
+      };
+      Layer.prototype.update = function(x, y) {
+        console.log(x, y);
+        this.LayerDom.style.cssText = `left: ${x}px;top: ${y}px;`;
+        // this.updateText(this.getInnerText());
+      };
+      Layer.prototype.updateText = function(text) {
+        console.log(text, "updateText");
+        this.LayerDom.querySelector(".container").innerText = text;
+      };
+      Layer.prototype.getInnerText = function(text) {
+        return this.dom.innerText || this.defaultVale;
+      };
+      Layer.prototype.bindEvent = function() {
+        console.log("bindEvent", this.dom);
+        this.dom.addEventListener("mousemove", ev => {
+          console.log(ev);
+          const { left, top, height } = this.dom.getBoundingClientRect();
+          const { width } = this.LayerDom.getBoundingClientRect();
+          const x = left + ev.offsetX - width / 2;
+          const y = top + height + 10;
+          console.log(this.dom.getBoundingClientRect());
+          this.update(x, y);
+        });
+        this.dom.addEventListener("mouseenter", () => {
+          console.log("enter", this.LayerDom);
+          this.LayerDom.classList.remove("hide");
+          this.updateText(this.defaultVale);
+        });
+        this.dom.addEventListener("mouseout", () => {
+          console.log("out");
+          this.LayerDom.classList.add("hide");
+        });
+      };
+
+      function Super(dom) {
+        this.dom = dom;
+        Layer.call(this, dom);
+      }
+      // Object.setPrototypeOf(Super.prototype, Layer.prototype);
+      Super.prototype = Object.create(Layer.prototype, {
+        constructor: {
+          value: Super,
+        },
+      });
+
+      var layerInstance = new Super(hoverDom);
+      console.log(layerInstance);
+      new Super(hoverDom1);
+    </script>
+  </body>
+</html>

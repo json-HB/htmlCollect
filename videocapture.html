@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>videocapture</title>
+</head>
+<body>
+    <h1>videocapture</h1>
+    <video src="/img/weipaitang.mp4" class="captrue-video" controls loop poster="/img/pic0.jpg"></video>
+    <style>
+        video {
+            width: 50vw;
+            height: auto;
+        }
+    </style>
+    <div>
+        <button class="btn-capture">截图</button>
+        <style>
+            .btn-capture {
+                color: black;
+                padding: .2rem;
+                font-size: .28rem;
+                cursor: pointer;
+            }
+        </style>
+    </div>
+    <video class='video' controls></video>
+    <button class="capture-1">截图</button>
+
+    <script>
+        // 生成图片
+        function createVideoPic(dom) {
+            let canvasEl, dataUrl;
+            try {
+                const styles = getComputedStyle(dom);
+                const w = styles.getPropertyValue('width').replace(/px/, '');
+                const h = styles.getPropertyValue('height').replace(/px/, '');
+                canvasEl = document.createElement('canvas');
+                canvasEl.style.cssText = 'position: fixed; left: -9999;'
+                canvasEl.width = w;
+                canvasEl.height = h;
+                document.body.appendChild(canvasEl);
+                const ctx = canvasEl.getContext('2d');
+                ctx.drawImage(dom, 0,0, w, h);
+                dataUrl = canvasEl.toDataURL();
+                return dataUrl;
+            } finally {
+                if (canvasEl) {
+                    canvasEl.parentNode.removeChild(canvasEl);
+                }
+                if (dataUrl) {
+                    dataUrl = null;
+                }
+            }
+        }
+
+        function download(url) {
+           const a = document.createElement('a');
+           a.setAttribute('href', url);
+           document.body.appendChild(a);
+           a.download = `${Date.now()}`;
+           a.click();
+           document.body.removeChild(a);
+        }
+
+        function doCapture(dom) {
+            const url = createVideoPic(document.querySelector(`.${dom}`));
+            download(url)
+        }
+        document.querySelector('.btn-capture').addEventListener('click', () => {
+            doCapture('captrue-video')
+        })
+
+        !(function () {
+
+            navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+            .then(function(stream) {
+            var video = document.querySelector('.video');
+            console.log(stream)
+            stream.onactive = (a) => {
+                console.log(a)
+            }
+            // 旧的浏览器可能没有srcObject
+            if ("srcObject" in video) {
+                video.srcObject = stream;
+            } else {
+                // 防止在新的浏览器里使用它，应为它已经不再支持了
+                video.src = window.URL.createObjectURL(stream);
+            }
+            video.onloadedmetadata = function(e) {
+                video.play();
+            };
+            })
+            .catch(function(err) {
+            console.log(err.name + ": " + err.message);
+            });
+            })();
+
+            document.querySelector('.capture-1').addEventListener('click', () => {
+                doCapture('video')
+            }, false)
+    </script>
+</body>
+</html>
