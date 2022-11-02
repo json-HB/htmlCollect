@@ -55,7 +55,7 @@
     "gulp-plumber": "^1.2.1",
     "gulp-uglify": "^3.0.2",
     "pdfmake": "^0.1.68",
-    "read-excel-file": "^4.1.0",
+    "read-excel-file": "^5.5.3",
     "requirejs": "^2.3.6",
     "run-sequence": "^2.2.1",
     "through2": "^3.0.1",
