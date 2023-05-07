@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>N/A</title>
+  </head>
+  <body>
+    <h1>route</h1>
+    <script>
+      const routerConfig = [
+        {
+          path: '/',
+          name: 'dashboard',
+          component: `<div>welcome</div>`,
+        },
+        {
+          path: '/react',
+          name: 'react',
+          component: `<div>react</div>`,
+          children: [
+            {
+              path: '/v1',
+              name: 'react-v1',
+              component: `<div>react v1</div>`,
+              children: [
+                {
+                  path: '/v3',
+                  name: 'react-v1',
+                  component: `<div>react v1</div>`,
+                },
+                {
+                  path: '/v4',
+                  name: 'react-v2',
+                  component: `<div>react v2</div>`,
+                },
+              ],
+            },
+            {
+              path: '/v2',
+              name: 'react-v2',
+              component: `<div>react v2</div>`,
+            },
+          ],
+        },
+        {
+          path: '/vue',
+          name: 'vue',
+          component: `<div>vue</div>`,
+        },
+        {
+          path: '/angular',
+          name: 'angular',
+          component: `<div>angular</div>`,
+        },
+        {
+          path: '/rxjs',
+          name: 'rxjs',
+          component: `<div>rxjs</div>`,
+        },
+        {
+          path: '*',
+          name: 'default',
+          component: `<div>default</div>`,
+        },
+      ];
+      class Router {
+        constructor(props = {}) {
+          this.opt = props;
+          this.router = {};
+          this.currentRouter = '/';
+          this.container = document.querySelector('.app');
+          console.log(this.container);
+          this.init();
+        }
+
+        init() {
+          this.flatRouter();
+          window.addEventListener('hashchange', this.hashChange.bind(this));
+          this.hashChange();
+        }
+        hashChange() {
+          const hash = location.hash;
+          let path;
+          if (hash.startsWith('#')) {
+            path = hash.substr(1);
+            this.currentRouter = path;
+          } else {
+            location.hash = '/';
+            this.currentRouter = '/';
+          }
+          new Promise((resolve, reject) => {
+            this.opt.beforeChange ? this.opt.beforeChange(path, resolve) : resolve();
+          }).then(() => {
+            if (this.opt.loadingComponent) {
+              this.container.innerHTML = this.opt.loadingComponent();
+              setTimeout(() => {
+                this.loadComponent(path);
+              }, 500);
+            } else {
+              this.loadComponent(path);
+            }
+          });
+        }
+        flatRouter() {
+          if (this.opt.router && Array.isArray(this.opt.router)) {
+            this.opt.router.forEach((item, index) => {
+              let currentPath = '';
+              this.router[item.path] = item;
+              let help = (current, arr) => {
+                if (arr.children && arr.children.length) {
+                  arr.children.forEach((child, i) => {
+                    const c = current + child.path;
+                    this.router[c] = child;
+                    child.children && help(c, child);
+                  });
+                }
+              };
+              help(item.path, item);
+            });
+          }
+          this.createNav();
+        }
+        createNav() {
+          const nav = document.querySelector(this.opt.nav);
+          let str = '';
+          Object.entries(this.router).forEach(([key, val]) => {
+            str += `<li><a href="#${key}">${val.name}</a></li>`;
+          });
+          nav.innerHTML = str;
+        }
+        loadComponent(path) {
+          const routerItem = this.router[path];
+
+          this.container.innerHTML = routerItem.component;
+        }
+      }
+    </script>
+    <ul class="nav"> </ul>
+    <div class="app"> </div>
+    <style>
+      .nav li {
+        list-style-type: none;
+        display: inline-block;
+        border: 1px solid #ccc;
+        padding: 5px;
+        color: block;
+      }
+      .nav li:hover {
+        cursor: pointer;
+        color: red;
+      }
+      .nav li.active {
+        color: blue;
+      }
+    </style>
+    <script>
+      const router = new Router({
+        router: routerConfig,
+        dom: '.app',
+        nav: '.nav',
+        beforeChange(router, next) {
+          console.log(router);
+          setTimeout(() => {
+            next();
+          }, 0);
+        },
+        loadingComponent() {
+          return `<div>loading</div>`;
+        },
+      });
+    </script>
+  </body>
+</html>

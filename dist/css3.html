@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script>
+      G = {
+        ENV: 'qa',
+      };
+    </script>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2686582_dljrvs9ivbc.css">
+    <title>css3</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        position: relative;
+        width: 100%;
+        height: 300px;
+        border: 1px solid #ccc;
+        perspective: 800px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform-style: preserve-3d;
+      }
+      .container .transform {
+        width: 50%;
+        height: 300px;
+        transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+        position: absolute;
+        transition: all 0.3s linear 0s;
+        transform-origin: center center;
+      }
+      .container .transform div {
+        transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+        width: 100%;
+        height: 300px;
+        position: absolute;
+        background: black;
+        color: white;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        top: 0;
+        backface-visibility: hidden;
+      }
+      .container .transform .font {
+        z-index: 1;
+      }
+      .container .transform .back {
+        transform: rotate3d(0, 1, 0, 180deg);
+        background: blue;
+      }
+      .animate {
+        animation: move 2s linear 1 forwards;
+      }
+      @keyframes move {
+        0% {
+          transform: scale(1);
+        }
+        30% {
+          transform: translateZ(50px) scale(1.2);
+          transform-origin: 50% 50% 50px;
+        }
+        50% {
+          transform: rotate3d(0, 1, 0, -30deg) translateZ(50px);
+        }
+        75% {
+          transform: rotate3d(0, 1, 0, -100deg) translateZ(50px);
+        }
+        100% {
+          transform: rotate3d(0, 1, 0, -180deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>css3</h1>
+    <div class="container">
+      <div class="transform">
+        <div class="font">A</div>
+        <div class="back">B</div>
+      </div>
+    </div>
+    <script>
+      const container = document.querySelector('.container');
+
+      container.addEventListener(
+        'click',
+        function() {
+          console.log('mouseenter');
+          container.querySelector('.transform').classList.add('animate');
+          container.querySelector('.transform').addEventListener(
+            'animationiteration',
+            function() {
+              console.log('animationiteration');
+            },
+            false
+          );
+          container.querySelector('.transform').addEventListener(
+            'animationend',
+            function() {
+              container.querySelector('.transform').classList.remove('animate');
+            },
+            false
+          );
+        },
+        false
+      );
+    </script>
+    <div class="animation">hello world javascript!</div>
+    <!-- <div class="paddingBefore"></div> -->
+    <style>
+      .paddingBefore {
+        width: 100%;
+        background: red;
+      }
+      .paddingBefore:before {
+        content: '';
+        display: block;
+        padding-top: 100%;
+        position: relative;
+      }
+      .animation {
+        width: 100%;
+        border: 1px solid #ccc;
+        color: yellowgreen;
+        animation: stepAni 10s steps(10, start);
+      }
+      @keyframes stepAni {
+        from {
+          width: 0%;
+        }
+        to {
+          width: 100%;
+        }
+      }
+    </style>
+    <div class="box-shadow"></div>
+    <div class="table-cell">
+      <span>center</span>
+    </div>
+    <style>
+      .box-shadow {
+        width: 100%;
+        height: 10vh;
+        background: white;
+        position: relative;
+        border: 1px solid #ddd;
+      }
+      .box-shadow:before {
+        top: 50%;
+        transform: translateY(-50%);
+        display: table-cell;
+        content: '';
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        box-shadow: 10px 0 0px red, 25px 0 0px blue, 40px 0 0px green;
+      }
+      .table-cell {
+        display: table;
+        width: 256px;
+        height: 256px;
+        border: 1px solid #ccc;
+      }
+      .table-cell span {
+        text-align: center;
+        display: table-cell;
+        vertical-align: middle;
+        font-size: 20px;
+      }
+    </style>
+    <div class="background-move">move </div>
+    <script>
+      const dom = document.querySelector('.background-move');
+      dom.addEventListener(
+        'animationstart',
+        () => {
+          console.log('animationstart');
+        },
+        { capture: false }
+      );
+      dom.addEventListener(
+        'animationend',
+        () => {
+          console.log('animationend');
+        },
+        { capture: false }
+      );
+    </script>
+    <style>
+      .background-move {
+        border: 1px solid rebeccapurple;
+        padding: 5px;
+        background: linear-gradient(to right, white 0%, yellow 50%, #ccc 100%);
+        background-size: 400% 100%;
+        animation: bgMove 2s linear 0s 1;
+      }
+      @keyframes bgMove {
+        0% {
+          background-position: 0% 100%;
+        }
+        to {
+          background-position: 100% 100%;
+        }
+      }
+    </style>
+    <div class="clip-path">
+      <img src="./img/pic0.jpg" alt="pic0.jgp" />
+    </div>
+    <style>
+      .clip-path img {
+        width: 50vw;
+        height: auto;
+        border: 1px solid #ccc;
+        clip-path: circle(10%);
+        transition: clip-path 0.3s linear 0s;
+      }
+      .clip-path img:hover {
+        clip-path: circle(40%);
+      }
+    </style>
+    <section>
+      <div style="height: 50vh;"></div>
+      <h4 class="sticky">I am Top</h4>
+      <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li></li>
+      </ul>
+    </section>
+    <section>
+      <div style="height: 50vh;"></div>
+      <h4 class="sticky">I am Top1</h4>
+      <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+      </ul>
+    </section>
+    <section>
+      <div style="height: 50vh;"></div>
+      <h4 class="sticky">I am Top2</h4>
+      <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+      </ul>
+    </section>
+    <section>
+      <div style="height: 50vh;"></div>
+      <h4 class="sticky">I am Top3</h4>
+      <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+      </ul>
+    </section>
+    <section>
+      <div style="height: 50vh;"></div>
+      <h4 class="sticky">I am Top4</h4>
+      <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+      </ul>
+    </section>
+    <style>
+      ul {
+        list-style: none;
+      }
+      ul > li {
+        height: 100px;
+        background: yellow;
+      }
+      ul > li:empty {
+        background: red;
+      }
+      .sticky {
+        position: sticky;
+        top: 0;
+        width: 100vw;
+        height: 10vh;
+        background: aqua;
+        color: brown;
+        font-size: 28px;
+        line-height: 10vh;
+        text-align: center;
+        word-break: normal;
+        letter-spacing: 2px;
+      }
+    </style>
+    <div class="radial-gradient"> </div>
+    <style>
+      :root {
+        --baseWidth: 100px;
+        --baseColor: red;
+      }
+      .radial-gradient {
+        width: var(--baseWidth, 200px);
+        height: var(--baseWidth);
+        border: 1px solid #ccc;
+        background: radial-gradient(circle at left center, red 10%, yellow 50%, blue);
+      }
+    </style>
+    <div class="mask-demo"> </div>
+    <style>
+      .mask-demo {
+        width: 50vmax;
+        height: 400px;
+        padding: 10px;
+        border: 1px solid red;
+        background: url('/img/pic0.jpg'), linear-gradient(to right, red 0%, yellow 100%);
+        background-repeat: no-repeat;
+        background-size: cover, cover;
+        mask-image: url('/img/hospital.png');
+        -webkit-mask-image: url('/img/hostipal.png');
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-mode: alpha;
+        -webkit-mask-position: 0 0;
+        -webkit-mask-clip: border-box;
+        -webkit-mask-size: cover;
+      }
+    </style>
+    <script>
+      window.onload = function() {
+        window.scrollTo({ top: document.body.scrollHeight });
+      };
+    </script>
+
+    <ul class="scroll-container">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+    </ul>
+    <style>
+      .scroll-container {
+        overflow-x: scroll;
+        overflow-y: hidden;
+        width: 300px;
+        height: 200px;
+        display: flex;
+        flex-flow: row nowrap;
+        border: 1px solid aquamarine;
+        scroll-snap-type: x mandatory;
+      }
+      .scroll-container li {
+        list-style: none;
+        height: 100%;
+        display: inline-block;
+        text-align: center;
+        font-size: 28px;
+        flex: 0 0 200px;
+        line-height: 200px;
+        color: black;
+        border-right: 1px solid red;
+      }
+    </style>
+
+    <div class='gap-demo'>
+      <div>123</div>
+      <div>1234</div>
+      <div>14</div>
+      <div>1adfsd</div>
+    </div>
+    <hr>
+
+    <style>
+      .gap-demo {
+        width: 100%;
+        columns: 100px;
+        column-gap: 50px;
+        column-count: 4;
+        column-rule: 1px solid red;
+      }
+    </style>
+
+    <img class="scale-img" src="img/pic0.jpg" alt="">
+    <style>
+      .scale-img {
+        display: inline-block;
+        width: 400px;
+        height: auto;
+        margin: 0 auto;
+        will-change: transform;
+        transition: transform linear 0s;
+      }
+      .scale-t {
+        will-change: transform;
+        transition: transform linear 0s;
+      }
+    </style>
+
+    <div class="mask"></div>
+
+      <div class="img-tool">
+        <ul>
+          <li><i class="icon-plus iconfont"></i></li>
+          <li><i class="icon-Scale iconfont"></i></li>
+          <li><i class="icon-rotate iconfont"></i></li>
+          <li><i class="icon-delete iconfont"></i></li>
+        </ul>
+      </div>
+      <style>
+        .img-tool {
+          position: fixed;
+          bottom: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          height: auto;
+          z-index: 99999;
+        }
+        .img-tool ul {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: row;
+          height: 80px;
+        }
+        .img-tool ul li {
+          background-color: #ccc;
+          height: auto;
+          width: 100px;
+          text-align: center;
+        }
+        .img-tool ul li:hover {
+          cursor: pointer;
+        }
+      </style>
+    <style>
+
+      .mask {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+        transition: opacity .3s ease-in 0s;
+        background: black;
+        opacity: 0;
+        z-index: -99;
+      }
+      .mask.show {
+        opacity: 0.4;
+        display: block;
+        z-index: 99;
+      }
+    </style>
+
+    <script>
+      const img = document.querySelector('.scale-img');
+      img.addEventListener('click', scale, {
+        capture: false,
+        passive: true
+      });
+
+     const getOffset = (dom, dir) => {
+      let res = dir === 'top' ? dom.offsetTop : dom.offsetLeft;
+      while(dom.offsetParent) {
+        dom = dom.offsetParent;
+        res += dir === 'top' ? dom.offsetTop : dom.offsetLeft;
+      }
+      return res;
+     }
+
+    function setVisible(dom, bol) {
+      dom.style.visibility = bol ? 'visible' : 'hidden'
+    }
+
+    function showMask(bol) {
+      const dom = document.querySelector('.mask');
+      if (!dom.classList.contains('show')) {
+        const fn = () => {
+          showMask();
+          document.querySelector('[data-zoom]').parentNode.removeChild(document.querySelector('[data-zoom]'))
+          document.querySelector('.scale-img').style.visibility = 'visible'
+          setOverFlow(false)
+        }
+        dom.onclick = fn;
+      }
+      dom.classList.toggle('show');
+    }
+
+    function setOverFlow(bol) {
+      const s = document.body.style.overflow;
+      document.body.style.overflow = s === 'hidden' ? 'auto' : 'hidden'
+    }
+
+    class Tool {
+      constructor(dom) {
+        this.dom = dom;
+        this.t = document.querySelector('.img-tool');
+        this.init();
+      }
+
+      init() {
+        Array.from(this.t.querySelectorAll('li')).forEach((item, index) => {
+          item.addEventListener('click', this.bind(index), {
+            capture: false
+          })
+        })
+      }
+
+      bind(index) {
+        return () => {
+          if (index === 0) {
+            let transform = this.dom.style.transform;
+            console.log(333)
+            this.dom.style.transform = this.dom.style.transform.replace(/scale\(([^)]+)\)/g, (full, part) => {
+              console.log(full, part)
+              return `scale(${+part + 0.1})`
+            })
+          }
+        }
+      }
+    }
+
+      function scale() {
+        setVisible(this, false);
+        showMask(true)
+        setOverFlow(true);
+        const w = this.width;
+        const h = this.height;
+        const windowW = window.innerWidth;
+        const windowH = window.innerHeight;
+        const sle = (windowH - 100) / h;
+        const targetH = sle * windowH / w;
+        const img = document.createElement('img');
+        new Tool(img);
+        img.setAttribute('src', this.getAttribute('src'));
+        img.width = this.width;
+        img.height = this.height;
+        img.setAttribute('data-scale', this.getAttribute('src'))
+        img.style.position = 'absolute'
+        img.style.zIndex = 9999;
+        img.setAttribute('data-zoom', 'true')
+        img.style.className = 'scale-t'
+        const top = getOffset(this, 'top');
+        const left = getOffset(this, 'left');
+        img.style.left = left;
+        console.log(top)
+        img.style.top = top;
+        img.style.transition = `all .3s linear 0s`;
+        document.body.appendChild(img)
+        img.style.transformOrigin = 'center'
+        setTimeout(() => {
+          const l = (windowW - w) / 2 + document.documentElement.scrollLeft - left;
+          const t = (windowH - h) / 2 + document.documentElement.scrollTop - top;
+          img.style.transform = `scale(1) translate3d(${l}px,${t}px,0)`;
+          let flag = false;
+          img.addEventListener('transitionend', () => {
+            console.log(flag)
+            img.onclick = () => {
+              console.log(flag)
+              if (flag) {
+                const transform = img.style.transform.replace(/translate3d\(.*px,\s+?.*px,\s+?0px\)/, 'translate3d(0px,0px,0)');
+                console.log(transform)
+                img.style.transform = transform;
+              }
+            }
+            if (!flag) {
+              flag = true;
+            } else {
+              img.parentNode.removeChild(img)
+              showMask();
+              setVisible(this, true)
+              setOverFlow(false)
+            }
+          })
+        })
+      }
+    </script>
+    <ul class='nth-child'>
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+      <li>7</li>
+      <li>8</li>
+      <li>9</li>
+      <li>10</li>
+    </ul>
+    <style>
+      .nth-child li {
+        display: inline-block;
+        background-color: white;
+      }
+      /* .nth-child li:nth-child(odd) {
+        background-color: yellow;
+      }
+      .nth-child li:nth-child(even) {
+        background-color: red;
+      } */
+      .nth-child li:nth-child(n + 3) {
+        background-color: blue;
+      }
+    </style>
+  </body>
+</html>

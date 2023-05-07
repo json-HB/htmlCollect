@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>marked</title>
+    <script type='text/javascript' js-name='baseTag'>if("json-hb.github.io"==document.domain){var base=document.createElement("base");base.href="/htmlCollect/",base.target="_self",document.head.appendChild(base)}</script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="col">
+        <textarea name="content" id="marked"></textarea>
+      </div>
+      <div class="col">
+        <div class="show-marked"> </div>
+      </div>
+    </div>
+
+    <button type="button" id="submit">Transfrom</button>
+    <style>
+      :root {
+        --height: 70vh;
+      }
+      .container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-content: flex-start;
+        align-items: flex-start;
+      }
+      .container .col {
+        flex: 1;
+      }
+      textarea[name="content"] {
+        display: block;
+        border: 1px solid #ccc;
+        width: 97%;
+        height: var(--height);
+        outline: none;
+        padding: 10px;
+        font-size: 28px;
+        box-shadow: none;
+      }
+      .show-marked {
+        padding: 10px;
+        border: 1px solid #ccc;
+        height: var(--height);
+        background: #242222;
+        color: white;
+      }
+      button {
+        display: block;
+        height: 50px;
+        line-height: 50px;
+        border: 1px solid #ccc;
+        padding: 0px 20px;
+        font-size: 16px;
+        color: green;
+        font-weight: 700;
+        margin: auto;
+        margin-top: 20px;
+        cursor: pointer;
+      }
+    </style>
+    <script src="vendors/marked.min.js"></script>
+    <script>
+      let btn = document.querySelector("#submit");
+      let transfromArea = document.querySelector(".show-marked");
+      let loading = false;
+      function renderMark() {
+        const content = document.querySelector("textarea").value;
+        const result = marked(content);
+        transfromArea.innerHTML = result;
+      }
+      function debounce(fn, delay) {
+        let timer = null;
+        return function() {
+          if (timer) clearTimeout(timer);
+          else {
+            setTimeout(() => {
+              fn.apply(null, arguments);
+            }, delay);
+          }
+        };
+      }
+
+      document.getElementById("marked").addEventListener("input", debounce(renderMark, 200), false);
+
+      btn.addEventListener("click", renderMark, { capture: false, passive: false });
+      // btn.addEventListener(
+      //   "click",
+      //   function() {
+      //     let val = text.value;
+      //     disableBtn(true);
+      //     let data = {
+      //       data: val,
+      //     };
+      //     fetch("http://haibo.online:3007/marked", {
+      //       body: JSON.stringify(data), // must match 'Content-Type' header
+      //       cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      //       credentials: "same-origin", // include, same-origin, *omit
+      //       headers: {
+      //         "user-agent": navigator.userAgent,
+      //         "content-type": "application/json",
+      //       },
+      //       method: "POST", // *GET, POST, PUT, DELETE, etc.
+      //       mode: "no-cors", // no-cors, cors, *same-origin
+      //       referrer: "no-referrer", // *client, no-referrer
+      //     })
+      //       .then(response => response.json())
+      //       .then(res => {
+      //         window.open(res.data, "_blank");
+      //       })
+      //       .catch(e => {
+      //         alert("wrong");
+      //       })
+      //       .finally(() => {
+      //         disableBtn(false);
+      //       });
+      //   },
+      //   false
+      // );
+      function disableBtn(bol) {
+        if (bol) {
+          btn.setAttribute("disabled", "");
+        } else {
+          btn.removeAttribute("disabled");
+        }
+      }
+    </script>
+  </body>
+</html>

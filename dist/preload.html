@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>preload</title>
+    <link rel="preload" as="script" href="./util/baseTag.js" />
+    <script>
+      var time = Date.now();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/2.1.10/chart/bar.js"></script>
+    <link rel="preload" href="https://unpkg.com/element-ui/lib/index.js" as="script" />
+    <link rel="preload" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" as="style" />
+  </head>
+  <body>
+    <button type="button">click</button>
+    <script type="module">
+      const btn = document.querySelector('button');
+      function preloadUrl() {
+        window.open('http://www.kreditone.in/');
+      }
+      btn.addEventListener('click', preloadUrl, {
+        capture: false,
+        once: true,
+        passive: true,
+      });
+      window.onload = function() {
+        const ele = document.createElement('script');
+        ele.src = 'https://cdn.bootcss.com/react/16.9.0-rc.0/cjs/react.development.js';
+        ele.async = true;
+        ele.type = 'module';
+        ele.addEventListener(
+          'load',
+          function() {
+            console.log('load');
+          },
+          false
+        );
+        ele.addEventListener(
+          'error',
+          function() {
+            alert('error');
+          },
+          false
+        );
+        document.body.appendChild(ele);
+      };
+    </script>
+    <script src="./util/clipboard.js"></script>
+    <div>content load: <span class="time-content"></span></div>
+    <div>load: <span class="time-load"></span></div>
+    <script>
+      window.addEventListener('load', function() {
+        document.querySelector('.time-load').innerText = (Date.now() - time) / 1000;
+      });
+      window.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('.time-content').innerText = (Date.now() - time) / 1000;
+      });
+    </script>
+  </body>
+</html>

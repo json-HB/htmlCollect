@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>channelMessage</title>
+</head>
+<body>
+    <h1>channelMessage</h1>
+    <div class='wrap'>wrap channel</div>
+    <button></button>
+    <iframe src="taotao.html" width="400" height="400"></iframe>
+    <script>
+      const channel = new MessageChannel();
+      const domA = document.querySelector('.wrap');
+      const domB = document.querySelector('iframe');
+  
+      domB.addEventListener('load', () => {
+        console.log('load')
+        channel.port1.onmessage = (e) => {
+            console.log(e)
+            domA.innerHTML = e.data;
+        }
+        domB.contentWindow.postMessage('iframe message', 'http://localhost:8008', [channel.port2])
+      })
+    </script>
+</body>
+</html>
