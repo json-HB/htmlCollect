@@ -13,3 +13,4 @@ package-lock.json
 main.out
 src/c/*.*
 bin/c.js
+dist
